@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  //final String courseCode;
+  //final String yrStanding;
+   const Dashboard({Key? key, }) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -9,22 +10,17 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final _formKey = GlobalKey<FormState>();
-  late String _courseCode;
-  late String _myStanding;
-  String _currentSelectedStanding = 'Unselected';
-  final List<String> standing = [
-    "Unselected",
-    "Freshman",
-    "Sophomore","Junior",
-    "Senior"
-  ];
+  late String _day;
+  late String _time;
+  late String _course;
+
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+    return  Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(100, 25, 100, 100),
@@ -35,14 +31,14 @@ class _DashboardState extends State<Dashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'Hello!',
+                        'Mabuhay!',
                         style: TextStyle(
                             color: Color(0xff8B1538),
                             fontSize: 54,
                             fontWeight: FontWeight.w800),
                       ),
                       Text(
-                        'Are you looking for classes to enlist in?',
+                        'Welcome to your CRS Scheduler dashboard',
                         style: TextStyle(
                             color: Color(0xff7D0C0E),
                             fontSize: 24,
@@ -225,127 +221,51 @@ class _DashboardState extends State<Dashboard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Course Code',
-                                style: TextStyle(
-                                    color: Color(0xff7D0C0E),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                child: TextFormField(
-                                  style: const TextStyle(fontFamily: 'Poppins'),
-                                  onChanged: (value) {
-                                    _courseCode = value;
-                                  },
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Please enter your course code (e.g. BS CS)',
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter some text';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
+                        Row(
+                          children: [
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children:  [
+                              children: [
                                 const Text(
-                                  'Standing',
+                                  'Desired Courses',
                                   style: TextStyle(
                                       color: Color(0xff7D0C0E),
                                       fontSize: 24,
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                                  child: FormField<String>(
-                                    builder: (FormFieldState<String> state) {
-                                      return InputDecorator(
-                                        isEmpty: false,
-                                        decoration: InputDecoration(
-                                            filled: false,
-                                            fillColor: Colors.white,
-                                            errorStyle: const TextStyle(
-                                                color: Colors.redAccent,
-                                                fontSize: 20.0),
-                                            hintText: 'Please select expense',
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(5.0))),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            value: _currentSelectedStanding,
-                                            isDense: true,
-                                            onChanged: (newValue) {
-                                              setState(() {
-                                                _currentSelectedStanding = newValue!;
-                                                _myStanding = newValue;
-                                              });
-                                            },
-                                            items: standing.map((String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      );
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  child: TextFormField(
+                                    style: const TextStyle(fontFamily: 'Poppins'),
+                                    onChanged: (value) {
+                                      _course = value;
+                                    },
+                                    decoration: const InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(),
+                                      hintText: 'Please input your desired course (e.g CS 12, CS 20)',
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter some text';
+                                      }
+                                      return null;
                                     },
                                   ),
-                                )
-
-
+                                ),
                               ],
                             ),
-                          ),
+
+
+                          ],
                         ),
+
 
 
                       ],
                     ),
-                    SizedBox(
-                      height: 80,
-                      width: 120,
-                      child: ElevatedButton(
-                        style:  ElevatedButton.styleFrom(backgroundColor: Color(0xff8B1538)),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Adding to database')),
-                            );
-                          }
-                        },
-                        child: const Text(
-                          'Next',
-                          style: TextStyle(
-                            color: Color(0xffFFFFFF),
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -355,7 +275,4 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-}
-bool isNumeric(String s) {
-  return double.tryParse(s) != null;
 }
