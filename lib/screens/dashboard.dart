@@ -10,18 +10,26 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final _formKey = GlobalKey<FormState>();
   late String _courseCode;
+  late String _myStanding;
+  String _currentSelectedStanding = 'Unselected';
+  final List<String> standing = [
+    "Unselected",
+    "Freshman",
+    "Sophomore","Junior",
+    "Senior"
+  ];
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(100, 25, 100, 0),
+              padding: const EdgeInsets.fromLTRB(100, 25, 100, 100),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
                       Text(
                         'Hello!',
                         style: TextStyle(
-                            color: Color(0xffD64123),
+                            color: Color(0xff8B1538),
                             fontSize: 54,
                             fontWeight: FontWeight.w800),
                       ),
@@ -46,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
             ),
-            Row(
+            /*Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Card(
@@ -188,106 +196,156 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(100, 0, 100, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Text(
-                    'New Sales Entry',
-                    style: TextStyle(
-                        color: Color(0xffD64123),
-                        fontSize: 54,
-                        fontWeight: FontWeight.w800),
+            ),*/
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(100, 0, 100, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Input your details',
+                        style: TextStyle(
+                            color: Color(0xff00573F),
+                            fontSize: 30,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(100, 0, 100, 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                padding: const EdgeInsets.symmetric(vertical:50,horizontal: 100),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Amount',
-                              style: TextStyle(
-                                  color: Color(0xff7D0C0E),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: TextFormField(
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                                onChanged: (value) {
-                                  //_amount = double.parse(value);
-                                },
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter sales amount',
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter some text';
-                                  } else if (isNumeric(value) == false) {
-                                    return 'Please enter a numeric value';
-                                  }
-                                  return null;
-                                },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Course Code',
+                                style: TextStyle(
+                                    color: Color(0xff7D0C0E),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                child: TextFormField(
+                                  style: const TextStyle(fontFamily: 'Poppins'),
+                                  onChanged: (value) {
+                                    _courseCode = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Please enter your course code (e.g. BS CS)',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:  [
+                                const Text(
+                                  'Standing',
+                                  style: TextStyle(
+                                      color: Color(0xff7D0C0E),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                                  child: FormField<String>(
+                                    builder: (FormFieldState<String> state) {
+                                      return InputDecorator(
+                                        isEmpty: false,
+                                        decoration: InputDecoration(
+                                            filled: false,
+                                            fillColor: Colors.white,
+                                            errorStyle: const TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 20.0),
+                                            hintText: 'Please select expense',
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(5.0))),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            value: _currentSelectedStanding,
+                                            isDense: true,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                _currentSelectedStanding = newValue!;
+                                                _myStanding = newValue;
+                                              });
+                                            },
+                                            items: standing.map((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+
+
+                              ],
                             ),
-                          ],
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 80,
+                      width: 120,
+                      child: ElevatedButton(
+                        style:  ElevatedButton.styleFrom(backgroundColor: Color(0xff8B1538)),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Adding to database')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Next',
+                          style: TextStyle(
+                            color: Color(0xffFFFFFF),
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'Category',
-                              style: TextStyle(
-                                  color: Color(0xff7D0C0E),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600),
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'Payment Type',
-                              style: TextStyle(
-                                  color: Color(0xff7D0C0E),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600),
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    ),
-
                   ],
                 ),
               ),
