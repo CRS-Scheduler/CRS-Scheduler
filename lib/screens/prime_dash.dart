@@ -22,11 +22,10 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   ];
   final List<int> daychecklist = [0, 0, 0, 0, 0, 0];
   final List<String> timelist = ["", "", "", "", "", "", ""];
-  String nullday = "";
+
   final _timeformkey = GlobalKey<FormState>();
-  late String _day;
-  late String _time;
-  late String _course;
+
+
   int _indexer = 0;
 
   @override
@@ -137,7 +136,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff8B1538)),
                           onPressed: () {
-                            if (nullday == "" &&
+                            if (timelist[6] == "" &&
                                 dayblank(daychecklist) &&
                                 timeblank(timelist) &&
                                 _timeformkey.currentState!.validate() &&
@@ -181,7 +180,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               if (kDebugMode) {
                                 print("maybe success");
                                 print(
-                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday\n ProfSUb: ${subproflist.length}");
+                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: ${subproflist.length}");
                               }
                             }
                             ScaffoldMessenger.of(context).showSnackBar(
