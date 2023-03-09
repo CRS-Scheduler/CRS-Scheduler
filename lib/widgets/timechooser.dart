@@ -164,15 +164,15 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
   RegExp timePattern = RegExp(
       r'^(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9](,(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9])*$');
   double heightret(){
-    if(triggercheck(widget.validDays) >3){
-      return 500+50*triggercheck(widget.validDays);
+    if(triggercheck(widget.validDays) >4){
+      return 500+50*triggercheck(widget.validDays)-4;
     }
     return 500;
   }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height:heightret(),
+      height:600,
       child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -192,15 +192,17 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+
+                   children: [
 
                   Container(
                     child:
                     widget.validDays.any((e) => e == 1)
                         ? null
                         : Column(
+
                       children: [
                         const Text(style: TextStyle(fontWeight: FontWeight.bold,
                             color: Color(0xff7D0C0E),
@@ -252,38 +254,42 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                   ),
                   for (int x = 0; x < 6; x++)
                     if (widget.validDays[x] == 1)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 100, child: Text(days[x])),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: SizedBox(
-                              width: 300,
-                              child: TextFormField(
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                                onChanged: (value) {
-                                  widget.timeList[x] = value;
-                                },
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Please enter your preferred timeslots',
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 100, child: Text(days[x])),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: SizedBox(
+                                width: 300,
+                                child: TextFormField(
+                                  style: const TextStyle(fontFamily: 'Poppins'),
+                                  onChanged: (value) {
+                                    widget.timeList[x] = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Please enter your preferred timeslots',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    } else if (!timePattern.hasMatch(value)) {
+                                      return 'Please enter a valid timespan';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter some text';
-                                  } else if (!timePattern.hasMatch(value)) {
-                                    return 'Please enter a valid timespan';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      )
+
                 ],),
               )
 
