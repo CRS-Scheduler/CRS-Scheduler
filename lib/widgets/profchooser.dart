@@ -59,7 +59,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                 Text(
                     "You may add new preferred classes by pressing the add class button"),
                 Text(
-                    "Fill up all textfields"),
+                    "All textfields except the last one need to be filled up for your preferences to be saved"),
               ],
             ),
           ),
@@ -95,7 +95,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                           'Please enter your preferred subject',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null || value.isEmpty && i!=widget.preflist.length-1) {
                                         return 'Please enter some text';
                                       }
                                       return null;
@@ -124,7 +124,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                           'Please enter your preferred professor for the subject',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null || value.isEmpty && i!=widget.preflist.length-1) {
                                         return 'Please enter some text';
                                       }
                                       return null;

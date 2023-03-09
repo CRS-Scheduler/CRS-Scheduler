@@ -127,7 +127,8 @@ class _DashboardState extends State<Dashboard> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8B1538)),
                         onPressed: () {
-                          if (nullday=="" && dayblank(daychecklist) && timeblank(timelist) &&_timeformkey.currentState!.validate()) {
+
+                          if (nullday=="" && dayblank(daychecklist) && timeblank(timelist) &&_timeformkey.currentState!.validate() && subproflist.length==1 && subproflist[0][0]==''&&subproflist[0][1]=='') {
                             if (kDebugMode) {
                               print("ERROR Log 1");
                               print(
@@ -163,9 +164,14 @@ class _DashboardState extends State<Dashboard> {
                                   content: Text('Saving preferences')),
                             );
                           }else{if (kDebugMode) {
+                            print("maybe success");
                             print(
-                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday\n ProfSUb: $subproflist");
+                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday\n ProfSUb: ${subproflist.length}");
                           }}
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Saving preferences')),
+                          );
 
                         },
                         child: const Text(
