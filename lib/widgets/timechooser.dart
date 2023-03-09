@@ -1,7 +1,10 @@
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 
+/*
 class WhenToMeetMenu extends StatefulWidget {
+  const WhenToMeetMenu({super.key});
+
   @override
   _WhenToMeetMenuState createState() => _WhenToMeetMenuState();
 }
@@ -35,7 +38,7 @@ class _WhenToMeetMenuState extends State<WhenToMeetMenu> {
             selected: selected,
           );
         },
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 80,
         ),
       ),
@@ -106,15 +109,13 @@ class _SelectableItemState extends State<SelectableItem>
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
-        return Container(
-          child: Transform.scale(
-            scale: _scaleAnimation.value,
-            child: DecoratedBox(
-              child: child,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                color: calculateColor(),
-              ),
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: DecoratedBox(
+            child: ,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              color: calculateColor(),
             ),
           ),
         );
@@ -124,7 +125,7 @@ class _SelectableItemState extends State<SelectableItem>
         child: Text(
           'Item\n#${widget.index}',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, color: Colors.white),
+          style: const TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),
     );
@@ -138,4 +139,97 @@ class _SelectableItemState extends State<SelectableItem>
     );
   }
 }
+*/
+class TypeTimeEntry extends StatefulWidget {
+  final List<int> validDays;
+  final List<String> timeList;
 
+  const TypeTimeEntry(
+      {Key? key, required this.validDays, required this.timeList})
+      : super(key: key);
+
+  @override
+  State<TypeTimeEntry> createState() => _TypeTimeEntryState();
+}
+
+class _TypeTimeEntryState extends State<TypeTimeEntry> {
+  static List<String> days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
+  RegExp timePattern = RegExp(
+      r'^(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9](,(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9])*$');
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              child: Column(
+                children: const [
+                  Text("Please type in your preferred times for each date.\n"),
+                  Text(
+                      "Your preferred time must be entered in the following manner:"
+                      "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
+                      "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
+                      "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(mainAxisAlignment:MainAxisAlignment.spaceAround,children: [widget.validDays.any((e) => e == 1)
+                  ? const Text("")
+                  : const Text(style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff7D0C0E),fontSize: 20),"Please pick a preferred day first"),
+                for (int x = 0; x < 6; x++)
+                  if (widget.validDays[x] == 1)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width:100, child: Text(days[x])),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: SizedBox(
+                            width: 300,
+                            child: TextFormField(
+                              style: const TextStyle(fontFamily: 'Poppins'),
+                              onChanged: (value) {
+                                widget.timeList[x] = value;
+                              },
+                              decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(),
+                                hintText: 'Please enter your preferred timeslots',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter some text';
+                                } else if (!timePattern.hasMatch(value)) {
+                                  return 'Please enter a valid timespan';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),],),
+            )
+
+          ],
+        )
+
+        //Column(children: [Text(widget.validDays[x])])
+
+        );
+  }
+}
