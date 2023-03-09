@@ -216,6 +216,7 @@ class _DetailDashState extends State<DetailDash> {
                                     builder: (context) => Dashboard(
                                         courseCode: _courseCode,
                                         yearLevel: _myStanding)));
+
                           }
                         },
                         child: const Text(
