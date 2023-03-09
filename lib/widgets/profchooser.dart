@@ -59,6 +59,8 @@ class _SubProfChooserState extends State<SubProfChooser> {
                 Text(
                     "You may add new preferred classes by pressing the add class button"),
                 Text(
+                    "You do not need to fill the preferred professor field for a class."),
+                Text(
                     "All textfields except the last one need to be filled up for your preferences to be saved"),
               ],
             ),
@@ -121,14 +123,9 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(),
                                       hintText:
-                                          'Please enter your preferred professor for the subject',
+                                          'OPTIONAL: Please enter your preferred professor',
                                     ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty && i!=widget.preflist.length-1) {
-                                        return 'Please enter some text';
-                                      }
-                                      return null;
-                                    },
+
                                   ),
                                 ),
                               ],
