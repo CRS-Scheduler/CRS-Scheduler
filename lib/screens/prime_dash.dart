@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 import 'package:crs_scheduler/widgets/timechooser.dart';
 import 'package:crs_scheduler/widgets/daychooser.dart';
+import 'package:crs_scheduler/widgets/profchooser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -16,6 +17,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  List<List> subproflist=[["",""]];
   final List<int> daychecklist = [0, 0, 0, 0, 0, 0];
   final List<String> timelist = ["", "", "", "", "", "",""];
   String nullday = "";
@@ -114,14 +116,9 @@ class _DashboardState extends State<Dashboard> {
                                 timeList: timelist,
 
                               ),
-                              const Center(
-                                child: Text('Display Tab 4',
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ]),
-                          )
+                              SubProfChooser(preflist: subproflist,),
+                            ])
+                          ),
                         ])),
                     SizedBox(
                       height: 80,
@@ -132,8 +129,9 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () {
                           if (nullday=="" && dayblank(daychecklist) && timeblank(timelist) &&_timeformkey.currentState!.validate()) {
                             if (kDebugMode) {
+                              print("ERROR Log 1");
                               print(
-                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                             }
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -143,8 +141,9 @@ class _DashboardState extends State<Dashboard> {
                           } 
                           else if (_timeformkey.currentState!.validate() && dayblank(daychecklist)) {
                             if (kDebugMode) {
+                              print("No day chosen case");
                               print(
-                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                                  "User inputs:\nDaylist: $daychecklist,\nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                             }
 
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -154,8 +153,9 @@ class _DashboardState extends State<Dashboard> {
                           }
                           else if (timeblank(timelist) && !dayblank(daychecklist)) {
                             if (kDebugMode) {
+                              print("No time chosen case");
                               print(
-                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                             }
 
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -164,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
                             );
                           }else{if (kDebugMode) {
                             print(
-                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday");
+                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday\n ProfSUb: $subproflist");
                           }}
 
                         },
