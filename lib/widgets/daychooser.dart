@@ -128,12 +128,14 @@ class _DayButtonState extends State<DayButton> {
               setState(() {
                 widget.checker[widget.Index] = widget.checker[widget.Index] == 1 ? 0 : 1;
                 widget.tv[widget.Index]="";
+                widget.tv[6]="";
 
               });
               if (kDebugMode) {
                 print("date chosen");
                 print(widget.checker);
                 print(widget.tv);
+
               }
             },
             child: Text(widget.Day)),

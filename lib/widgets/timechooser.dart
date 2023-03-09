@@ -144,7 +144,7 @@ class TypeTimeEntry extends StatefulWidget {
   final List<int> validDays;
   final List<String> timeList;
 
-  const TypeTimeEntry(
+   const TypeTimeEntry(
       {Key? key, required this.validDays, required this.timeList})
       : super(key: key);
 
@@ -166,7 +166,6 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -179,63 +178,115 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                   Text("Please type in your preferred times for each date.\n"),
                   Text(
                       "Your preferred time must be entered in the following manner:"
-                      "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
-                      "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
-                      "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
+                          "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
+                          "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
+                          "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
                 ],
               ),
             ),
             Expanded(
-              child: Column(mainAxisAlignment:MainAxisAlignment.spaceAround,children: [
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
 
-                Container(
-                  child:
+                  Container(
+                    child:
                     widget.validDays.any((e) => e == 1)
-                      ? null
-                      : const Text(style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff7D0C0E),fontSize: 20),"Please pick a preferred day first"),
-
-                ),
-                for (int x = 0; x < 6; x++)
-                  if (widget.validDays[x] == 1)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                        ? null
+                        : Column(
                       children: [
-                        SizedBox(width:100, child: Text(days[x])),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: SizedBox(
-                            width: 300,
-                            child: TextFormField(
-                              style: const TextStyle(fontFamily: 'Poppins'),
-                              onChanged: (value) {
-                                widget.timeList[x] = value;
-                              },
-                              decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(),
-                                hintText: 'Please enter your preferred timeslots',
+                        const Text(style: TextStyle(fontWeight: FontWeight.bold,
+                            color: Color(0xff7D0C0E),
+                            fontSize: 20),
+                            "Warning you have not chosen a preferred day"),
+                        const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text("General Schedule for Monday to Saturday"),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: SizedBox(
+                                width: 300,
+                                child: TextFormField(
+                                  style: const TextStyle(fontFamily: 'Poppins'),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.timeList[6]= value;
+                                    });
+
+                                  },
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Please enter your preferred timeslots',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    } else if (!timePattern.hasMatch(value)) {
+                                      return 'Please enter a valid timespan';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
-                                } else if (!timePattern.hasMatch(value)) {
-                                  return 'Please enter a valid timespan';
-                                }
-                                return null;
-                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+
+                  ),
+                  for (int x = 0; x < 6; x++)
+                    if (widget.validDays[x] == 1)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 100, child: Text(days[x])),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextFormField(
+                                style: const TextStyle(fontFamily: 'Poppins'),
+                                onChanged: (value) {
+                                  widget.timeList[x] = value;
+                                },
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Please enter your preferred timeslots',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  } else if (!timePattern.hasMatch(value)) {
+                                    return 'Please enter a valid timespan';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),],),
+                        ],
+                      ),
+                ],),
+              ),
             )
 
           ],
         )
 
-        //Column(children: [Text(widget.validDays[x])])
+      //Column(children: [Text(widget.validDays[x])])
 
-        );
+    );
   }
 }

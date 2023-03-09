@@ -17,7 +17,8 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final List<int> daychecklist = [0, 0, 0, 0, 0, 0];
-  final List<String> timelist = ["", "", "", "", "", ""];
+  final List<String> timelist = ["", "", "", "", "", "",""];
+  String nullday = "";
   final _timeformkey = GlobalKey<FormState>();
   late String _day;
   late String _time;
@@ -25,7 +26,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -56,8 +56,7 @@ class _DashboardState extends State<Dashboard> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          'You are a ${widget.yearLevel} of ${widget
-                              .courseCode}',
+                          'You are a ${widget.yearLevel} of ${widget.courseCode}',
                           style: const TextStyle(
                               color: Color(0xff7D0C0E),
                               fontSize: 24,
@@ -113,6 +112,7 @@ class _DashboardState extends State<Dashboard> {
                               TypeTimeEntry(
                                 validDays: daychecklist,
                                 timeList: timelist,
+
                               ),
                               const Center(
                                 child: Text('Display Tab 4',
@@ -130,28 +130,43 @@ class _DashboardState extends State<Dashboard> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8B1538)),
                         onPressed: () {
-                          if (dayblank(daychecklist)|| timeblank(timelist)) {
-                           ScaffoldMessenger.of(context).showSnackBar(
+                          if (nullday=="" && dayblank(daychecklist) && timeblank(timelist) &&_timeformkey.currentState!.validate()) {
+                            if (kDebugMode) {
+                              print(
+                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(
-                                      'WARNING: Error in preference entry')),
+                                      'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and Instructor')),
                             );
+                          } 
+                          else if (_timeformkey.currentState!.validate() && dayblank(daychecklist)) {
+                            if (kDebugMode) {
+                              print(
+                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                            }
 
-                          }else if (_timeformkey.currentState!.validate() &&
-                          !dayblank(daychecklist)) {
-                          if (kDebugMode) {
-                          print(
-                          "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist ");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Saving preferences')),
+                            );
                           }
+                          else if (timeblank(timelist) && !dayblank(daychecklist)) {
+                            if (kDebugMode) {
+                              print(
+                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${daychecklist[6]}");
+                            }
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                          content: Text('Saving preferences')),
-                          );
-                          }else{ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                          content: Text('WARNING: Error in preference entry')),
-                          );}
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Saving preferences')),
+                            );
+                          }else{if (kDebugMode) {
+                            print(
+                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: $nullday");
+                          }}
+
                         },
                         child: const Text(
                           'Next',
@@ -215,7 +230,7 @@ bool dayblank(List<int> lister) {
 
 double triggercheck(List<int> lister) {
   double valhold = 0;
-  for (int i = 0; i < lister.length; i++) {
+  for (int i = 0; i < 5; i++) {
     if (lister[i] == 1) {
       valhold += 1;
     }
