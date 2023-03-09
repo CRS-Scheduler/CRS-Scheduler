@@ -186,9 +186,15 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
               ),
             ),
             Expanded(
-              child: Column(mainAxisAlignment:MainAxisAlignment.spaceAround,children: [widget.validDays.any((e) => e == 1)
-                  ? const Text("")
-                  : const Text(style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff7D0C0E),fontSize: 20),"Please pick a preferred day first"),
+              child: Column(mainAxisAlignment:MainAxisAlignment.spaceAround,children: [
+
+                Container(
+                  child:
+                    widget.validDays.any((e) => e == 1)
+                      ? null
+                      : const Text(style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff7D0C0E),fontSize: 20),"Please pick a preferred day first"),
+
+                ),
                 for (int x = 0; x < 6; x++)
                   if (widget.validDays[x] == 1)
                     Row(

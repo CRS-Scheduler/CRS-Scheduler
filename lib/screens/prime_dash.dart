@@ -25,10 +25,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    int count = 0;
-    for (var num in daychecklist) {
-      count += num == 1 ? 1 : 0;
-    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -59,7 +56,8 @@ class _DashboardState extends State<Dashboard> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          'You are a ${widget.yearLevel} of ${widget.courseCode}',
+                          'You are a ${widget.yearLevel} of ${widget
+                              .courseCode}',
                           style: const TextStyle(
                               color: Color(0xff7D0C0E),
                               fontSize: 24,
@@ -112,11 +110,9 @@ class _DashboardState extends State<Dashboard> {
                                 dayvector: daychecklist,
                                 timevector: timelist,
                               ),
-                              KeepAliveWrapper(
-                                child: TypeTimeEntry(
-                                  validDays: daychecklist,
-                                  timeList: timelist,
-                                ),
+                              TypeTimeEntry(
+                                validDays: daychecklist,
+                                timeList: timelist,
                               ),
                               const Center(
                                 child: Text('Display Tab 4',
@@ -134,20 +130,27 @@ class _DashboardState extends State<Dashboard> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8B1538)),
                         onPressed: () {
-                          if (_timeformkey.currentState!.validate() &&
-                              !dayblank(daychecklist)) {
-                            if (kDebugMode) {
-                              print(
-                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist ");
-                            }
-
-                            ScaffoldMessenger.of(context).showSnackBar(
+                          if (dayblank(daychecklist)|| timeblank(timelist)) {
+                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Saving preferences')),
+                                  content: Text(
+                                      'WARNING: Error in preference entry')),
                             );
+
+                          }else if (_timeformkey.currentState!.validate() &&
+                          !dayblank(daychecklist)) {
+                          if (kDebugMode) {
+                          print(
+                          "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist ");
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                          content: Text('Saving preferences')),
+                          );
                           }else{ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('WARNING: Error in preference entry')),
+                          const SnackBar(
+                          content: Text('WARNING: Error in preference entry')),
                           );}
                         },
                         child: const Text(
