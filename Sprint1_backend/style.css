@@ -1,0 +1,51 @@
+.mydiv{
+    margin-left: 50%;
+}
+button{
+    margin-top: 20px;
+    margin-left: 50%;
+}
+.option{
+    width: 50%;
+    background-color: gray;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+.optionSel{
+    background-color: green;
+}
+.header{
+    width: 80%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+.div_day{
+    width: 25%;
+    background-color: maroon;
+    display: flex;
+    float: left;
+    flex-direction: column;
+    padding-left: 2%;
+    margin-right: 10px;
+}
+.div_time{
+    width: 60%;
+    background-color: maroon;
+    display: flex;
+    float: right;
+    flex-direction: column;
+    padding-left: 2%;
+}
+
+.resultsDiv{
+    width: 60%;
+    background-color: maroon;
+    display: flex;
+}
+
+p{
+    width: 20%;
+    background-color: yellow;
+    display: flex;
+}
