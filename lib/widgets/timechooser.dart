@@ -163,38 +163,46 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
   ];
   RegExp timePattern = RegExp(
       r'^(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9](,(2[0-3]|[0-1][0-9])[0-5][0-9]-(2[0-3]|[0-1][0-9])[0-5][0-9])*$');
-
+  double heightret(){
+    if(triggercheck(widget.validDays) >4){
+      return 500+50*triggercheck(widget.validDays)-4;
+    }
+    return 500;
+  }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
+    return SizedBox(
+      height:600,
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
 
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
-              child: Column(
-                children: const [
-                  Text("Please type in your preferred times for each date.\n"),
-                  Text(
-                      "Your preferred time must be entered in the following manner:"
-                          "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
-                          "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
-                          "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1.0),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                  children: const [
+                    Text("Please type in your preferred times for each date.\n"),
+                    Text(
+                        "Your preferred time must be entered in the following manner:"
+                            "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
+                            "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
+                            "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Column(
+
+                   children: [
 
                   Container(
                     child:
                     widget.validDays.any((e) => e == 1)
                         ? null
                         : Column(
+
                       children: [
                         const Text(style: TextStyle(fontWeight: FontWeight.bold,
                             color: Color(0xff7D0C0E),
@@ -246,47 +254,60 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                   ),
                   for (int x = 0; x < 6; x++)
                     if (widget.validDays[x] == 1)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 100, child: Text(days[x])),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: SizedBox(
-                              width: 300,
-                              child: TextFormField(
-                                style: const TextStyle(fontFamily: 'Poppins'),
-                                onChanged: (value) {
-                                  widget.timeList[x] = value;
-                                },
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Please enter your preferred timeslots',
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 100, child: Text(days[x])),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: SizedBox(
+                                width: 300,
+                                child: TextFormField(
+                                  style: const TextStyle(fontFamily: 'Poppins'),
+                                  onChanged: (value) {
+                                    widget.timeList[x] = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Please enter your preferred timeslots',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    } else if (!timePattern.hasMatch(value)) {
+                                      return 'Please enter a valid timespan';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter some text';
-                                  } else if (!timePattern.hasMatch(value)) {
-                                    return 'Please enter a valid timespan';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      )
+
                 ],),
-              ),
-            )
+              )
 
-          ],
-        )
+            ],
+          )
 
-      //Column(children: [Text(widget.validDays[x])])
+        //Column(children: [Text(widget.validDays[x])])
 
+      ),
     );
   }
+}
+double triggercheck(List<int> lister) {
+  double valhold = 0;
+  for (int i = 0; i < 5; i++) {
+    if (lister[i] == 1) {
+      valhold += 1;
+    }
+  }
+  return valhold;
 }

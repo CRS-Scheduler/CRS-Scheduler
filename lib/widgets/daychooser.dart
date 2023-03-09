@@ -17,73 +17,77 @@ class _DayChooserState extends State<DayChooser> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
+    return SizedBox(
+      height: 400,
+      child: Center(
+        child: Column(
 
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 50.0),
-            child: Text("Which days would you like your classes to be on?"),
-          ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DayButton(
-                      Day: "Monday",
-                      Index: 0,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    ),
-                    DayButton(
-                      Day: "Tuesday",
-                      Index: 1,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DayButton(
-                      Day: "Wednesday",
-                      Index: 2,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    ),
-                    DayButton(
-                      Day: "Thursday",
-                      Index: 3,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    ),
-
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DayButton(
-                      Day: "Friday",
-                      Index: 4,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    ), DayButton(
-                      Day: "Saturday",
-                      Index: 5,
-                      checker: widget.dayvector,
-                      tv: widget.timevector,
-                    ),
-                  ],
-                ),
-              ],
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 50.0),
+              child: Text("Which days would you like your classes to be on?"),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      DayButton(
+                        Day: "Monday",
+                        Index: 0,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      ),
+                      DayButton(
+                        Day: "Tuesday",
+                        Index: 1,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      DayButton(
+                        Day: "Wednesday",
+                        Index: 2,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      ),
+                      DayButton(
+                        Day: "Thursday",
+                        Index: 3,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      ),
+
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      DayButton(
+                        Day: "Friday",
+                        Index: 4,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      ), DayButton(
+                        Day: "Saturday",
+                        Index: 5,
+                        checker: widget.dayvector,
+                        tv: widget.timevector,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -142,4 +146,13 @@ class _DayButtonState extends State<DayButton> {
       ),
     );
   }
+}
+double triggercheck(List<int> lister) {
+  double valhold = 0;
+  for (int i = 0; i < 5; i++) {
+    if (lister[i] == 1) {
+      valhold += 1;
+    }
+  }
+  return valhold;
 }
