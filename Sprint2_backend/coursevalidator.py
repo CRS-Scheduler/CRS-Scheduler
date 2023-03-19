@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+# Schedule format:
+# (class_name, raw_schedule, slots)
+
 def sched_lookup(sched):
     regex_string = r"(\d{1})[:](\d{2})?"
     sched = re.findall(regex_string, sched)
@@ -33,7 +36,7 @@ def parse_contents(contents):
 
 def get_data_from_parsed_contents(parsed_contents):
     error = "No courses to display!"
-    ret = {}
+    ret = []
     regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM)?"
     dissolved_offset = 0
     if len(parsed_contents) == 1: return (False, error)
@@ -52,7 +55,8 @@ def get_data_from_parsed_contents(parsed_contents):
         if slots == 0:
             continue
         raw_schedule = re.findall(regex_string, search_string)
-        ret[class_name] = (raw_schedule, slots)
+        ret.append((class_name, raw_schedule, slots))
+    if len(ret) == 0: return (False, error)
     return (True, ret)
 
 def get_data(name):
@@ -61,19 +65,29 @@ def get_data(name):
     tmp = parse_contents(tmp[1])
     if not tmp[0]: eprint(tmp[1]) # error print for parse_contents
     tmp = get_data_from_parsed_contents(tmp[1])
-    if not tmp[0]: eprint(tmp[1])
     return tmp[1]
 
-class CourseClass:
+class Course:
     def __init__(self, name):
         self.name = name
         self.course_list = get_data(name)
     def print_data(self):
         print(self.course_list)
 
+class DegreeProgram:
+    def __init__(self, name):
+        self.name = name
+        self.year_levels = 4
+
 def main():
-    courses = CourseClass("CS 155")
-    courses.print_data()
+    all_courses = [ "CS 192",
+                    "CS 194",
+                    "CS 145",
+                    "CS 153",
+                    "CS 180",
+                    "math 23" ]
+    for i in all_courses:
+        Course(i).print_data()
 
 if __name__ == "__main__":
     main()
