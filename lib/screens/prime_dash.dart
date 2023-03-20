@@ -1,7 +1,11 @@
 // ignore_for_file: unused_field
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:crs_scheduler/widgets/timechooser.dart';
 import 'package:crs_scheduler/widgets/daychooser.dart';
 import 'package:crs_scheduler/widgets/profchooser.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -17,6 +21,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  List<List<dynamic>> _importedData = [];
   List<List> subproflist = [
     ["", ""]
   ];
@@ -198,6 +203,85 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 80,
+                        width: 120,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff8B1538)),
+                          onPressed: () {
+                            final List<String> rowHeader = ["Day","Time","Professor"];
+                            List<List<dynamic>> rows = [];
+                            rows.add(rowHeader); // add header
+                            for(int i=0;i<6;i++){ //For 6 Days
+                              //loop to add new row
+                              List<dynamic> dataRow=[];
+                              if (daychecklist[i] != 0){
+                                dataRow.add(i);
+                                dataRow.add(timelist[i]);
+                                dataRow.add(subproflist);
+                                rows.add(dataRow);
+                              }
+                            }
+                            //PLUGIN of CSV used here
+                            String csv = const ListToCsvConverter().convert(rows);
+                            String dir = Directory.current.path;
+                            //print("dir $dir");  //debug directory
+                            String file = "$dir";
+                            File f = File(file + "/user_preferences.csv");
+                            f.writeAsString(csv);
+                            print(csv); //debug csv
+                          }, child: const Text(
+                          'Export',
+                          style: TextStyle(
+                            color: Color(0xffffffff),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ),
+                        )
+                      ),
+                      SizedBox(
+                        height: 80,
+                        width: 120,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff8B1538)),
+                            onPressed: () async {
+                              final input = new File('user_preferences.csv').openRead();
+                              _importedData = await input.transform(utf8.decoder).transform(new CsvToListConverter()).toList();
+                              //print(_importedData[0]); // header debug
+                              //print(_importedData[1]); // row 1 debug
+                              //print(_importedData[1][0]); // row 1 col 0 debug
+                              final len = _importedData.length;
+                              for(int i = 1; i<len; i++){
+                                for (int j = 0; j < 3; j++){
+                                  //update days
+                                  if (j == 0){
+                                    daychecklist[_importedData[i][j]] = 1;
+                                  }
+                                  //update time
+                                  if (j == 1){
+                                    timelist[_importedData[i][j-1]] = _importedData[i][j];
+                                  }
+                                }
+                              }
+                              print(daychecklist);
+                              print(timelist);
+
+                            },
+                          child: const Text(
+                            'Import',
+                            style: TextStyle(
+                              color: Color(0xffffffff),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+
+                        ),
+                      )
+
                     ],
                   ),
                 ),
@@ -205,6 +289,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     ));
   }
 }
+
 
 bool timeblank(List<String> lister) {
   for (int i = 0; i < lister.length; i++) {
@@ -262,6 +347,7 @@ class _MyHomePageState extends State<MyHomePage>
       ],
     );
   }
+
 
   @override
   void initState() {
