@@ -228,9 +228,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             String dir = Directory.current.path;
                             //print("dir $dir");  //debug directory
                             String file = "$dir";
-                            File f = File(file + "/user_preferences.csv");
+                            File f = File("$file/user_preferences.csv");
                             f.writeAsString(csv);
-                            print(csv); //debug csv
+                            if (kDebugMode) {
+                              print(csv);
+                            } //debug csv
                           }, child: const Text(
                           'Export',
                           style: TextStyle(
@@ -248,8 +250,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xff8B1538)),
                             onPressed: () async {
-                              final input = new File('user_preferences.csv').openRead();
-                              _importedData = await input.transform(utf8.decoder).transform(new CsvToListConverter()).toList();
+                              final input = File('user_preferences.csv').openRead();
+                              _importedData = await input.transform(utf8.decoder).transform(const CsvToListConverter()).toList();
                               //print(_importedData[0]); // header debug
                               //print(_importedData[1]); // row 1 debug
                               //print(_importedData[1][0]); // row 1 col 0 debug
@@ -266,9 +268,10 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   }
                                 }
                               }
-                              print(daychecklist);
-                              print(timelist);
-
+                              if (kDebugMode) {
+                                print(daychecklist);
+                                print(timelist);
+                              }
                             },
                           child: const Text(
                             'Import',
