@@ -5,10 +5,23 @@ import re
 # Schedule format:
 # (class_name, raw_schedule, slots)
 
-def sched_lookup(sched):
-    regex_string = r"(\d{1})[:](\d{2})?"
-    sched = re.findall(regex_string, sched)
-    return sched[0]
+def time_lookup(time):
+    regex_string = r"(\d{1,2})[:]?(\d{0,2})"
+    # print(re.findall(regex_string, time)[0])
+    parsed_time = re.findall(regex_string, time)[0]
+    hours = int(parsed_time[0]) * 100
+    minutes = int(parsed_time[1]) if parsed_time[1] != "" else 0
+    return (hours + minutes) % 1200
+
+def get_sched(sched):
+    start = time_lookup(sched[0])
+    end = time_lookup(sched[2])
+    AM = 0000
+    PM = 1200
+    if sched[1] == "": start = start + AM if sched[3] == "AM" else start + PM
+    else: start = start + AM if sched[1] == "AM" else start + PM
+    end = end + AM if sched[3] == "AM" else end + PM
+    return (start,end)
 
 # Error printing (for debug only!)
 def eprint(string):
@@ -34,18 +47,19 @@ def parse_contents(contents):
         error = "Error! Could not obtain the parse object. Perhaps the HTML is not fully loaded?"
         return (False, error)
 
-def get_data_from_parsed_contents(parsed_contents):
+def get_data_from_parsed_contents(name, parsed_contents):
     error = "No courses to display!"
     ret = []
-    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM)"
+    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) (lab|lec)"
     dissolved_offset = 0
     if len(parsed_contents) == 1: return (False, error)
     for i in range(0, len(parsed_contents), 8):
-        class_name = parsed_contents[1+i+dissolved_offset].get_text()
+        class_name = parsed_contents[1+i+dissolved_offset].get_text(" ")
+        # print(class_name)
         search_string = str(parsed_contents[3+i+dissolved_offset])
-        slots = parsed_contents[5+i+dissolved_offset]
-        if not re.search(r"\b"+class_name+r"\b", class_name):
+        if not re.search(r"\b"+name+r"\b", class_name, re.IGNORECASE):
             continue
+        slots = parsed_contents[5+i+dissolved_offset]
         if re.search("DISSOLVED", str(slots)):
             dissolved_offset -= 1 
             continue
@@ -64,8 +78,8 @@ def get_data(name):
     if not tmp[0]: eprint(tmp[1]) # error print for get_html
     tmp = parse_contents(tmp[1])
     if not tmp[0]: eprint(tmp[1]) # error print for parse_contents
-    tmp = get_data_from_parsed_contents(tmp[1])
-    return tmp[1]
+    tmp = get_data_from_parsed_contents(name, tmp[1])
+    return tmp[1] if tmp[0] else eprint(tmp[1])
 
 def get_days(days_sched):
     days = []
@@ -134,12 +148,15 @@ class DegreeProgram:
             class Schedule:
                 def __init__(self, schedule):
                     self.days = get_days(schedule[0])
+                    self.time = get_sched(schedule[1:5])
+                    self.type = schedule[5]
                     # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
 def main():
     # DegreeProgram("BS CS", 4).print_courses()
-    DegreeProgram("BS CS").Course("CS 136").print_data()
-    for i in DegreeProgram("BS CS").Course("CS 136").course_list:
+    course = "PHILO 1"
+    DegreeProgram("BS CS").Course(course).print_data()
+    for i in DegreeProgram("BS CS").Course(course).course_list:
         i.print_section()
     # print(parse_schedule([('TTh', '8:30', '', '9:30', 'AM')]))
     # print(parse_schedule("ThT"))
