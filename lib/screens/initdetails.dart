@@ -348,26 +348,7 @@ class _DetailDashState extends State<DetailDash> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 80,
-              width: 120,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff8B1538)),
-                onPressed: ()  {
-                  print(data);
-
-                },
-                child: const Text(
-                  'Test',
-                  style: TextStyle(
-                    color: Color(0xffFFFFFF),
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+           
           ],
         ),
       ),
