@@ -37,7 +37,7 @@ def parse_contents(contents):
 def get_data_from_parsed_contents(parsed_contents):
     error = "No courses to display!"
     ret = []
-    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM)?"
+    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM)"
     dissolved_offset = 0
     if len(parsed_contents) == 1: return (False, error)
     for i in range(0, len(parsed_contents), 8):
@@ -67,27 +67,82 @@ def get_data(name):
     tmp = get_data_from_parsed_contents(tmp[1])
     return tmp[1]
 
-class Course:
-    def __init__(self, name):
-        self.name = name
-        self.course_list = get_data(name)
-    def print_data(self):
-        print(self.course_list)
+def get_days(days_sched):
+    days = []
+    for i in range(0, len(days_sched)):
+        match days_sched[i]:
+            case "M": days.append("Monday")
+            case "T":
+                if i+1 == len(days_sched):
+                    days.append("Tuesday")
+                elif days_sched[i+1] == "h":
+                    days.append("Thursday")
+                else:
+                    days.append("Tuesday")
+            case "W": days.append("Wednesday")
+            case "F": days.append("Friday")
+            case "S": days.append("Saturday")
+    return days
 
 class DegreeProgram:
     def __init__(self, name):
         self.name = name
-        self.year_levels = 4
+        self.courses = {
+            1: (
+                ["KAS 1", "PHILO 1", "MATH 21", "CS 11", "CS 30", "CS 10", "PE 1", "PE 2"],
+                ["SOC SCI 1", "SOC SCI 2", "CS 12", "CS 31", "MATH 22", "PHYSICS 71", "PE 1", "PE 2"],
+                [],
+            ),
+            2: (
+                ["ENG 13", "CS 20", "CS 32", "MATH 23", "PHYSICS 72", "PE 1", "PE 2", "NSTP"],
+                ["SPEECH 30", "CS 21", "CS 33", "CS 136", "MATH 40", "PE 1", "PE 2", "NSTP"],
+                [],
+            ),
+            3: (
+                ["FIL 40", "CS 138", "CS 140", "CS 150", "CS 165", "CS 191"],
+                ["ENG 30", "CS 145", "CS 153", "CS 180", "CS 192", "CS 194"],
+                ["CS 195"],
+            ),
+            4: (
+                ["STS 1", "CS 133", "CS 198", "ENGG 150"],
+                ["ARTS 1", "CS 132", "CS 155", "CS 196", "CS 199", "CS 200", "PI 100"],
+                [],
+            ),
+        }
+        self.years = len(self.courses)
+
+    def print_courses(self):
+        print(self.courses)
+
+    class Course:
+        def __init__(self, name):
+            self.name = name
+            self.course_list = map(lambda section: self.Section(section), get_data(name))
+        def print_data(self):
+            print([i.__dict__ for i in self.course_list])
+
+        class Section:
+            def __init__(self, section):
+                self.name = section[0]
+                self.schedules = map(lambda schedule: self.Schedule(schedule), section[1])
+                self.slots = section[2]
+            def print_section(self):
+                print([i.__dict__ for i in self.schedules])
+            # def print_time(self):
+            #     print(self.time)
+
+            class Schedule:
+                def __init__(self, schedule):
+                    self.days = get_days(schedule[0])
+                    # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
 def main():
-    all_courses = [ "CS 192",
-                    "CS 194",
-                    "CS 145",
-                    "CS 153",
-                    "CS 180",
-                    "math 23" ]
-    for i in all_courses:
-        Course(i).print_data()
+    # DegreeProgram("BS CS", 4).print_courses()
+    DegreeProgram("BS CS").Course("CS 136").print_data()
+    for i in DegreeProgram("BS CS").Course("CS 136").course_list:
+        i.print_section()
+    # print(parse_schedule([('TTh', '8:30', '', '9:30', 'AM')]))
+    # print(parse_schedule("ThT"))
 
 if __name__ == "__main__":
     main()
