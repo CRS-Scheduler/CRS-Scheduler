@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class DayChooser extends StatefulWidget {
   final List<int> dayvector;
   final List<String> timevector;
+
   const DayChooser({Key? key, required this.dayvector,required this.timevector}) : super(key: key);
 
   @override

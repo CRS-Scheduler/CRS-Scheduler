@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 class SubProfChooser extends StatefulWidget {
   final List<List> preflist;
 
-  const SubProfChooser({Key? key, required this.preflist}) : super(key: key);
+   const SubProfChooser({Key? key, required this.preflist}) : super(key: key);
 
   @override
   State<SubProfChooser> createState() => _SubProfChooserState();
@@ -50,25 +50,29 @@ class _SubProfChooserState extends State<SubProfChooser> {
     }
     return 700;
   }
+  double deviceHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height;
+  double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: heightret(),
+
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              padding: const EdgeInsets.symmetric(vertical: 50.0,horizontal: 20),
               child: Column(
                 children: const [
-                  Text("Please type in your subjects and preferred professors\n"),
+                  Text("Please type in your subjects and preferred professors\n",textAlign: TextAlign.center,),
                   Text(
-                      "You may add new preferred classes by pressing the add class button"),
+                      "You may add new preferred classes by pressing the add class button",textAlign: TextAlign.center),
                   Text(
-                      "You do not need to fill the preferred professor field for a class."),
+                      "You do not need to fill the preferred professor field for a class.",textAlign: TextAlign.center),
                   Text(
-                      "All textfields except the last one need to be filled up for your preferences to be saved"),
+                      "All textfields except the last one need to be filled up for your preferences to be saved",textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -89,7 +93,8 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                 children: [
                                   const Text("Subject"),
                                   SizedBox(
-                                    width: 300,
+                                    width: (deviceWidth(context)>800)?300:deviceWidth(context)*0.4,
+
                                     child: TextFormField(
                                       style: const TextStyle(fontFamily: 'Poppins'),
                                       onChanged: (value) {
@@ -118,7 +123,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                 children: [
                                   const Text("Professor"),
                                   SizedBox(
-                                    width: 300,
+                                    width: (deviceWidth(context)>800)?300:deviceWidth(context)*0.4,
                                     child: TextFormField(
                                       style: const TextStyle(fontFamily: 'Poppins'),
                                       onChanged: (value) {

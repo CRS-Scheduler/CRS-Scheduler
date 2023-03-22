@@ -47,11 +47,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               children: [
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-          (SizeConfig.screenWidth > 600)
+          (deviceWidth(context) > 600)
               ? 100
               : SizeConfig.safeBlockHorizontal * 12,
           25,
-          (SizeConfig.screenWidth > 600)
+          (deviceWidth(context) > 600)
               ? 100
               : SizeConfig.safeBlockHorizontal * 12,
           100),
@@ -155,8 +155,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             timeList: timelist,
                                           )
                                         : SubProfChooser(
-                                            preflist: subproflist,
-                                          ))
+                                            preflist: subproflist, ))
 
 
 
@@ -349,110 +348,3 @@ double triggercheck(List<int> lister) {
   return valhold;
 }
 
-class TabHolder extends StatefulWidget {
-  const TabHolder({Key? key}) : super(key: key);
-
-  @override
-  State<TabHolder> createState() => _TabHolderState();
-}
-
-class _TabHolderState extends State<TabHolder>
-    with SingleTickerProviderStateMixin {
-  final bodyGlobalKey = GlobalKey();
-  final List<Widget> myTabs = [
-    const Tab(text: 'auto short'),
-    const Tab(text: 'auto long'),
-    const Tab(text: 'fixed'),
-  ];
-  late TabController _tabController;
-  late ScrollController _scrollController;
-  late bool fixedScroll;
-
-  Widget _buildCarousel() {
-    return Stack(
-      children: const <Widget>[
-        Placeholder(fallbackHeight: 100),
-        Positioned.fill(
-            child: Align(alignment: Alignment.center, child: Text('Slider'))),
-      ],
-    );
-  }
-
-
-  @override
-  void initState() {
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(_smoothScrollToTop);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  _scrollListener() {
-    if (fixedScroll) {
-      _scrollController.jumpTo(0);
-    }
-  }
-
-  _smoothScrollToTop() {
-    _scrollController.animateTo(
-      0,
-      duration: const Duration(microseconds: 300),
-      curve: Curves.ease,
-    );
-
-    setState(() {
-      fixedScroll = _tabController.index == 2;
-    });
-  }
-
-  _buildTabContext(int lineCount) => ListView.builder(
-        physics: const ClampingScrollPhysics(),
-        itemCount: lineCount,
-        itemBuilder: (BuildContext context, int index) {
-          return const Text('some content');
-        },
-      );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, value) {
-          return [
-            SliverToBoxAdapter(child: _buildCarousel()),
-            SliverToBoxAdapter(
-              child: TabBar(
-                controller: _tabController,
-                indicatorColor: const Color(0xffFEB81C),
-                labelColor: const Color(0xff00573F),
-                tabs: const [
-                  Tab(icon: Icon(Icons.calendar_month)),
-                  Tab(icon: Icon(Icons.timer)),
-                  Tab(icon: Icon(Icons.school)),
-                ],
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildTabContext(2),
-            _buildTabContext(200),
-            _buildTabContext(2)
-          ],
-        ),
-      ),
-    );
-  }
-}
