@@ -171,7 +171,7 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height:600,
+      height:650,
       child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

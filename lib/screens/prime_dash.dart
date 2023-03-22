@@ -8,7 +8,7 @@ import 'package:crs_scheduler/widgets/profchooser.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
+import '../sizeconfig.dart';
 class Dashboard extends StatefulWidget {
   final String courseCode;
   final String yearLevel;
@@ -30,7 +30,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   final List<String> timelist = ["", "", "", "", "", "", ""];
 
   final _timeformkey = GlobalKey<FormState>();
-
+  double deviceHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height;
+  double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
 
   int _indexer = 0;
 
@@ -44,35 +46,54 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(100, 25, 100, 100),
+                  padding: EdgeInsets.fromLTRB(
+          (SizeConfig.screenWidth > 600)
+              ? 100
+              : SizeConfig.safeBlockHorizontal * 12,
+          25,
+          (SizeConfig.screenWidth > 600)
+              ? 100
+              : SizeConfig.safeBlockHorizontal * 12,
+          100),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Mabuhay!',
-                            style: TextStyle(
-                                color: Color(0xff8B1538),
-                                fontSize: 54,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          const Text(
-                            'Welcome to your CRS Scheduler dashboard',
-                            style: TextStyle(
-                                color: Color(0xff7D0C0E),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            'You are a ${widget.yearLevel} of ${widget.courseCode}',
-                            style: const TextStyle(
-                                color: Color(0xff7D0C0E),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                             Text(
+                              'Mabuhay!',
+                              style: TextStyle(
+                                  color: const Color(0xff8B1538),
+                                  fontSize: (SizeConfig.screenWidth > 600)
+                                      ? 54
+                                      : SizeConfig.safeBlockHorizontal * 8,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                             Text(
+                              'Welcome to your CRS Scheduler dashboard',
+                              style: TextStyle(
+                                  color: const Color(0xff7D0C0E),
+                                  fontSize: (SizeConfig.screenWidth > 600)
+                                      ? 24
+                                      : SizeConfig.safeBlockHorizontal * 4,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15.0),
+                              child: Text(
+                                'You are a ${widget.yearLevel} of ${widget.courseCode}',
+                                style:  TextStyle(
+                                    color: const Color(0xff7D0C0E),
+                                    fontSize: (SizeConfig.screenWidth > 600)
+                                        ? 24
+                                        : SizeConfig.safeBlockHorizontal * 4,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -80,15 +101,20 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(100, 0, 100, 0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: (SizeConfig.screenWidth > 600)
+                              ? 100
+                              : SizeConfig.safeBlockHorizontal * 12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
+                        children:  [
                           Text(
                             'Input your details',
                             style: TextStyle(
-                                color: Color(0xff00573F),
-                                fontSize: 30,
+                                color: const Color(0xff00573F),
+                                fontSize: (SizeConfig.screenWidth > 600)
+                                    ? 30
+                                    : SizeConfig.safeBlockHorizontal * 5,
                                 fontWeight: FontWeight.w800),
                           ),
                         ],
@@ -323,14 +349,14 @@ double triggercheck(List<int> lister) {
   return valhold;
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class TabHolder extends StatefulWidget {
+  const TabHolder({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TabHolder> createState() => _TabHolderState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
+class _TabHolderState extends State<TabHolder>
     with SingleTickerProviderStateMixin {
   final bodyGlobalKey = GlobalKey();
   final List<Widget> myTabs = [
