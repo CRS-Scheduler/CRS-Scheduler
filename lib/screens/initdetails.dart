@@ -14,44 +14,18 @@ class DetailDash extends StatefulWidget {
 }
 
 class _DetailDashState extends State<DetailDash> {
-  Future<List<dynamic>> getCourseNames(String query) async {
-    String csvData = await rootBundle
-        .loadString('media/course_college_rel_demo.csv');
-    List<List<dynamic>> rowsAsListOfValues =
-        const CsvToListConverter().convert(csvData);
-    int collegeIndex = rowsAsListOfValues[0]
-        .indexOf("course_name"); // find the index of the 'College' column
 
-    return rowsAsListOfValues
-        .where((row) =>
-            row[1] ==
-            query) // filter the rows where the second column (index 1) matches the specified college
-        .map((row) =>
-            row[collegeIndex]) // extract the values from the first column
-        .toList();
+
+  Future<void> getCourseNames(List<List<dynamic>> data, String college) async {
+
+    _courseNames = data.where((row) => row[collegeInd] == college).map((row) => row[courseNameInd]).toList();
   }
-  Future <String> getCourseSN(String college, String coursename) async {
-    String csvData = await rootBundle
-        .loadString('media/course_college_rel_demo.csv');
-    List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter().convert(csvData);
-    List<List<dynamic>> filteredrows=rowsAsListOfValues.where((row) => row[1] == college && row[4]==coursename).toList();
-    if (filteredrows.isNotEmpty){
-      return filteredrows.first[0].toString();
-    }else{
-      return "You should not see this";
-    }
-
-
-  }
-
-
-
 
   List<dynamic> _courseNames = ["Unselected"];
   late List<String> _dropdownItems=["Unselected"];
   final _formKey = GlobalKey<FormState>();
   late String _myStanding;
-  bool _isActive = false;
+  bool _isActiveCourses = false;
   String _currentSelectedStanding = 'Unselected';
   String _currentSelectedCollege = 'Unselected';
   String _currentSelectedCourse = 'Unselected';
@@ -67,17 +41,27 @@ class _DetailDashState extends State<DetailDash> {
     "College of Engineering",
     "College of Social Sciences and Philosophy",
   ];
+  List<String> _courseData=[];
+  List<List<dynamic>>? data;
+  late int collegeInd;
+  late int courseNameInd;
+  Future<List<List>> loadData() async {
+    // Perform some asynchronous operation to load data
+    // and update the state
+    String csvData = await rootBundle.loadString('media/course_college_rel_demo.csv');
 
-  late List<List> data;
+    return const CsvToListConverter().convert(csvData);
+
+  }
+
   @override
   void initState() {
     super.initState();
-    /*widget.csvReader.loadData().then((value) {
-      setState(() {
-
-        data = value;
-      });
-    });*/
+    widget.csvReader.loadData().then((value) => setState((){
+      data=value;
+      collegeInd=value[0].indexOf('college');
+      courseNameInd=value[0].indexOf('course_name');
+    }));
 
   }
   @override
@@ -176,22 +160,17 @@ class _DetailDashState extends State<DetailDash> {
                                       value: _currentSelectedCollege,
                                       isDense: false,
                                       isExpanded: true,
-                                      onChanged: (newValue) async {
+                                      onChanged: (newValue)  {
                                         setState(() {
                                           _currentSelectedCollege = newValue!;
-                                        });
-                                        _courseNames = await getCourseNames(
-                                            _currentSelectedCollege);
-                                        setState(() {
+                                          getCourseNames(data!, _currentSelectedCollege);
                                           _dropdownItems=  _courseNames.map((e) => e.toString()).toList();
                                           _dropdownItems.insert(0, "Unselected");
-
-                                          _isActive= newValue=="Unselected"? false : true;
-                                          _currentSelectedCourse="Unselected";
-
+                                          _isActiveCourses=(newValue=="Unselected")? false :true;
                                         });
+
                                         if (kDebugMode) {
-                                          print(_courseNames);
+                                          print(_dropdownItems);
                                         }
                                       },
                                       validator: (value) {
@@ -246,7 +225,7 @@ class _DetailDashState extends State<DetailDash> {
                                       value: _currentSelectedCourse,
                                       isDense: false
                                       ,
-                                      onChanged:  _isActive ?(value) => setState(() => _currentSelectedCourse = value!) : null,
+                                      onChanged:  _isActiveCourses ?(value) => setState(() => _currentSelectedCourse = value!) : null,
                                       validator: (value) {
                                         if (value == "Unselected") {
                                           return 'Please choose your degree program';
@@ -332,7 +311,9 @@ class _DetailDashState extends State<DetailDash> {
                         onPressed: ()  {
                           if (_formKey.currentState!.validate()) {
                             // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
+                            _courseData=data!.where((row) => row[collegeInd] == _currentSelectedCollege && row[courseNameInd]==_currentSelectedCourse).map((e) => e.toString()).toList();
                             if (kDebugMode) {
+                              print(_courseData);
 
                               print(
                                   "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
@@ -349,7 +330,7 @@ class _DetailDashState extends State<DetailDash> {
                                 MaterialPageRoute(
                                     builder: (context) => Dashboard(
                                         courseCode: _currentSelectedCourse,
-                                        yearLevel: _myStanding,courseSN: "1")));
+                                        yearLevel: _myStanding,courseData: _courseData)));
                           }
                         },
                         child: const Text(
@@ -364,6 +345,26 @@ class _DetailDashState extends State<DetailDash> {
                     ),
 
                   ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 80,
+              width: 120,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff8B1538)),
+                onPressed: ()  {
+                  print(data);
+
+                },
+                child: const Text(
+                  'Test',
+                  style: TextStyle(
+                    color: Color(0xffFFFFFF),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
