@@ -1,9 +1,9 @@
 import 'package:crs_scheduler/screens/initdetails.dart';
 import 'package:flutter/material.dart';
+import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 
 
-
-void main() {
+void main()  {
   runApp(const MyApp());
 }
 
@@ -56,6 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return const DetailDash();
+    return  DetailDash(csvReader: MyCsvReader());
   }
 }

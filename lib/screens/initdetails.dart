@@ -1,12 +1,13 @@
 import 'package:crs_scheduler/screens/prime_dash.dart';
-
+import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:csv/csv.dart';
 
 class DetailDash extends StatefulWidget {
-  const DetailDash({Key? key}) : super(key: key);
+  final MyCsvReader csvReader;
+  const DetailDash({Key? key,required this.csvReader}) : super(key: key);
 
   @override
   State<DetailDash> createState() => _DetailDashState();
@@ -15,7 +16,7 @@ class DetailDash extends StatefulWidget {
 class _DetailDashState extends State<DetailDash> {
   Future<List<dynamic>> getCourseNames(String query) async {
     String csvData = await rootBundle
-        .loadString('lib/assets/media/course_college_rel_demo.csv');
+        .loadString('media/course_college_rel_demo.csv');
     List<List<dynamic>> rowsAsListOfValues =
         const CsvToListConverter().convert(csvData);
     int collegeIndex = rowsAsListOfValues[0]
@@ -29,18 +30,26 @@ class _DetailDashState extends State<DetailDash> {
             row[collegeIndex]) // extract the values from the first column
         .toList();
   }
-
-  retCollegeCourseCells(String college) async {
-    final cells = await getCourseNames(college);
-    if (kDebugMode) {
-      print(cells);
+  Future <String> getCourseSN(String college, String coursename) async {
+    String csvData = await rootBundle
+        .loadString('media/course_college_rel_demo.csv');
+    List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter().convert(csvData);
+    List<List<dynamic>> filteredrows=rowsAsListOfValues.where((row) => row[1] == college && row[4]==coursename).toList();
+    if (filteredrows.isNotEmpty){
+      return filteredrows.first[0].toString();
+    }else{
+      return "You should not see this";
     }
+
+
   }
+
+
+
 
   List<dynamic> _courseNames = ["Unselected"];
   late List<String> _dropdownItems=["Unselected"];
   final _formKey = GlobalKey<FormState>();
-  late String _courseCode;
   late String _myStanding;
   bool _isActive = false;
   String _currentSelectedStanding = 'Unselected';
@@ -59,10 +68,22 @@ class _DetailDashState extends State<DetailDash> {
     "College of Social Sciences and Philosophy",
   ];
 
+  late List<List> data;
+  @override
+  void initState() {
+    super.initState();
+    /*widget.csvReader.loadData().then((value) {
+      setState(() {
+
+        data = value;
+      });
+    });*/
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body:  Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -175,7 +196,7 @@ class _DetailDashState extends State<DetailDash> {
                                       },
                                       validator: (value) {
                                         if (value == "Unselected") {
-                                          return 'Please choose your year level';
+                                          return 'Please choose your College';
                                         }
                                         return null;
                                       },
@@ -308,11 +329,13 @@ class _DetailDashState extends State<DetailDash> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8B1538)),
-                        onPressed: () {
+                        onPressed: ()  {
                           if (_formKey.currentState!.validate()) {
+                            // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
                             if (kDebugMode) {
+
                               print(
-                                  "User inputs:\nCourse code: $_courseCode,Year Standing: $_myStanding ");
+                                  "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
                             }
 
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -325,8 +348,8 @@ class _DetailDashState extends State<DetailDash> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Dashboard(
-                                        courseCode: _courseCode,
-                                        yearLevel: _myStanding)));
+                                        courseCode: _currentSelectedCourse,
+                                        yearLevel: _myStanding,courseSN: "1")));
                           }
                         },
                         child: const Text(

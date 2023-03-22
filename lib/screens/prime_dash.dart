@@ -12,8 +12,9 @@ import 'package:flutter/foundation.dart';
 class Dashboard extends StatefulWidget {
   final String courseCode;
   final String yearLevel;
+  final String courseSN;
 
-  const Dashboard({Key? key, required this.courseCode, required this.yearLevel})
+  const Dashboard({Key? key, required this.courseCode, required this.yearLevel,required this.courseSN})
       : super(key: key);
 
   @override
