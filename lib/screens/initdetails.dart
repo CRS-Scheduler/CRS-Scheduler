@@ -51,7 +51,7 @@ class _DetailDashState extends State<DetailDash> {
     // Perform some asynchronous operation to load data
     // and update the state
     String csvData =
-        await rootBundle.loadString('media/course_college_rel_demo.csv');
+        await rootBundle.loadString('assets/media/course_college_rel_demo.csv');
 
     return const CsvToListConverter().convert(csvData);
   }
