@@ -283,19 +283,22 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   //print(result);
                                   //update day
                                   var len_Day = 6;
-                                  for(int i = 1; i<len_Day; i++){
-                                    if(result[i] == '1'){
-                                      daychecklist[i-1] = 1;
+                                  setState(() {
+                                    for(int i = 1; i<len_Day; i++){
+                                      if(result[i] == '1'){
+                                        daychecklist[i-1] = 1;
+                                      }
                                     }
-                                  }
-                                  //update time
-                                  for(int i = 7; i<14; i++){
-                                    if (result[i] != ''){
-                                      timelist[i-7] = result[i];
-                                    }else{
-                                      timelist[i-7] = '';
+                                    //update time
+                                    for(int i = 7; i<14; i++){
+                                      if (result[i] != ''){
+                                        timelist[i-7] = result[i];
+                                      }else{
+                                        timelist[i-7] = '';
+                                      }
                                     }
-                                  }
+                                  });
+
                                 }
 
                                 if (timelist[6] == "" &&
