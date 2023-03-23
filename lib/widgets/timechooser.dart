@@ -220,9 +220,12 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                                   horizontal: 20.0),
                               child: SizedBox(
                                 width: 300,
+
                                 child: TextFormField(
+                                  initialValue: widget.timeList[6],
                                   style: const TextStyle(fontFamily: 'Poppins'),
                                   onChanged: (value) {
+
                                     setState(() {
                                       widget.timeList[6]= value;
                                     });
@@ -264,6 +267,7 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                               child: SizedBox(
                                 width: 300,
                                 child: TextFormField(
+                                  initialValue: widget.timeList[x],
                                   style: const TextStyle(fontFamily: 'Poppins'),
                                   onChanged: (value) {
                                     widget.timeList[x] = value;
