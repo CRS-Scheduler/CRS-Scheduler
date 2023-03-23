@@ -281,19 +281,22 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               //print(_importedData[0]); // header debug
                               //print(_importedData[1]); // row 1 debug
                               //print(_importedData[1][0]); // row 1 col 0 debug
-                              final len = _importedData.length;
-                              for(int i = 1; i<len; i++){
-                                for (int j = 0; j < 3; j++){
-                                  //update days
-                                  if (j == 0){
-                                    daychecklist[_importedData[i][j]] = 1;
-                                  }
-                                  //update time
-                                  if (j == 1){
-                                    timelist[_importedData[i][j-1]] = _importedData[i][j];
+                              setState(() {
+                                final len = _importedData.length;
+                                for(int i = 1; i<len; i++){
+                                  for (int j = 0; j < 3; j++){
+                                    //update days
+                                    if (j == 0){
+                                      daychecklist[_importedData[i][j]] = 1;
+                                    }
+                                    //update time
+                                    if (j == 1){
+                                      timelist[_importedData[i][j-1]] = _importedData[i][j];
+                                    }
                                   }
                                 }
-                              }
+                              });
+
                               if (kDebugMode) {
                                 print(daychecklist);
                                 print(timelist);
