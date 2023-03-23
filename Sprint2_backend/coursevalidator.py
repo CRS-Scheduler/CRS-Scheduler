@@ -5,6 +5,11 @@ import re
 # Schedule format:
 # (class_name, raw_schedule, slots)
 
+# Error printing (for debug only!)
+def eprint(string):
+    print(string)
+    exit(1)
+
 def time_lookup(time):
     regex_string = r"(\d{1,2})[:]?(\d{0,2})"
     # print(re.findall(regex_string, time)[0])
@@ -23,11 +28,6 @@ def get_sched(sched):
     end = end + AM if sched[3] == "AM" else end + PM
     return (start,end)
 
-# Error printing (for debug only!)
-def eprint(string):
-    print(string)
-    exit(1)
-
 def get_html(name):
     url = "https://crs.upd.edu.ph/schedule/120222/" + name.replace(" ", "%20")
     try:
@@ -41,6 +41,7 @@ def get_html(name):
 def parse_contents(contents):
     try:
         ret = BeautifulSoup(contents, "html.parser").find_all('td')
+        # re.findall(, str(ret))
         # print(ret)
         return (True, ret)
     except:
@@ -48,11 +49,10 @@ def parse_contents(contents):
         return (False, error)
 
 def get_data_from_parsed_contents(name, parsed_contents):
-    error = "No courses to display!"
     ret = []
     regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) (lab|lec)"
     dissolved_offset = 0
-    if len(parsed_contents) == 1: return (False, error)
+    if len(parsed_contents) == 1: return ret
     for i in range(0, len(parsed_contents), 8):
         class_name = parsed_contents[1+i+dissolved_offset].get_text(" ")
         # print(class_name)
@@ -70,16 +70,14 @@ def get_data_from_parsed_contents(name, parsed_contents):
             continue
         raw_schedule = re.findall(regex_string, search_string)
         ret.append((class_name, raw_schedule, slots))
-    if len(ret) == 0: return (False, error)
-    return (True, ret)
+    return ret
 
 def get_data(name):
     tmp = get_html(name)
     if not tmp[0]: eprint(tmp[1]) # error print for get_html
     tmp = parse_contents(tmp[1])
     if not tmp[0]: eprint(tmp[1]) # error print for parse_contents
-    tmp = get_data_from_parsed_contents(name, tmp[1])
-    return tmp[1] if tmp[0] else eprint(tmp[1])
+    return get_data_from_parsed_contents(name, tmp[1])
 
 def get_days(days_sched):
     days = []
@@ -98,42 +96,65 @@ def get_days(days_sched):
             case "S": days.append("Saturday")
     return days
 
+
 class DegreeProgram:
     def __init__(self, name):
         self.name = name
-        self.courses = {
-            1: (
+        # Require a lookup table for a particular degree program
+        self.courses = [
+            (
                 ["KAS 1", "PHILO 1", "MATH 21", "CS 11", "CS 30", "CS 10", "PE 1", "PE 2"],
                 ["SOC SCI 1", "SOC SCI 2", "CS 12", "CS 31", "MATH 22", "PHYSICS 71", "PE 1", "PE 2"],
                 [],
             ),
-            2: (
+            (
                 ["ENG 13", "CS 20", "CS 32", "MATH 23", "PHYSICS 72", "PE 1", "PE 2", "NSTP"],
                 ["SPEECH 30", "CS 21", "CS 33", "CS 136", "MATH 40", "PE 1", "PE 2", "NSTP"],
                 [],
             ),
-            3: (
+            (
                 ["FIL 40", "CS 138", "CS 140", "CS 150", "CS 165", "CS 191"],
                 ["ENG 30", "CS 145", "CS 153", "CS 180", "CS 192", "CS 194"],
                 ["CS 195"],
             ),
-            4: (
+            (
                 ["STS 1", "CS 133", "CS 198", "ENGG 150"],
                 ["ARTS 1", "CS 132", "CS 155", "CS 196", "CS 199", "CS 200", "PI 100"],
                 [],
             ),
-        }
+        ]
         self.years = len(self.courses)
+        self.courses_data = self.fetch_courses_data()
 
     def print_courses(self):
         print(self.courses)
+    
+    def print_years(self):
+        print(self.years)
+
+    def fetch_courses_data(self):
+        courses_data = []
+        for current_year in self.courses:
+            first_sem = map(lambda c: self.Course(c), current_year[0])
+            second_sem = map(lambda c: self.Course(c), current_year[1])
+            midyear_sem = map(lambda c: self.Course(c), current_year[2])
+            courses_data.append((first_sem, second_sem, midyear_sem))
+        return courses_data
+
+    def print_courses_data(self):
+        for year in self.courses_data:
+            for sem in year:
+                for course in sem:
+                    course.print_data()
+                    # for section in course.section_list:
+                    #     section.print_section()
 
     class Course:
         def __init__(self, name):
             self.name = name
-            self.course_list = map(lambda section: self.Section(section), get_data(name))
+            self.section_list = map(lambda section: self.Section(section), get_data(name))
         def print_data(self):
-            print([i.__dict__ for i in self.course_list])
+            print([i.__dict__ for i in self.section_list])
 
         class Section:
             def __init__(self, section):
@@ -154,10 +175,13 @@ class DegreeProgram:
 
 def main():
     # DegreeProgram("BS CS", 4).print_courses()
-    course = "PHILO 1"
-    DegreeProgram("BS CS").Course(course).print_data()
-    for i in DegreeProgram("BS CS").Course(course).course_list:
-        i.print_section()
+    # course = "CS 12"
+    DegreeProgram("BS CS").fetch_courses_data()
+    # DegreeProgram("BS CS").print_courses()
+    DegreeProgram("BS CS").print_courses_data()
+    # DegreeProgram("BS CS").Course(course).print_data()
+    # for i in DegreeProgram("BS CS").Course(course).course_list:
+    #     i.print_section()
     # print(parse_schedule([('TTh', '8:30', '', '9:30', 'AM')]))
     # print(parse_schedule("ThT"))
 
