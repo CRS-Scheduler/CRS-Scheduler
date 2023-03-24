@@ -28,7 +28,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
-  List<List<dynamic>> _importedData = [];
   List<List> subproflist = [
     ["", ""]
   ];
@@ -248,12 +247,27 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   final List<String> timeRow = ['Time', timelist[0], timelist[1], timelist[2], timelist[3]
                                     ,timelist[4],timelist[5],timelist[6]];
                                   final List<String> newline = ['\n'];
+                                  int profCount = subproflist.length;
+                                  final List<String> subSel = ['Sub'];
+                                  final List<String> profSel = ['Prof'];
+                                  for (int i=0; i < profCount; i++ ){
+                                    for (int j = 0; j < 1; j++ ){
+                                      subSel.add(subproflist[i][j]);
+                                      profSel.add(subproflist[i][j+1]);
+                                    }
+                                  }
+                                  while (subSel.length < 6){
+                                    subSel.add('');
+                                  }
+                                  while (profSel.length < 6){
+                                    profSel.add('');
+                                  }
 
                                   //PLUGIN of CSV used here
                                   if (kIsWeb) {
 
-                                    var blob = webFile.Blob([dayRow] + [newline] + [timeRow], 'text/plain', 'native');
-
+                                    var blob = webFile.Blob([dayRow] + [newline] + [timeRow] + [newline] + [subSel] +
+                                        [newline] + [profSel], 'text/plain', 'native');
                                     var anchorElement = webFile.AnchorElement(
                                       href: webFile.Url.createObjectUrlFromBlob(blob).toString(),
                                     )..setAttribute("download", "user_preference.csv")..click();
@@ -280,13 +294,16 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                 if (picked != null) {
                                   PlatformFile selectedFile = picked.files.first;
                                   List<String> result = ReadFile(selectedFile);
-                                  //print(result);
+                                  List<String> force = result[6].split('');
+                                  if(force[0] == '1'){
+                                    daychecklist[5] = 1;
+                                  }
                                   //update day
-                                  var len_Day = 6;
                                   setState(() {
-                                    for(int i = 1; i<len_Day; i++){
-                                      if(result[i] == '1'){
-                                        daychecklist[i-1] = 1;
+                                    var len_Day = 7;
+                                    for(int i = 0; i<len_Day; i++){
+                                      if(result[i+1] == '1'){
+                                        daychecklist[i] = 1;
                                       }
                                     }
                                     //update time
@@ -297,7 +314,27 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                         timelist[i-7] = '';
                                       }
                                     }
+                                    //update sub and prof
+                                    int countSubs = 0;
+                                    while(result[16+countSubs] != ''){
+                                      countSubs ++;
+                                    }
+                                    for (int h = 0; h < countSubs; h++){
+                                        for (int i = 16; i < 21; i++) {
+                                          if (result [i] != '') {
+                                            subproflist[h][0] = result[i];
+                                          }
+                                        }
+                                        for (int j = 21; j < 24; j++){
+                                          if(result[j] != ''){
+                                            subproflist[h][1] = result[j];
+                                          }
+                                        }
+
+                                    }
+
                                   });
+
 
                                 }
 
