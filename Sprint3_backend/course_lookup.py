@@ -1,0 +1,1 @@
+(['KAS 1', 'PHILO 1', 'MATH 21', 'CS 11', 'CS 30', 'CS 10', 'PE 1', 'PE 2'], ['SOC SCI 1', 'SOC SCI 3', 'SOC SCI 2', 'MATH 23'], ['MIDYEAR SEM', 'COURSES'])

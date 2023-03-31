@@ -124,7 +124,6 @@ class DegreeProgram:
             ),
         ]
         self.years = len(self.courses)
-        self.courses_data = self.fetch_courses_data()
 
     def print_courses(self):
         print(self.courses)
@@ -176,8 +175,8 @@ class DegreeProgram:
 def main():
     # DegreeProgram("BS CS", 4).print_courses()
     # course = "CS 12"
-    DegreeProgram("BS CS").fetch_courses_data()
     # DegreeProgram("BS CS").print_courses()
+    DegreeProgram("BS CS").fetch_courses_data()
     DegreeProgram("BS CS").print_courses_data()
     # DegreeProgram("BS CS").Course(course).print_data()
     # for i in DegreeProgram("BS CS").Course(course).course_list:
