@@ -1,5 +1,3 @@
-import sys
-# from pathlib import PurePath 
 from pathlib import Path
 
 def course_lister(root):

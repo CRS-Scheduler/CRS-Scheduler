@@ -97,7 +97,6 @@ def get_days(days_sched):
             case "S": days.append("Saturday")
     return days
 
-
 class DegreeProgram:
     def __init__(self, name):
         self.name = name
@@ -115,9 +114,9 @@ class DegreeProgram:
     def fetch_courses_data(self):
         courses_data = []
         for current_year in self.courses:
-            first_sem = map(lambda c: self.Course(c), current_year[0])
-            second_sem = map(lambda c: self.Course(c), current_year[1])
-            midyear_sem = map(lambda c: self.Course(c), current_year[2])
+            first_sem = map(lambda c: Course(c), current_year[0])
+            second_sem = map(lambda c: Course(c), current_year[1])
+            midyear_sem = map(lambda c: Course(c), current_year[2])
             courses_data.append((first_sem, second_sem, midyear_sem))
         self.courses_data = courses_data
 
@@ -129,29 +128,29 @@ class DegreeProgram:
                     # for section in course.section_list:
                     #     section.print_section()
 
-    class Course:
-        def __init__(self, name):
-            self.name = name
-            self.section_list = map(lambda section: self.Section(section), get_data(name))
-        def print_data(self):
-            print([i.__dict__ for i in self.section_list])
+class Course:
+    def __init__(self, name):
+        self.name = name
+        self.section_list = map(lambda section: Section(section), get_data(name))
+    def print_data(self):
+        print([i.__dict__ for i in self.section_list])
 
-        class Section:
-            def __init__(self, section):
-                self.name = section[0]
-                self.schedules = map(lambda schedule: self.Schedule(schedule), section[1])
-                self.slots = section[2]
-            def print_section(self):
-                print([i.__dict__ for i in self.schedules])
-            # def print_time(self):
-            #     print(self.time)
+class Section:
+    def __init__(self, section):
+        self.name = section[0]
+        self.schedules = map(lambda schedule: Schedule(schedule), section[1])
+        self.slots = section[2]
+    def print_section(self):
+        print([i.__dict__ for i in self.schedules])
+    # def print_time(self):
+    #     print(self.time)
 
-            class Schedule:
-                def __init__(self, schedule):
-                    self.days = get_days(schedule[0])
-                    self.time = get_sched(schedule[1:5])
-                    self.type = schedule[5]
-                    # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
+class Schedule:
+    def __init__(self, schedule):
+        self.days = get_days(schedule[0])
+        self.time = get_sched(schedule[1:5])
+        self.type = schedule[5]
+        # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
 def main():
     # DegreeProgram("BS CS", 4).print_courses()
@@ -171,19 +170,19 @@ if __name__ == "__main__":
 
 # class DegreeProgramDAO:
 #     def __init__(self):
-#         self.CourseDict = set()
+#         CourseDict = set()
 
 #     def insertDegree(self, degree_name):
-#         self.CourseDict.add(degree_name)
+#         CourseDict.add(degree_name)
 
 #     def degreeValidator(self, degree_name):
-#         if degree_name in self.CourseDict:
+#         if degree_name in CourseDict:
 #             # print("Valid!")
 #             return
 #         # print("Invalid!")
     
 #     # def printCourseDict(self):
-#     #     print(self.CourseDict)
+#     #     print(CourseDict)
 
 # degree_programs = DegreeProgramDAO()
 # degree_programs.insertDegree("BS CS")
