@@ -26,6 +26,7 @@ class DetailParent extends StatelessWidget {
         }
 
       },
+      enableAutoScroll: true,
       blurValue: 1,
       builder: Builder(builder: (context) =>  DetailDash(csvReader: MyCsvReader())),
       autoPlayDelay: const Duration(seconds: 3),
@@ -147,13 +148,16 @@ class _DetailDashState extends State<DetailDash> {
                         ],
                       ),
                     ),
-                     Container(decoration: BoxDecoration(
-                      border: Border.all(width: 3, color: const Color(0xff8B1538)),
-                      shape: BoxShape.circle,
+                     Padding(
+                       padding: const EdgeInsets.only(left:20.0),
+                       child: Container(decoration: BoxDecoration(
+                        border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                        shape: BoxShape.circle,
                     ),child:   IconButton(iconSize:20,splashRadius:1,onPressed: (){ShowCaseWidget.of(context).startShowCase([_college,_degree,_standing,_next]);
-                      if (kDebugMode) {
-                        print("lets play");
-                      }}, icon: const Icon(Icons.question_mark_rounded),color:  const Color(0xff8B1538)),)
+                        if (kDebugMode) {
+                          print("lets play");
+                        }}, icon: const Icon(Icons.question_mark_rounded),color:  const Color(0xff8B1538)),),
+                     )
                   ],
                 ),
               ),
