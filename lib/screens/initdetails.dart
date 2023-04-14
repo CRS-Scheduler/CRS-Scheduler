@@ -680,7 +680,7 @@ class _DetailDashState extends State<DetailDash> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Dashboard(
+                                        builder: (context) => PrimeShowcaser(
                                             courseCode: _currentSelectedCourse,
                                             yearLevel: _myStanding,
                                             courseData: _courseData)));

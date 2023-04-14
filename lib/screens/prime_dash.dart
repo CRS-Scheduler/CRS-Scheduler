@@ -14,6 +14,43 @@ import 'package:flutter/foundation.dart';
 import '../sizeconfig.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:showcaseview/showcaseview.dart';
+
+
+
+class PrimeShowcaser extends StatelessWidget {
+  final String courseCode;
+  final String yearLevel;
+  final List<String> courseData;
+  const PrimeShowcaser({Key? key,required this.courseCode, required this.yearLevel,required this.courseData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: ShowCaseWidget(
+      onStart: (index, key) {
+
+        if (kDebugMode) {
+          print('onStart: $index, $key');
+        }
+      },
+      onComplete: (index, key) {
+        if (kDebugMode) {
+          print('onComplete: $index, $key');
+        }
+
+
+
+      },
+      enableAutoScroll: true,
+      blurValue: 1,
+      builder: Builder(builder: (context) =>  Dashboard(courseCode: courseCode,
+          yearLevel: this.yearLevel,
+          courseData: courseData)),
+      autoPlayDelay: const Duration(seconds: 3),
+    ),);
+  }
+}
+
 class Dashboard extends StatefulWidget {
   final String courseCode;
   final String yearLevel;
@@ -40,7 +77,19 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
 
   int _indexer = 0;
-
+  GlobalKey _day = GlobalKey();
+  GlobalKey _time = GlobalKey();
+  GlobalKey _prof = GlobalKey();
+  GlobalKey _click1 = GlobalKey();
+  GlobalKey _click2 = GlobalKey();
+  void _incrementCounter() {
+    setState(() {
+      if(_indexer==2){
+        _indexer==0;
+      }else{
+      _indexer++;}
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +148,16 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                 ),
                               ],
                             ),
-                          ),
+                          ), Padding(
+                            padding: const EdgeInsets.only(left:20.0),
+                            child: Container(decoration: BoxDecoration(
+                              border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                              shape: BoxShape.circle,
+                            ),child:   IconButton(iconSize:20,splashRadius:1,onPressed: (){ShowCaseWidget.of(context).startShowCase([_day,_time,_prof]);
+                            if (kDebugMode) {
+                              print("lets play");
+                            }}, icon: const Icon(Icons.question_mark_rounded),color:  const Color(0xff8B1538)),),
+                          )
                         ],
                       ),
                     ),
@@ -143,7 +201,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   },
                                   indicatorColor: const Color(0xffFEB81C),
                                   labelColor: const Color(0xff00573F),
-                                  tabs: const [
+                                  tabs:   [
                                     Tab(icon: Icon(Icons.calendar_month)),
                                     Tab(icon: Icon(Icons.timer)),
                                     Tab(icon: Icon(Icons.school)),
@@ -151,17 +209,24 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                 ),
                                 Container(
                                     child: (_indexer == 0)
-                                        ? DayChooser(
+                                        ? Showcase(key:_day,onBarrierClick: _incrementCounter,
+                                      description: "This tab allows you to enter the days you\nprefer to have your subjects in",
+                                          child: DayChooser(
                                       dayvector: daychecklist,
                                       timevector: timelist,
-                                    )
+                                    ),
+                                        )
                                         : (_indexer == 1)
-                                        ? TypeTimeEntry(
+                                        ? Showcase(key:_time,onBarrierClick: _incrementCounter,description: "This tab allows you to enter the times you\nprefer to have your subjects in",
+                                          child: TypeTimeEntry(
                                       validDays: daychecklist,
                                       timeList: timelist,
-                                    )
-                                        : SubProfChooser(
-                                      preflist: subproflist, ))
+                                    ),
+                                        )
+                                        : Showcase(key:_prof,onBarrierClick: _incrementCounter,description: "This tab allows you to enter your preferred classes and \noptionally, your preferred professors for those classes",
+                                          child: SubProfChooser(
+                                      preflist: subproflist, ),
+                                        ))
 
 
 
