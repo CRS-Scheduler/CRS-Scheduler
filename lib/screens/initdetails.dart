@@ -2,10 +2,36 @@ import 'package:crs_scheduler/screens/prime_dash.dart';
 import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:csv/csv.dart';
+import 'package:flutter/services.dart';
 
+import 'package:csv/csv.dart';
+import 'package:showcaseview/showcaseview.dart';
 import '../sizeconfig.dart';
+
+
+class DetailParent extends StatelessWidget {
+  const DetailParent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: ShowCaseWidget(
+      onStart: (index, key) {
+        if (kDebugMode) {
+          print('onStart: $index, $key');
+        }
+      },
+      onComplete: (index, key) {
+        if (kDebugMode) {
+          print('onComplete: $index, $key');
+        }
+
+      },
+      blurValue: 1,
+      builder: Builder(builder: (context) =>  DetailDash(csvReader: MyCsvReader())),
+      autoPlayDelay: const Duration(seconds: 3),
+    ),);
+  }
+}
 
 class DetailDash extends StatefulWidget {
   final MyCsvReader csvReader;
@@ -55,10 +81,17 @@ class _DetailDashState extends State<DetailDash> {
 
     return const CsvToListConverter().convert(csvData);
   }
-
+  GlobalKey _college = GlobalKey();
+  GlobalKey _degree = GlobalKey();
+  GlobalKey _standing = GlobalKey();
+  GlobalKey _next = GlobalKey();
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ShowCaseWidget.of(context)
+          .startShowCase([_college,_degree,_standing,_next]),
+    );
     widget.csvReader.loadData().then((value) => setState(() {
           data = value;
           collegeInd = value[0].indexOf('college');
@@ -87,7 +120,7 @@ class _DetailDashState extends State<DetailDash> {
                         : SizeConfig.safeBlockHorizontal * 12,
                     100),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
                       child: Column(
@@ -114,6 +147,13 @@ class _DetailDashState extends State<DetailDash> {
                         ],
                       ),
                     ),
+                     Container(decoration: BoxDecoration(
+                      border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                      shape: BoxShape.circle,
+                    ),child:   IconButton(iconSize:20,splashRadius:1,onPressed: (){ShowCaseWidget.of(context).startShowCase([_college,_degree,_standing,_next]);
+                      if (kDebugMode) {
+                        print("lets play");
+                      }}, icon: const Icon(Icons.question_mark_rounded),color:  const Color(0xff8B1538)),)
                   ],
                 ),
               ),
@@ -156,221 +196,242 @@ class _DetailDashState extends State<DetailDash> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'College',
-                                          style: TextStyle(
-                                              color: const Color(0xff7D0C0E),
-                                              fontSize: (SizeConfig
-                                                          .screenWidth >
-                                                      600)
-                                                  ? 24
-                                                  : SizeConfig
-                                                          .safeBlockHorizontal *
-                                                      4,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 25.0),
-                                          child: DropdownButtonHideUnderline(
-                                            child:
-                                                DropdownButtonFormField<String>(
-                                              itemHeight: null,
-                                              decoration: InputDecoration(
-                                                  filled: false,
-                                                  fillColor: Colors.white,
-                                                  errorStyle: const TextStyle(
-                                                      color: Colors.redAccent,
-                                                      fontSize: 15.0),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5.0))),
-                                              value: _currentSelectedCollege,
-                                              isDense: false,
-                                              isExpanded: true,
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  _currentSelectedCollege =
-                                                      newValue!;
-                                                  getCourseNames(data!,
-                                                      _currentSelectedCollege);
-                                                  _dropdownItems = _courseNames
-                                                      .map((e) => e.toString())
-                                                      .toList();
-                                                  _dropdownItems.insert(
-                                                      0, "Unselected");
-                                                  _isActiveCourses =
-                                                      (newValue == "Unselected")
-                                                          ? false
-                                                          : true;
-                                                  _currentSelectedCourse="Unselected";
-                                                });
+                                  child: Showcase(
+                                    key: _college,
+                                    description: 'Pick your college from the drop down menu',
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'College',
+                                            style: TextStyle(
+                                                color: const Color(0xff7D0C0E),
+                                                fontSize: (SizeConfig
+                                                            .screenWidth >
+                                                        600)
+                                                    ? 24
+                                                    : SizeConfig
+                                                            .safeBlockHorizontal *
+                                                        4,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 25.0),
+                                            child: Tooltip(
+                                              message: "Pick the college you're currently enrolled in.",
+                                              child: DropdownButtonHideUnderline(
+                                                child:
+                                                    DropdownButtonFormField<String>(
+                                                  itemHeight: null,
+                                                  decoration: InputDecoration(
+                                                      filled: false,
+                                                      fillColor: Colors.white,
+                                                      errorStyle: const TextStyle(
+                                                          color: Colors.redAccent,
+                                                          fontSize: 15.0),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  5.0))),
+                                                  value: _currentSelectedCollege,
+                                                  isDense: false,
+                                                  isExpanded: true,
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      _currentSelectedCollege =
+                                                          newValue!;
+                                                      getCourseNames(data!,
+                                                          _currentSelectedCollege);
+                                                      _dropdownItems = _courseNames
+                                                          .map((e) => e.toString())
+                                                          .toList();
+                                                      _dropdownItems.insert(
+                                                          0, "Unselected");
+                                                      _isActiveCourses =
+                                                          (newValue == "Unselected")
+                                                              ? false
+                                                              : true;
+                                                      _currentSelectedCourse="Unselected";
+                                                    });
 
-                                                if (kDebugMode) {
-                                                  print(_dropdownItems);
-                                                }
-                                              },
-                                              validator: (value) {
-                                                if (value == "Unselected") {
-                                                  return 'Please choose your College';
-                                                }
-                                                return null;
-                                              },
-                                              items:
-                                                  college.map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
+                                                    if (kDebugMode) {
+                                                      print(_dropdownItems);
+                                                    }
+                                                  },
+                                                  validator: (value) {
+                                                    if (value == "Unselected") {
+                                                      return 'Please choose your College';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  items:
+                                                      college.map((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Degree',
-                                          style: TextStyle(
-                                              color: const Color(0xff7D0C0E),
-                                              fontSize: (SizeConfig
-                                                          .screenWidth >
-                                                      600)
-                                                  ? 24
-                                                  : SizeConfig
-                                                          .safeBlockHorizontal *
-                                                      4,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 25.0),
-                                          child: DropdownButtonHideUnderline(
-                                            child:
-                                                DropdownButtonFormField<String>(
-                                              disabledHint: const Text(
-                                                  "Please choose your college first"),
-                                              isExpanded: true,
-                                              itemHeight: null,
-                                              decoration: InputDecoration(
-                                                  filled: false,
-                                                  fillColor: Colors.white,
-                                                  errorStyle: const TextStyle(
-                                                      color: Colors.redAccent,
-                                                      fontSize: 15.0),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5.0))),
-                                              value: _currentSelectedCourse,
-                                              isDense: false,
-                                              onChanged: _isActiveCourses
-                                                  ? (value) => setState(() =>
-                                                      _currentSelectedCourse =
-                                                          value!)
-                                                  : null,
-                                              validator: (value) {
-                                                if (value == "Unselected") {
-                                                  return 'Please choose your degree program';
-                                                }
-                                                return null;
-                                              },
-                                              items: _dropdownItems
-                                                  .map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
+                                  child: Showcase(
+                                    key:_degree,
+                                    description: "Pick your degree program from the drop down menu",
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Degree',
+                                            style: TextStyle(
+                                                color: const Color(0xff7D0C0E),
+                                                fontSize: (SizeConfig
+                                                            .screenWidth >
+                                                        600)
+                                                    ? 24
+                                                    : SizeConfig
+                                                            .safeBlockHorizontal *
+                                                        4,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 25.0),
+                                            child: Tooltip(
+                                              message:"Pick your degree program.",
+                                              child: DropdownButtonHideUnderline(
+                                                child:
+                                                    DropdownButtonFormField<String>(
+                                                  disabledHint: const Text(
+                                                      "Please choose your college first"),
+                                                  isExpanded: true,
+                                                  itemHeight: null,
+                                                  decoration: InputDecoration(
+                                                      filled: false,
+                                                      fillColor: Colors.white,
+                                                      errorStyle: const TextStyle(
+                                                          color: Colors.redAccent,
+                                                          fontSize: 15.0),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  5.0))),
+                                                  value: _currentSelectedCourse,
+                                                  isDense: false,
+                                                  onChanged: _isActiveCourses
+                                                      ? (value) => setState(() =>
+                                                          _currentSelectedCourse =
+                                                              value!)
+                                                      : null,
+                                                  validator: (value) {
+                                                    if (value == "Unselected") {
+                                                      return 'Please choose your degree program';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  items: _dropdownItems
+                                                      .map((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Standing',
-                                          style: TextStyle(
-                                              color: const Color(0xff7D0C0E),
-                                              fontSize: (SizeConfig
-                                                          .screenWidth >
-                                                      600)
-                                                  ? 24
-                                                  : SizeConfig
-                                                          .safeBlockHorizontal *
-                                                      4,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 25.0),
-                                          child: DropdownButtonHideUnderline(
-                                            child:
-                                                DropdownButtonFormField<String>(
-                                              decoration: InputDecoration(
-                                                  filled: false,
-                                                  fillColor: Colors.white,
-                                                  errorStyle: const TextStyle(
-                                                      color: Colors.redAccent,
-                                                      fontSize: 15.0),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5.0))),
-                                              value: _currentSelectedStanding,
-                                              itemHeight: (SizeConfig.screenWidth > 863)
-                                                  ? null
-                                                  : 57,
-                                              isDense: false,
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  _currentSelectedStanding =
-                                                      newValue!;
-                                                  _myStanding = newValue;
-                                                });
-                                              },
-                                              validator: (value) {
-                                                if (value == "Unselected") {
-                                                  return 'Please choose your year level';
-                                                }
-                                                return null;
-                                              },
-                                              items:
-                                                  standing.map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
-                                            ),
+                                  child: Showcase(
+                                    key:_standing,
+                                    description: "Pick your current standing from the drop down menu",
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Standing',
+                                            style: TextStyle(
+                                                color: const Color(0xff7D0C0E),
+                                                fontSize: (SizeConfig
+                                                            .screenWidth >
+                                                        600)
+                                                    ? 24
+                                                    : SizeConfig
+                                                            .safeBlockHorizontal *
+                                                        4,
+                                                fontWeight: FontWeight.w600),
                                           ),
-                                        )
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 25.0),
+                                            child: Tooltip(
+                                              message:"Enter your current standing.",
+                                              child: DropdownButtonHideUnderline(
+                                                child:
+                                                    DropdownButtonFormField<String>(
+                                                  decoration: InputDecoration(
+                                                      filled: false,
+                                                      fillColor: Colors.white,
+                                                      errorStyle: const TextStyle(
+                                                          color: Colors.redAccent,
+                                                          fontSize: 15.0),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  5.0))),
+                                                  value: _currentSelectedStanding,
+                                                  itemHeight: (SizeConfig.screenWidth > 863)
+                                                      ? null
+                                                      : 57,
+                                                  isDense: false,
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      _currentSelectedStanding =
+                                                          newValue!;
+                                                      _myStanding = newValue;
+                                                    });
+                                                  },
+                                                  validator: (value) {
+                                                    if (value == "Unselected") {
+                                                      return 'Please choose your year level';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  items:
+                                                      standing.map((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -379,239 +440,255 @@ class _DetailDashState extends State<DetailDash> {
                           : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Column(children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'College',
-                                      style: TextStyle(
-                                          color: const Color(0xff7D0C0E),
-                                          fontSize: (SizeConfig.screenWidth >
-                                                  600)
-                                              ? 24
-                                              : SizeConfig.safeBlockHorizontal *
-                                                  4,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 25.0),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButtonFormField<String>(
-                                          itemHeight: null,
-                                          decoration: InputDecoration(
-                                              filled: false,
-                                              fillColor: Colors.white,
-                                              errorStyle: const TextStyle(
-                                                  color: Colors.redAccent,
-                                                  fontSize: 15.0),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0))),
-                                          value: _currentSelectedCollege,
-                                          isDense: false,
-                                          isExpanded: true,
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              _currentSelectedCollege =
-                                                  newValue!;
-                                              getCourseNames(data!,
-                                                  _currentSelectedCollege);
-                                              _dropdownItems = _courseNames
-                                                  .map((e) => e.toString())
-                                                  .toList();
-                                              _dropdownItems.insert(
-                                                  0, "Unselected");
-                                              _isActiveCourses =
-                                                  (newValue == "Unselected")
-                                                      ? false
-                                                      : true;
-                                              _currentSelectedCourse="Unselected";
-                                            });
+                                Showcase(
+                                  key: _college,
+                                  description: 'Pick your college from the drop down menu',
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'College',
+                                        style: TextStyle(
+                                            color: const Color(0xff7D0C0E),
+                                            fontSize: (SizeConfig.screenWidth >
+                                                    600)
+                                                ? 24
+                                                : SizeConfig.safeBlockHorizontal *
+                                                    4,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 25.0),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButtonFormField<String>(
+                                            itemHeight: null,
+                                            decoration: InputDecoration(
+                                                filled: false,
+                                                fillColor: Colors.white,
+                                                errorStyle: const TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontSize: 15.0),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0))),
+                                            value: _currentSelectedCollege,
+                                            isDense: false,
+                                            isExpanded: true,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                _currentSelectedCollege =
+                                                    newValue!;
+                                                getCourseNames(data!,
+                                                    _currentSelectedCollege);
+                                                _dropdownItems = _courseNames
+                                                    .map((e) => e.toString())
+                                                    .toList();
+                                                _dropdownItems.insert(
+                                                    0, "Unselected");
+                                                _isActiveCourses =
+                                                    (newValue == "Unselected")
+                                                        ? false
+                                                        : true;
+                                                _currentSelectedCourse="Unselected";
+                                              });
 
-                                            if (kDebugMode) {
-                                              print(_dropdownItems);
-                                            }
-                                          },
-                                          validator: (value) {
-                                            if (value == "Unselected") {
-                                              return 'Please choose your College';
-                                            }
-                                            return null;
-                                          },
-                                          items: college.map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
+                                              if (kDebugMode) {
+                                                print(_dropdownItems);
+                                              }
+                                            },
+                                            validator: (value) {
+                                              if (value == "Unselected") {
+                                                return 'Please choose your College';
+                                              }
+                                              return null;
+                                            },
+                                            items: college.map((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Degree',
-                                      style: TextStyle(
-                                          color: const Color(0xff7D0C0E),
-                                          fontSize: (SizeConfig.screenWidth >
-                                                  600)
-                                              ? 24
-                                              : SizeConfig.safeBlockHorizontal *
-                                                  4,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 25.0),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButtonFormField<String>(
-                                          disabledHint: const Text(
-                                              "Please choose your college first"),
-                                          isExpanded: true,
-                                          itemHeight: null,
-                                          decoration: InputDecoration(
-                                              filled: false,
-                                              fillColor: Colors.white,
-                                              errorStyle: const TextStyle(
-                                                  color: Colors.redAccent,
-                                                  fontSize: 15.0),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0))),
-                                          value: _currentSelectedCourse,
-                                          isDense: false,
-                                          onChanged: _isActiveCourses
-                                              ? (value) => setState(() =>
-                                                  _currentSelectedCourse =
-                                                      value!)
-                                              : null,
-                                          validator: (value) {
-                                            if (value == "Unselected") {
-                                              return 'Please choose your degree program';
-                                            }
-                                            return null;
-                                          },
-                                          items: _dropdownItems
-                                              .map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
+                                Showcase(
+                                  key:_degree,
+                                  description: "Pick your degree program from the drop down menu",
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Degree',
+                                        style: TextStyle(
+                                            color: const Color(0xff7D0C0E),
+                                            fontSize: (SizeConfig.screenWidth >
+                                                    600)
+                                                ? 24
+                                                : SizeConfig.safeBlockHorizontal *
+                                                    4,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 25.0),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButtonFormField<String>(
+                                            disabledHint: const Text(
+                                                "Please choose your college first"),
+                                            isExpanded: true,
+                                            itemHeight: null,
+                                            decoration: InputDecoration(
+                                                filled: false,
+                                                fillColor: Colors.white,
+                                                errorStyle: const TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontSize: 15.0),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0))),
+                                            value: _currentSelectedCourse,
+                                            isDense: false,
+                                            onChanged: _isActiveCourses
+                                                ? (value) => setState(() =>
+                                                    _currentSelectedCourse =
+                                                        value!)
+                                                : null,
+                                            validator: (value) {
+                                              if (value == "Unselected") {
+                                                return 'Please choose your degree program';
+                                              }
+                                              return null;
+                                            },
+                                            items: _dropdownItems
+                                                .map((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Standing',
-                                      style: TextStyle(
-                                          color: const Color(0xff7D0C0E),
-                                          fontSize: (SizeConfig.screenWidth >
-                                                  600)
-                                              ? 24
-                                              : SizeConfig.safeBlockHorizontal *
-                                                  4,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 25.0),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(
-                                              filled: false,
-                                              fillColor: Colors.white,
-                                              errorStyle: const TextStyle(
-                                                  color: Colors.redAccent,
-                                                  fontSize: 15.0),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0))),
-                                          value: _currentSelectedStanding,
-                                          itemHeight: 50,
-                                          isDense: false,
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              _currentSelectedStanding =
-                                                  newValue!;
-                                              _myStanding = newValue;
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value == "Unselected") {
-                                              return 'Please choose your year level';
-                                            }
-                                            return null;
-                                          },
-                                          items: standing.map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                        ),
+                                Showcase(
+                                  key:_standing,
+                                  description: "Pick your current standing from the drop down menu",
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Standing',
+                                        style: TextStyle(
+                                            color: const Color(0xff7D0C0E),
+                                            fontSize: (SizeConfig.screenWidth >
+                                                    600)
+                                                ? 24
+                                                : SizeConfig.safeBlockHorizontal *
+                                                    4,
+                                            fontWeight: FontWeight.w600),
                                       ),
-                                    )
-                                  ],
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 25.0),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButtonFormField<String>(
+                                            decoration: InputDecoration(
+                                                filled: false,
+                                                fillColor: Colors.white,
+                                                errorStyle: const TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontSize: 15.0),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0))),
+                                            value: _currentSelectedStanding,
+                                            itemHeight: 50,
+                                            isDense: false,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                _currentSelectedStanding =
+                                                    newValue!;
+                                                _myStanding = newValue;
+                                              });
+                                            },
+                                            validator: (value) {
+                                              if (value == "Unselected") {
+                                                return 'Please choose your year level';
+                                              }
+                                              return null;
+                                            },
+                                            items: standing.map((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 )
                               ]),
                           ),
-                      SizedBox(
-                        height: 80,
-                        width: 120,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff8B1538)),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
-                              _courseData = data!
-                                  .where((row) =>
-                                      row[collegeInd] ==
-                                          _currentSelectedCollege &&
-                                      row[courseNameInd] ==
-                                          _currentSelectedCourse)
-                                  .map((e) => e.toString())
-                                  .toList();
-                              if (kDebugMode) {
-                                print(_courseData);
+                      Showcase(
+                        key:_next,
+                        description: "When you've finished entering all your details above, press NEXT.",
+                        child: SizedBox(
+                          height: 80,
+                          width: 120,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff8B1538)),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
+                                _courseData = data!
+                                    .where((row) =>
+                                        row[collegeInd] ==
+                                            _currentSelectedCollege &&
+                                        row[courseNameInd] ==
+                                            _currentSelectedCourse)
+                                    .map((e) => e.toString())
+                                    .toList();
+                                if (kDebugMode) {
+                                  print(_courseData);
 
-                                print(
-                                    "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
+                                  print(
+                                      "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
+                                }
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      duration: Duration(seconds: 1),
+                                      content: Text(
+                                          'Saving details for your session')),
+                                );
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Dashboard(
+                                            courseCode: _currentSelectedCourse,
+                                            yearLevel: _myStanding,
+                                            courseData: _courseData)));
                               }
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    duration: Duration(seconds: 1),
-                                    content: Text(
-                                        'Saving details for your session')),
-                              );
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Dashboard(
-                                          courseCode: _currentSelectedCourse,
-                                          yearLevel: _myStanding,
-                                          courseData: _courseData)));
-                            }
-                          },
-                          child: const Text(
-                            'Next',
-                            style: TextStyle(
-                              color: Color(0xffFFFFFF),
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                            },
+                            child: const Text(
+                              'Next',
+                              style: TextStyle(
+                                color: Color(0xffFFFFFF),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:html'  as webFile;
 import 'dart:io' as io;
 import 'dart:js';
-
+import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 import 'package:crs_scheduler/widgets/timechooser.dart';
 import 'package:crs_scheduler/widgets/daychooser.dart';
 import 'package:crs_scheduler/widgets/profchooser.dart';
