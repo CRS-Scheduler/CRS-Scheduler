@@ -89,10 +89,10 @@ class _DetailDashState extends State<DetailDash> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
+   /* WidgetsBinding.instance.addPostFrameCallback(
           (_) => ShowCaseWidget.of(context)
           .startShowCase([_college,_degree,_standing,_next]),
-    );
+    );*/
     widget.csvReader.loadData().then((value) => setState(() {
           data = value;
           collegeInd = value[0].indexOf('college');

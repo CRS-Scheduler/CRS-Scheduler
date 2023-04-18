@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 /*
 class WhenToMeetMenu extends StatefulWidget {
@@ -139,6 +141,33 @@ class _SelectableItemState extends State<SelectableItem>
   }
 }
 */
+class TimeChooserShowcase extends StatelessWidget {
+  final List<int> validDays;
+  final List<String> timeList;
+  const TimeChooserShowcase({Key? key, required this.validDays, required this.timeList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ShowCaseWidget(
+      onStart: (index, key) {
+        if (kDebugMode) {
+          print('onStart: $index, $key');
+        }
+      },
+      onComplete: (index, key) {
+        if (kDebugMode) {
+          print('onComplete: $index, $key');
+        }
+      },
+      enableAutoScroll: true,
+      blurValue: 1,
+      builder: Builder(
+          builder: (context) =>
+              TypeTimeEntry(validDays: validDays,timeList: timeList,)),
+      autoPlayDelay: const Duration(seconds: 3),
+    );
+  }
+}
 class TypeTimeEntry extends StatefulWidget {
   final List<int> validDays;
   final List<String> timeList;
@@ -168,6 +197,9 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
     }
     return 500;
   }
+  GlobalKey _general = GlobalKey();
+  GlobalKey _specific = GlobalKey();
+  int first_live=0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -255,7 +287,44 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
 
                   ),
                   for (int x = 0; x < 6; x++)
-                    if (widget.validDays[x] == 1)
+                    if(widget.validDays.indexWhere((element) => element==1)==x)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 100, child: Text(days[x])),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: SizedBox(
+                                width: 300,
+                                child: TextFormField(
+                                  initialValue: widget.timeList[x],
+                                  style: const TextStyle(fontFamily: 'Poppins'),
+                                  onChanged: (value) {
+                                    widget.timeList[x] = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                    hintText: 'heheheheh',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    } else if (!timePattern.hasMatch(value)) {
+                                      return 'Please enter a valid timespan';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (widget.validDays[x] == 1)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: Row(
@@ -294,6 +363,26 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                       )
 
                 ],),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                    iconSize: 15,
+                    splashRadius: 1,
+                    onPressed: () {
+
+                     // if(widget.validDays.any((e) => e == 1)): null ?
+                      //ShowCaseWidget.of(context).startShowCase([_general]);
+                      //ShowCaseWidget.of(context).startShowCase([_specific]);
+                      if (kDebugMode) {
+                        print("lets play");
+                      }
+                    },
+                    icon: const Icon(Icons.question_mark_rounded),
+                    color: const Color(0xff8B1538)),
               )
 
             ],

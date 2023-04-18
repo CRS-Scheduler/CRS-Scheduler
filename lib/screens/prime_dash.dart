@@ -201,7 +201,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   },
                                   indicatorColor: const Color(0xffFEB81C),
                                   labelColor: const Color(0xff00573F),
-                                  tabs:   [
+                                  tabs:   const [
                                     Tab(icon: Icon(Icons.calendar_month)),
                                     Tab(icon: Icon(Icons.timer)),
                                     Tab(icon: Icon(Icons.school)),
@@ -211,20 +211,20 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                     child: (_indexer == 0)
                                         ? Showcase(key:_day,onBarrierClick: _incrementCounter,
                                       description: "This tab allows you to enter the days you\nprefer to have your subjects in",
-                                          child: DayChooser(
+                                          child: DayChooserShowcase(
                                       dayvector: daychecklist,
                                       timevector: timelist,
                                     ),
                                         )
                                         : (_indexer == 1)
                                         ? Showcase(key:_time,onBarrierClick: _incrementCounter,description: "This tab allows you to enter the times you\nprefer to have your subjects in",
-                                          child: TypeTimeEntry(
+                                          child: TimeChooserShowcase(
                                       validDays: daychecklist,
                                       timeList: timelist,
                                     ),
                                         )
                                         : Showcase(key:_prof,onBarrierClick: _incrementCounter,description: "This tab allows you to enter your preferred classes and \noptionally, your preferred professors for those classes",
-                                          child: SubProfChooser(
+                                          child: SubProfChooserShowcase(
                                       preflist: subproflist, ),
                                         ))
 
