@@ -1,0 +1,6 @@
+POLSC 199
+ECON 190.2
+
+STS 1
+PI 100
+
