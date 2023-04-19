@@ -40,8 +40,8 @@ class SubProfChooser extends StatefulWidget {
 }
 
 class _SubProfChooserState extends State<SubProfChooser> {
-  GlobalKey _sub = GlobalKey();
-  GlobalKey _prof = GlobalKey();
+  final GlobalKey _sub = GlobalKey();
+  final GlobalKey _prof = GlobalKey();
   Widget _addRemoveButton(
     bool add,
     int index,
