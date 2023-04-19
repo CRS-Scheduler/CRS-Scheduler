@@ -153,17 +153,9 @@ class Schedule:
         # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
 def main():
-    # DegreeProgram("BS CS", 4).print_courses()
-    # course = "CS 12"
-    # DegreeProgram("BS CS").print_courses()
     deg = DegreeProgram("BS-CS")
     deg.fetch_courses_data()
     deg.print_courses_data()
-    # DegreeProgram("BS CS").Course(course).print_data()
-    # for i in DegreeProgram("BS CS").Course(course).course_list:
-    #     i.print_section()
-    # print(parse_schedule([('TTh', '8:30', '', '9:30', 'AM')]))
-    # print(parse_schedule("ThT"))
 
 if __name__ == "__main__":
     main()
