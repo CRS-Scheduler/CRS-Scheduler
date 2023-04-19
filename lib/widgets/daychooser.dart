@@ -51,17 +51,36 @@ class _DayChooserState extends State<DayChooser> {
   GlobalKey _day = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 30.0),
-              child: Text("Which days would you like your classes to be on?"),
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 30.0),
+            child: Text("Which days would you like your classes to be on?"),
+          ), Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                  iconSize: 15,
+                  splashRadius: 1,
+                  onPressed: () {
+                    ShowCaseWidget.of(context).startShowCase([_day]);
+                    if (kDebugMode) {
+                      print("lets play");
+                    }
+                  },
+                  icon: const Icon(Icons.question_mark_rounded),
+                  color: const Color(0xff8B1538)),
             ),
+          ),
 
-            Padding(
+          SizedBox(
+            height: 300,
+            child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -125,28 +144,9 @@ class _DayChooserState extends State<DayChooser> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 3, color: const Color(0xff8B1538)),
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                    iconSize: 15,
-                    splashRadius: 1,
-                    onPressed: () {
-                      ShowCaseWidget.of(context).startShowCase([_day]);
-                      if (kDebugMode) {
-                        print("lets play");
-                      }
-                    },
-                    icon: const Icon(Icons.question_mark_rounded),
-                    color: const Color(0xff8B1538)),
-              ),
-            )
-          ],
-        ),
+          ),
+
+        ],
       ),
     );
   }

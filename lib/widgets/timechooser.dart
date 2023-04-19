@@ -202,48 +202,48 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
   int firstlive=0;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height:650,
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
 
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Column(
-                  children:  [
-                    const Text("Please type in your preferred times for each date.\n"),
-                    const Text(
-                        "Your preferred time must be entered in the following manner:"
-                            "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
-                            "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
-                            "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 3, color: const Color(0xff8B1538)),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                          iconSize: 15,
-                          splashRadius: 1,
-                          onPressed: () {
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              child: Column(
+                children:  [
+                  const Text("Please type in your preferred times for each date.\n"),
+                  const Text(
+                      "Your preferred time must be entered in the following manner:"
+                          "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
+                          "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
+                          "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                        iconSize: 15,
+                        splashRadius: 1,
+                        onPressed: () {
 
-                            if(widget.validDays.any((element) => element==1)) {
-                              ShowCaseWidget.of(context).startShowCase([_specific]);
-                            } else {
-                              ShowCaseWidget.of(context).startShowCase([_general]);
-                            }
-                            if (kDebugMode) {
-                              print("lets play");
-                            }
-                          },
-                          icon: const Icon(Icons.question_mark_rounded),
-                          color: const Color(0xff8B1538)),
-                    )
-                  ],
-                ),
+                          if(widget.validDays.any((element) => element==1)) {
+                            ShowCaseWidget.of(context).startShowCase([_specific]);
+                          } else {
+                            ShowCaseWidget.of(context).startShowCase([_general]);
+                          }
+                          if (kDebugMode) {
+                            print("lets play");
+                          }
+                        },
+                        icon: const Icon(Icons.question_mark_rounded),
+                        color: const Color(0xff8B1538)),
+                  )
+                ],
               ),
-              Padding(
+            ),
+            SizedBox(
+              height: 600,
+              child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
 
@@ -389,14 +389,14 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
 
                 ],),
               ),
+            ),
 
 
-            ],
-          )
+          ],
+        )
 
-        //Column(children: [Text(widget.validDays[x])])
+      //Column(children: [Text(widget.validDays[x])])
 
-      ),
     );
   }
 }
