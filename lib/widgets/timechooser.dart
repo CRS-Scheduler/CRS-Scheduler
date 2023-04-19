@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 /*
 class WhenToMeetMenu extends StatefulWidget {
@@ -139,6 +141,33 @@ class _SelectableItemState extends State<SelectableItem>
   }
 }
 */
+class TimeChooserShowcase extends StatelessWidget {
+  final List<int> validDays;
+  final List<String> timeList;
+  const TimeChooserShowcase({Key? key, required this.validDays, required this.timeList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ShowCaseWidget(
+      onStart: (index, key) {
+        if (kDebugMode) {
+          print('onStart: $index, $key');
+        }
+      },
+      onComplete: (index, key) {
+        if (kDebugMode) {
+          print('onComplete: $index, $key');
+        }
+      },
+      enableAutoScroll: true,
+      blurValue: 1,
+      builder: Builder(
+          builder: (context) =>
+              TypeTimeEntry(validDays: validDays,timeList: timeList,)),
+      autoPlayDelay: const Duration(seconds: 3),
+    );
+  }
+}
 class TypeTimeEntry extends StatefulWidget {
   final List<int> validDays;
   final List<String> timeList;
@@ -168,6 +197,9 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
     }
     return 500;
   }
+  final GlobalKey _general = GlobalKey();
+  final GlobalKey _specific = GlobalKey();
+  int firstlive=0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -180,13 +212,34 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 50.0),
                 child: Column(
-                  children: const [
-                    Text("Please type in your preferred times for each date.\n"),
-                    Text(
+                  children:  [
+                    const Text("Please type in your preferred times for each date.\n"),
+                    const Text(
                         "Your preferred time must be entered in the following manner:"
                             "\n • Time must be indicated in their 24-hour format e.g. 0700 not 7:00am"
                             "\n • To indicate time spans use the \"-\" character e.g 0700-1200"
-                            "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),
+                            "\n • To add additional time spans within a day, use the \",\" character e.g 0700-1200,1400-1800"),Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 3, color: const Color(0xff8B1538)),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                          iconSize: 15,
+                          splashRadius: 1,
+                          onPressed: () {
+
+                            if(widget.validDays.any((element) => element==1)) {
+                              ShowCaseWidget.of(context).startShowCase([_specific]);
+                            } else {
+                              ShowCaseWidget.of(context).startShowCase([_general]);
+                            }
+                            if (kDebugMode) {
+                              print("lets play");
+                            }
+                          },
+                          icon: const Icon(Icons.question_mark_rounded),
+                          color: const Color(0xff8B1538)),
+                    )
                   ],
                 ),
               ),
@@ -215,9 +268,9 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
 
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                            Showcase(
+                              key: _general,
+                              description: "Please input your preferred time for your subjects in the manner specified above\nEx: 0700-1200,1500:1700",
                               child: SizedBox(
                                 width: 300,
 
@@ -255,7 +308,48 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
 
                   ),
                   for (int x = 0; x < 6; x++)
-                    if (widget.validDays[x] == 1)
+                    if(widget.validDays.indexWhere((element) => element==1)==x)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Showcase(
+                          key: _specific,
+                          description: "Please input your preferred time for your subjects in the manner specified above\nEx: 0700-1200,1500:1700",
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 100, child: Text(days[x])),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: SizedBox(
+                                  width: 300,
+                                  child: TextFormField(
+                                    initialValue: widget.timeList[x],
+                                    style: const TextStyle(fontFamily: 'Poppins'),
+                                    onChanged: (value) {
+                                      widget.timeList[x] = value;
+                                    },
+                                    decoration: const InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(),
+                                      hintText: 'Please enter your preferred timeslots',
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter some text';
+                                      } else if (!timePattern.hasMatch(value)) {
+                                        return 'Please enter a valid timespan';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else if (widget.validDays[x] == 1)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: Row(
@@ -294,7 +388,8 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                       )
 
                 ],),
-              )
+              ),
+
 
             ],
           )
