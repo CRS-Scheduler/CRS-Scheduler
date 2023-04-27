@@ -42,6 +42,15 @@ class SubProfChooser extends StatefulWidget {
 class _SubProfChooserState extends State<SubProfChooser> {
   final GlobalKey _sub = GlobalKey();
   final GlobalKey _prof = GlobalKey();
+
+  List<TextEditingController> controllers = [TextEditingController()];
+  List<TextEditingController> prof_controllers = [TextEditingController()];
+  void addController() {
+    TextEditingController newController = TextEditingController();
+    TextEditingController newerController = TextEditingController();
+    controllers.add(newController);
+    prof_controllers.add(newerController);
+  }
   Widget _addRemoveButton(
     bool add,
     int index,
@@ -53,8 +62,11 @@ class _SubProfChooserState extends State<SubProfChooser> {
         if (add) {
           // add new text-fields at the top of all friends textfields
           widget.preflist.insert(widget.preflist.length, blank);
+          addController();
         } else {
           widget.preflist.removeAt(index);
+          controllers[index].clear();
+          prof_controllers[index].clear();
         }
         setState(() {});
         if (kDebugMode) {
@@ -156,6 +168,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                       key:_sub,
                                       description: "Input the course code of your preferred subject here.",
                                       child: TextFormField(
+                                        controller:  controllers[0],
                                         style: const TextStyle(fontFamily: 'Poppins'),
                                         onChanged: (value) {
                                           widget.preflist[i][0]=value;
@@ -189,6 +202,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                       key:_prof,
                                       description: "Input the name of the professor you prefer for this course.",
                                       child: TextFormField(
+                                          controller: prof_controllers[i],
                                         style: const TextStyle(fontFamily: 'Poppins'),
                                         onChanged: (value) {
                                           widget.preflist[i][1]=value;
@@ -225,6 +239,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                       width: (deviceWidth(context)>800)?300:deviceWidth(context)*0.4,
 
                                       child: TextFormField(
+                                          controller:  controllers[i],
                                         style: const TextStyle(fontFamily: 'Poppins'),
                                         onChanged: (value) {
                                           widget.preflist[i][0]=value;
@@ -254,6 +269,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                                     SizedBox(
                                       width: (deviceWidth(context)>800)?300:deviceWidth(context)*0.4,
                                       child: TextFormField(
+                                        controller: prof_controllers[i],
                                         style: const TextStyle(fontFamily: 'Poppins'),
                                         onChanged: (value) {
                                           widget.preflist[i][1]=value;
