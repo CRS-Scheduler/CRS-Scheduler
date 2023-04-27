@@ -1,22 +1,22 @@
 deg_no,college,college_code,course_code,course_name
-1,College of Engineering,CoE,BS CE,BS Civil Engineering
-2,College of Engineering,CoE,BS ChE,BS Chemical Engineering
-3,College of Engineering,CoE,BS CS,BS Computer Science
-4,College of Engineering,CoE,BS CoE,BS in Computer Engineering
-5,College of Engineering,CoE,BS EE,BS in Electrical Engineering
-6,College of Engineering,CoE,BS EcE,BS in Electronics and Communications Engineering
-7,College of Engineering,CoE,BS GE,BS in Geodetic Engineering
-8,College of Engineering,CoE,BS IE,BS Industrial Engineering
-9,College of Engineering,CoE,BS ME,BS Mechanical Engineering
-10,College of Engineering,CoE,BS MatE,BS Materials Engineering
-11,College of Engineering,CoE,BS MetE,BS Metallurgical Engineering
-12,College of Engineering,CoE,BS EM,BS Mining Engineering
-13,College of Social Sciences and Philosophy,CSSP,BA Anthro,BA Anthropology
-14,College of Social Sciences and Philosophy,CSSP,BS Geog,BS Geogrpahy
-15,College of Social Sciences and Philosophy,CSSP,BA Hist,BA History
-16,College of Social Sciences and Philosophy,CSSP,BA Ling,BA Linguistics
-17,College of Social Sciences and Philosophy,CSSP,BA Philo,BA Philosophy
-18,College of Social Sciences and Philosophy,CSSP,BA Pol Sci,BA Political Science
-19,College of Social Sciences and Philosophy,CSSP,BA Psych,BA Psychology
-20,College of Social Sciences and Philosophy,CSSP,BA Pscyh,BS Psychology
-21,College of Social Sciences and Philosophy,CSSP,BA Socio,BA Sociology
+1,College of Engineering,CoE,BS_CE,BS Civil Engineering
+2,College of Engineering,CoE,BS_ChE,BS Chemical Engineering
+3,College of Engineering,CoE,BS_CS,BS Computer Science
+4,College of Engineering,CoE,BS_CoE,BS in Computer Engineering
+5,College of Engineering,CoE,BS_EE,BS in Electrical Engineering
+6,College of Engineering,CoE,BS_EcE,BS in Electronics and Communications Engineering
+7,College of Engineering,CoE,BS_GE,BS in Geodetic Engineering
+8,College of Engineering,CoE,BS_IE,BS Industrial Engineering
+9,College of Engineering,CoE,BS_ME,BS Mechanical Engineering
+10,College of Engineering,CoE,BS_MatE,BS Materials Engineering
+11,College of Engineering,CoE,BS_MetE,BS Metallurgical Engineering
+12,College of Engineering,CoE,BS_EM,BS Mining Engineering
+13,College of Social Sciences and Philosophy,CSSP,BA_Anthro,BA Anthropology
+14,College of Social Sciences and Philosophy,CSSP,BS_Geog,BS Geogrpahy
+15,College of Social Sciences and Philosophy,CSSP,BA_Hist,BA History
+16,College of Social Sciences and Philosophy,CSSP,BA_Ling,BA Linguistics
+17,College of Social Sciences and Philosophy,CSSP,BA_Philo,BA Philosophy
+18,College of Social Sciences and Philosophy,CSSP,BA_Pol_Sci,BA Political Science
+19,College of Social Sciences and Philosophy,CSSP,BA_Psych,BA Psychology
+20,College of Social Sciences and Philosophy,CSSP,BA_Pscyh,BS Psychology
+21,College of Social Sciences and Philosophy,CSSP,BA_Socio,BA Sociology

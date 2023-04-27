@@ -9,4 +9,9 @@ Camingao, Ethan
 Gonzales, Isaiah Nikolo  
 Tanael, Aaron Jude  
 
+---------------------------------------------------------
+To run the backend server:
+1. go to the directory where server.py is located
+2. run: python -m flask --app server run
+3. access through localhost:5000
 
