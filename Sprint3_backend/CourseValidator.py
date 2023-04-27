@@ -90,13 +90,11 @@ def get_days(days_sched):
                     days.append("Tuesday")
                 elif days_sched[i+1] == "h":
                     days.append("Thursday")
-                else:
-                    days.append("Tuesday")
+                days.append("Tuesday")
             case "W": days.append("Wednesday")
             case "F": days.append("Friday")
             case "S": days.append("Saturday")
     return days
-
 
 class DegreeProgram:
     def __init__(self, name):
@@ -122,12 +120,7 @@ class DegreeProgram:
         return courses_data
 
     def print_courses_data(self):
-        for year in self.courses_data:
-            for sem in year:
-                for course in sem:
-                    course.print_data()
-                    # for section in course.section_list:
-                    #     section.print_section()
+        [course.print_data() for year in self.courses_data for sem in year for course in sem]
 
 class Course:
     def __init__(self, name):
@@ -143,50 +136,21 @@ class Section:
         self.slots = section[2]
     def print_section(self):
         print([i.__dict__ for i in self.schedules])
-    # def print_time(self):
-    #     print(self.time)
 
 class Schedule:
     def __init__(self, schedule):
         self.days = get_days(schedule[0])
         self.time = get_sched(schedule[1:5])
         self.type = schedule[5]
-        # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
 def get_course_list_from_program(program: str): #get_course_list_from_program(bs_cs) returns list of all courses required under program
     deg = DegreeProgram(program)
     flat = []
-    for year in deg.courses:
-        for sem in year:
-            flat.extend(sem)
+    [flat.extend(sem) for year in deg.courses for sem in year]
     return list(set(flat))
 
 def main():
-    pass
+    print(get_course_list_from_program('BS_CS'))
     
 if __name__ == "__main__":
     main()
-
-# class DegreeProgramDAO:
-#     def __init__(self):
-#         CourseDict = set()
-
-#     def insertDegree(self, degree_name):
-#         CourseDict.add(degree_name)
-
-#     def degreeValidator(self, degree_name):
-#         if degree_name in CourseDict:
-#             # print("Valid!")
-#             return
-#         # print("Invalid!")
-    
-#     # def printCourseDict(self):
-#     #     print(CourseDict)
-
-# degree_programs = DegreeProgramDAO()
-# degree_programs.insertDegree("BS CS")
-# degree_programs.insertDegree("BS EE")
-# degree_programs.degreeValidator("BS CS")
-# degree_programs.degreeValidator("BS AE")
-
-# degree_programs.printCourseDict()
