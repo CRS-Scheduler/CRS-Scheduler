@@ -97,13 +97,14 @@ def get_days(days_sched):
             case "S": days.append("Saturday")
     return days
 
+
 class DegreeProgram:
     def __init__(self, name):
         self.name = name
         # Require a lookup table for a particular degree program
         self.courses = CourseLookup.course_lister(name)
         self.years = len(self.courses)
-        self.courses_data = []
+        self.courses_data = self.fetch_courses_data()
 
     def print_courses(self):
         print(self.courses)
@@ -118,7 +119,7 @@ class DegreeProgram:
             second_sem = map(lambda c: Course(c), current_year[1])
             midyear_sem = map(lambda c: Course(c), current_year[2])
             courses_data.append((first_sem, second_sem, midyear_sem))
-        self.courses_data = courses_data
+        return courses_data
 
     def print_courses_data(self):
         for year in self.courses_data:
@@ -152,11 +153,17 @@ class Schedule:
         self.type = schedule[5]
         # self.start, self.end = get_times(schedule[1:2], schedule[3:4])
 
-def main():
-    deg = DegreeProgram("BS-CS")
-    deg.fetch_courses_data()
-    deg.print_courses_data()
+def get_course_list_from_program(program: str): #get_course_list_from_program(bs_cs) returns list of all courses required under program
+    deg = DegreeProgram(program)
+    flat = []
+    for year in deg.courses:
+        for sem in year:
+            flat.extend(sem)
+    return list(set(flat))
 
+def main():
+    pass
+    
 if __name__ == "__main__":
     main()
 
