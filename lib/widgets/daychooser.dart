@@ -187,7 +187,7 @@ class _DayButtonState extends State<DayButton> {
                 backgroundColor: MaterialStateProperty.resolveWith((states) {
               // If the button is pressed, return green, otherwise blue
               if (widget.checker[widget.Index] == 1) {
-                return const Color(0xff8B1538);
+                return const Color(0xff00573F);
               }
               return Colors.grey;
             })),
