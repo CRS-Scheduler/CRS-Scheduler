@@ -159,7 +159,7 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(bs
     for year in deg.courses:
         for sem in year:
             flat.extend(sem)
-    print(list(set(flat)))
+    return list(set(flat))
 
 def main():
     pass
