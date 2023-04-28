@@ -39,6 +39,7 @@ dependencies:
   csv: ^5.0.1
   file_picker: ^5.2.6
   showcaseview: ^2.0.3
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:

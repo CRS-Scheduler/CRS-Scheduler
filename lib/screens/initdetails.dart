@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:crs_scheduler/screens/prime_dash.dart';
+import 'package:http/http.dart' as http;
 import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:csv/csv.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../sizeconfig.dart';
 
@@ -53,6 +50,19 @@ class _DetailDashState extends State<DetailDash> {
         .map((row) => row[courseNameInd])
         .toList();
   }
+  List datar=[];
+  Future<List<dynamic>> fetchlist(String course) async {
+    List<dynamic> localhold = [];
+    print("http://127.0.0.1:5000/api/courses?prgm=$course");
+    var response = await http.get(
+      Uri.parse("http://127.0.0.1:5000/api/courses?prgm=$course"),
+      //headers: {"Accept": "application/json"}
+    );
+    setState(() {
+      localhold = json.decode(response.body);
+    });
+    return localhold;
+  }
 
   double deviceHeight(BuildContext context) =>
       MediaQuery.of(context).size.height;
@@ -80,14 +90,7 @@ class _DetailDashState extends State<DetailDash> {
   List<List<dynamic>>? data;
   late int collegeInd;
   late int courseNameInd;
-  Future<List<List>> loadData() async {
-    // Perform some asynchronous operation to load data
-    // and update the state
-    String csvData =
-        await rootBundle.loadString('assets/media/course_college_rel_demo.csv');
 
-    return const CsvToListConverter().convert(csvData);
-  }
 
   final GlobalKey _college = GlobalKey();
   final GlobalKey _degree = GlobalKey();
@@ -785,7 +788,8 @@ class _DetailDashState extends State<DetailDash> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xff8B1538)),
-                              onPressed: () {
+                              onPressed: () async {
+
                                 if (_formKey.currentState!.validate()) {
                                   // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
                                   _courseData = data!
@@ -796,8 +800,12 @@ class _DetailDashState extends State<DetailDash> {
                                               _currentSelectedCourse)
                                       .map((e) => e.toString())
                                       .toList();
+                                  List<dynamic> courseList = await fetchlist('BS_CS');
+
+                                  print(courseList.toString());
+                                  print(courseList[1]);
                                   if (kDebugMode) {
-                                    print(_courseData);
+                                    print(_courseData[0]);
 
                                     print(
                                         "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
@@ -805,10 +813,11 @@ class _DetailDashState extends State<DetailDash> {
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        duration: Duration(seconds:1),
+                                        duration: Duration(seconds: 1),
                                         content: Text(
                                             'Saving details for your session')),
                                   );
+
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -816,7 +825,7 @@ class _DetailDashState extends State<DetailDash> {
                                               courseCode:
                                                   _currentSelectedCourse,
                                               yearLevel: _myStanding,
-                                              courseData: _courseData)));
+                                              courseData: _courseData,allowedCourse: courseList,)));
                                 }
                               },
                               child: const Text(
