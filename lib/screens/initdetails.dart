@@ -800,12 +800,12 @@ class _DetailDashState extends State<DetailDash> {
                                               _currentSelectedCourse)
                                       .map((e) => e.toString())
                                       .toList();
-                                  List<dynamic> courseList = await fetchlist('BS_CS');
+                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3]);
 
                                   print(courseList.toString());
-                                  print(courseList[1]);
+                                  //print(courseList[1]);
                                   if (kDebugMode) {
-                                    print(_courseData[0]);
+                                    print(_courseData[0].split(', ')[3]);
 
                                     print(
                                         "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
