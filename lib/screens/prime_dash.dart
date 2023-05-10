@@ -366,80 +366,67 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             backgroundColor:
                                                 const Color(0xff8B1538)),
                                         onPressed: () {
-                                          if (timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist) && _timeformkey.currentState!.validate() && subproflist[0][0] == '') {
+                                          //No Entries
+                                          if(timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist)  && subproflist[0][0] == ''){
+                                            _timeformkey.currentState!.validate();
+                                            print("ERROR! Blank Entry");
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and subject')),
+                                            );
+                                          } else
+                                          if (subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
+                                            return false; // the element was found in data, no need to panic
+                                          }
+                                          }
+                                          return true; // the element was not found in data, trigger a panic
+                                          })&&!_timeformkey.currentState!.validate()&&!checkTimeSpansoverall(timelist)) {
+
                                             if (kDebugMode) {
-                                              print("ERROR Log 1");
+                                              print("ERROR: Time and Subject Error");
                                               print(
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                             }
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(duration: Duration(seconds: 1),
-                                                  content: Text(
-                                                      'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and Instructor')),
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    'WARNING: You have made an error in your time and subject preference input')),
                                             );
-                                          }
-                                          else if (subchecker(subproflist, widget.allowedCourse) && _timeformkey.currentState!.validate()) {
+                                          }else
+                                          if(!_timeformkey.currentState!.validate()|| !checkTimeSpansoverall(timelist)){
                                             if (kDebugMode) {
-                                              print("ERROR Log 1");
+                                              print("ERROR: Preferred time error");
                                               print(
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                             }
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  duration:
-                                                  Duration(seconds: 1),
-                                                  content: Text(
-                                                      'WARNING: The subject you have inputted could not be found in your curriculum, please check the course code\'s spelling or choose a permited subject')),
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    'WARNING: You have an error in your inputted prefered times.')),
                                             );
+                                          }else if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
+                                            return false; // the element was found in data, no need to panic
                                           }
-                                          else if (_timeformkey.currentState!.validate() && dayblank(daychecklist)) {
-                                            if (kDebugMode) {
-                                              print("No day chosen case");
-                                              print(
-                                                  "User inputs:\nDaylist: $daychecklist,\nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
-                                            }
+                                          }
+                                          return true; // the element was not found in data, trigger a panic
+                                          })){if (kDebugMode) {
+                                            print("ERROR: Preferred Subject Error");
+                                            print(
+                                                "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
+                                          }
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                              duration: Duration(seconds: 1),
+                                              content: Text(
+                                                  'WARNING: You have inputted a course that is unavailable to your degree program.')),
+                                          );}
+                                          else{
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    'Saving Preferences')));
+                                          }
 
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  duration:
-                                                  Duration(seconds: 1),
-                                                  content: Text(
-                                                      'Saving preferences')),
-                                            );
-                                          }
-                                          else if (timeblank(timelist) && !dayblank(daychecklist)) {
-                                            if (kDebugMode) {
-                                              print("No time chosen case");
-                                              print(
-                                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
-                                            }
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  duration:
-                                                  Duration(seconds: 1),
-                                                  content: Text(
-                                                      'Saving preferences')),
-                                            );
-                                          }
-                                          else {
-                                            if (kDebugMode) {
-                                              print("maybe success");
-                                              print(
-                                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: ${subproflist.length}");
-                                            }
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  duration:
-                                                  Duration(seconds: 1),
-                                                  content: Text(
-                                                      'Saving preferences')),
-                                            );
-                                          }
                                         },
                                         child: const Text(
                                           'Next',
@@ -485,9 +472,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             }
                                             //update day
                                             setState(() {
-                                              var len_Day = 7;
+                                              var lenDay = 7;
                                               for (int i = 0;
-                                                  i < len_Day;
+                                                  i < lenDay;
                                                   i++) {
                                                 if (result[i + 1] == '1') {
                                                   daychecklist[i] = 1;
@@ -722,83 +709,64 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   const Color(0xff8B1538)),
                                           onPressed: () {
                                             //No Entries
-                                            if (timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist) && _timeformkey.currentState!.validate() && subproflist[0][0] == '') {
-                                              if (kDebugMode) {
-                                                print("ERROR Log 1");
-                                                print(
-                                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
-                                              }
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(duration: Duration(seconds: 1),
-                                                    content: Text(
-                                                        'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and Instructor')),
+                                            if(timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist)  && subproflist[0][0] == ''){
+                                              _timeformkey.currentState!.validate();
+                                              print("ERROR! Blank Entry");
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text(
+                                                      'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and subject')),
                                               );
-                                            } else if (_timeformkey.currentState!.validate() && dayblank(daychecklist)) {
-                                              if (kDebugMode) {
-                                                print("No day chosen case");
-                                                print(
-                                                    "User inputs:\nDaylist: $daychecklist,\nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
-                                              }
-
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 1),
-                                                    content: Text(
-                                                        'Saving preferences')),
-                                              );
-                                            } else if (timeblank(timelist) && !dayblank(daychecklist)) {
-                                              if (kDebugMode) {
-                                                print("No time chosen case");
-                                                print(
-                                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
-                                              }
-
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 1),
-                                                    content: Text(
-                                                        'Saving preferences')),
-                                              );
+                                            } else
+                                            if (subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
+                                              return false; // the element was found in data, no need to panic
                                             }
-                                            else if (subproflist.any((sublist) {
-                                                for (var item in widget.allowedCourse) {
-                                                  if (item == sublist[0]) {
-                                                    return false; // the element was found in data, no need to panic
-                                                  }
-                                                }
-                                                return true; // the element was not found in data, trigger a panic
-                                              })) {
+                                            }
+                                            return true; // the element was not found in data, trigger a panic
+                                            })&&!_timeformkey.currentState!.validate()&&!checkTimeSpansoverall(timelist)) {
+
                                               if (kDebugMode) {
-                                                print("ERROR Log 1");
+                                                print("ERROR: Time and Subject Error");
                                                 print(
                                                     "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                               }
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    duration:
-                                                    Duration(seconds: 1),
-                                                    content: Text(
-                                                        'WARNING: You are not permitted to take this course according to your curriculum')),
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text(
+                                                      'WARNING: You have made an error in your time and subject preference input')),
                                               );
-                                            }else {
+                                            }else
+                                            if(!_timeformkey.currentState!.validate()|| !checkTimeSpansoverall(timelist)){
                                               if (kDebugMode) {
-                                                print("maybe success");
+                                                print("ERROR: Preferred time error");
                                                 print(
-                                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: ${subproflist.length}");
+                                                    "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                               }
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    duration:
-                                                    Duration(seconds: 1),
-                                                    content: Text(
-                                                        'Saving preferences')),
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text(
+                                                      'WARNING: You have an error in your inputted prefered times.')),
                                               );
+                                            }else if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
+                                              return false; // the element was found in data, no need to panic
+                                            }
+                                            }
+                                            return true; // the element was not found in data, trigger a panic
+                                            })){if (kDebugMode) {
+                                              print("ERROR: Preferred Subject Error");
+                                              print(
+                                                  "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
+                                            }
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    'WARNING: You have inputted a course that is unavailable to your degree program.')),
+                                            );}
+                                            else{
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text(
+                                                      'Saving Preferences')));
                                             }
 
                                           },
@@ -851,9 +819,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                               }
                                               //update day
                                               setState(() {
-                                                var len_Day = 7;
+                                                var lenDay = 7;
                                                 for (int i = 0;
-                                                    i < len_Day;
+                                                    i < lenDay;
                                                     i++) {
                                                   if (result[i + 1] == '1') {
                                                     daychecklist[i] = 1;
@@ -1034,4 +1002,34 @@ List<String> ReadFile(x) {
   //var singleline = fileContent.replaceAll("\n", " ");
   List<String> result = (fileContent.split(','));
   return result;
+}
+bool checkTimeSpansoverall(List<String> times) {
+
+  for (String input in times) {
+    if(input==""){continue;}
+    List<String> spanStrings = input.split(',').map((s) => s.trim()).toList();
+    List<DateTime> startTimes = [];
+    List<DateTime> endTimes = [];
+    
+    print(startTimes);
+    print(endTimes);
+    
+    for (String spanString in spanStrings) {
+      List<String> times = spanString.split('-').map((s) => s.trim()).toList();
+      int startHour = int.parse(times[0].substring(0, 2));
+      int startMinute = int.parse(times[0].substring(2, 4));
+      int endHour = int.parse(times[1].substring(0, 2));
+      int endMinute = int.parse(times[1].substring(2, 4));
+      startTimes.add(DateTime(2023, 1, 1, startHour, startMinute));
+      endTimes.add(DateTime(2023, 1, 1, endHour, endMinute));
+    }
+    for (int i = 0; i < startTimes.length; i++) {
+      for (int j = i + 1; j < startTimes.length; j++) {
+        if (startTimes[i].isBefore(endTimes[j]) && startTimes[j].isBefore(endTimes[i])) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 }
