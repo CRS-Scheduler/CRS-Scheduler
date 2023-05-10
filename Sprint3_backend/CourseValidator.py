@@ -1,11 +1,13 @@
-import CourseLookup
-import CourseParser
+from CourseLookup import course_lister
+from CourseParser import get_data
+from CourseParser import get_days
+from CourseParser import get_sched
 
 class DegreeProgram:
     def __init__(self, name):
         self.name = name
         # Require a lookup table for a particular degree program
-        self.courses = CourseLookup.course_lister(name)
+        self.courses = course_lister(name)
         self.years = len(self.courses)
         self.courses_data = self.fetch_courses_data()
         # print(self.courses)
@@ -24,7 +26,7 @@ class DegreeProgram:
 class Course:
     def __init__(self, name):
         self.name = name
-        self.section_list = list(map(lambda section: Section(section), CourseParser.get_data(name)))
+        self.section_list = list(map(lambda section: Section(section), get_data(name)))
         # print([i.__dict__ for i in self.section_list])
 
 class Section:
@@ -36,8 +38,8 @@ class Section:
 
 class Schedule:
     def __init__(self, schedule):
-        self.days = CourseParser.get_days(schedule[0])
-        self.time = CourseParser.get_sched(schedule[1:5])
+        self.days = get_days(schedule[0])
+        self.time = get_sched(schedule[1:5])
         self.type = schedule[5]
         # print(self.days, self.time, self.type)
 

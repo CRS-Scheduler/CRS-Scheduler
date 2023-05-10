@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
-import requests
-import re
+from requests import get
+from re import findall
+from re import search
+from re import IGNORECASE
 from datetime import time
 
 # Schedule format:
@@ -13,8 +15,8 @@ def eprint(string):
 
 def time_lookup(raw_time):
     regex_string = r"(\d{1,2})[:]?(\d{0,2})"
-    # print(re.findall(regex_string, time)[0])
-    parsed_time = re.findall(regex_string, raw_time)[0]
+    # print(findall(regex_string, time)[0])
+    parsed_time = findall(regex_string, raw_time)[0]
     hours = int(parsed_time[0])
     minutes = int(parsed_time[1]) if parsed_time[1] != "" else 0
     return time(hours%12, minutes%60)
@@ -39,7 +41,7 @@ def get_sched(sched):
 def get_html(name):
     url = "https://crs.upd.edu.ph/schedule/120222/" + name.replace(" ", "%20")
     try:
-        ret = requests.get(url, timeout=3).text
+        ret = get(url, timeout=3).text
         return (True, ret)
     except:
         error = "Error! Could not parse the url. Check the url and try again!"
@@ -49,7 +51,7 @@ def get_html(name):
 def parse_contents(contents):
     try:
         ret = BeautifulSoup(contents, "html.parser").find_all('td')
-        # re.findall(, str(ret))
+        # findall(, str(ret))
         # print(ret)
         return (True, ret)
     except:
@@ -65,18 +67,18 @@ def get_data_from_parsed_contents(name, parsed_contents):
         class_name = parsed_contents[1+i+dissolved_offset].get_text(" ")
         # print(class_name)
         search_string = str(parsed_contents[3+i+dissolved_offset])
-        if not re.search(r"\b"+name+r"\b", class_name, re.IGNORECASE):
+        if not search(r"\b"+name+r"\b", class_name, IGNORECASE):
             continue
         slots = parsed_contents[5+i+dissolved_offset]
-        if re.search("DISSOLVED", str(slots)):
+        if search("DISSOLVED", str(slots)):
             dissolved_offset -= 1 
             continue
-        if re.search("OVERBOOKED", str(slots)):
+        if search("OVERBOOKED", str(slots)):
             continue
         slots = int(slots.find_all('strong')[0].get_text())
         if slots == 0:
             continue
-        raw_schedule = re.findall(regex_string, search_string)
+        raw_schedule = findall(regex_string, search_string)
         ret.append((class_name, raw_schedule, slots))
     return ret
 
