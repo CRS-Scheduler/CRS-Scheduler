@@ -17,7 +17,7 @@ def time_lookup(raw_time):
     parsed_time = re.findall(regex_string, raw_time)[0]
     hours = int(parsed_time[0])
     minutes = int(parsed_time[1]) if parsed_time[1] != "" else 0
-    return time(hours, minutes)
+    return time(hours%12, minutes%60)
 
 def get_sched(sched):
     start = time_lookup(sched[0])
@@ -27,6 +27,13 @@ def get_sched(sched):
         end = time(12+end.hour, end.minute)
     elif (sched[3] == "PM"):
         end = time(12+end.hour, end.minute)
+    # dateTimeA = datetime.datetime.combine(datetime.date.today(), start)
+    # dateTimeB = datetime.datetime.combine(datetime.date.today(), end)
+    # # Get the difference between datetimes (as timedelta)
+    # dateTimeDifference = dateTimeA - dateTimeB
+    # # Divide difference in seconds by number of seconds in hour (3600)  
+    # dateTimeDifferenceInHours = (dateTimeDifference.total_seconds() / 3600)
+    # print(dateTimeDifferenceInHours)
     return (start,end)
 
 def get_html(name):
