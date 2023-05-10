@@ -51,7 +51,7 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(bs
 
 def main():
     print(get_course_list_from_program('BS_CS'))
-    deg = DegreeProgram('BS_CS');
+    deg = DegreeProgram('BS_CS')
     
 if __name__ == "__main__":
     main()
