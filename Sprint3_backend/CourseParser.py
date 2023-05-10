@@ -60,7 +60,7 @@ def parse_contents(contents):
 
 def get_data_from_parsed_contents(name, parsed_contents):
     ret = []
-    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) (lab|lec)"
+    regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) ([^ \n]+)"
     dissolved_offset = 0
     if len(parsed_contents) == 1: return ret
     for i in range(0, len(parsed_contents), 8):
