@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+from datetime import time
 
 # Schedule format:
 # (class_name, raw_schedule, slots)
@@ -10,13 +11,13 @@ def eprint(string):
     print(string)
     exit(1)
 
-def time_lookup(time):
+def time_lookup(raw_time):
     regex_string = r"(\d{1,2})[:]?(\d{0,2})"
     # print(re.findall(regex_string, time)[0])
-    parsed_time = re.findall(regex_string, time)[0]
-    hours = int(parsed_time[0]) * 100
+    parsed_time = re.findall(regex_string, raw_time)[0]
+    hours = int(parsed_time[0])
     minutes = int(parsed_time[1]) if parsed_time[1] != "" else 0
-    return (hours + minutes) % 1200
+    return time(hours, minutes)
 
 def get_sched(sched):
     start = time_lookup(sched[0])
