@@ -4,24 +4,26 @@ from CourseParser import get_days
 from CourseParser import get_sched
 
 class DegreeProgram:
-    def __init__(self, name):
+    def __init__(self, name, year, semester):
         self.name = name
         # Require a lookup table for a particular degree program
-        self.courses = course_lister(name)
+        self.courses = course_lister(name, year, semester)
         self.years = len(self.courses)
-        self.courses_data = self.fetch_courses_data()
+        self.courses_data = list(map(lambda c: Course(c), self.courses))
+
         # print(self.courses)
         # print(self.years)
+        # [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
         # [print([i.__dict__ for i in course.section_list]) for year in self.courses_data for sem in year for course in sem]
 
-    def fetch_courses_data(self):
-        courses_data = []
-        for current_year in self.courses:
-            first_sem = list(map(lambda c: Course(c), current_year[0]))
-            second_sem = list(map(lambda c: Course(c), current_year[1]))
-            midyear_sem = list(map(lambda c: Course(c), current_year[2]))
-            courses_data.append((first_sem, second_sem, midyear_sem))
-        return courses_data
+    # def fetch_courses_data(self, semester):
+    #     courses_data = []
+    #     for current_year in self.courses:
+    #         first_sem = list(map(lambda c: Course(c), current_year[0]))
+    #         second_sem = list(map(lambda c: Course(c), current_year[1]))
+    #         midyear_sem = list(map(lambda c: Course(c), current_year[2]))
+    #         courses_data.append((first_sem, second_sem, midyear_sem))
+    #     return courses_data
 
 class Course:
     def __init__(self, name):
@@ -32,6 +34,7 @@ class Course:
 class Section:
     def __init__(self, section):
         self.name = section[0]
+        # print(section)
         self.schedules = list(map(lambda schedule: Schedule(schedule), section[1]))
         self.slots = section[2]
         # print([i.__dict__ for i in self.schedules])
@@ -44,14 +47,15 @@ class Schedule:
         # print(self.days, self.time, self.type)
 
 def get_course_list_from_program(program: str): #get_course_list_from_program(program) returns list of all courses required under program
-    deg = DegreeProgram(program)
-    flat = []
-    [flat.extend(sem) for year in deg.courses for sem in year]
-    return list(set(flat))
+    deg = DegreeProgram(program, 3, 0)
+    return deg.courses
+    # flat = []
+    # [flat.extend(sem) for year in deg.courses for sem in year]
+    # return list(set(flat))
 
 def main():
-    print(get_course_list_from_program('BS_CS'))
-    deg = DegreeProgram('BS_CS')
+    # print(get_course_list_from_program('BS_CS'))
+    deg = DegreeProgram('BS_CS', 3, 1)
     
 if __name__ == "__main__":
     main()
