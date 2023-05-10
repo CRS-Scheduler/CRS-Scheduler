@@ -113,9 +113,9 @@ class DegreeProgram:
     def fetch_courses_data(self):
         courses_data = []
         for current_year in self.courses:
-            first_sem = map(lambda c: Course(c), current_year[0])
-            second_sem = map(lambda c: Course(c), current_year[1])
-            midyear_sem = map(lambda c: Course(c), current_year[2])
+            first_sem = list(map(lambda c: Course(c), current_year[0]))
+            second_sem = list(map(lambda c: Course(c), current_year[1]))
+            midyear_sem = list(map(lambda c: Course(c), current_year[2]))
             courses_data.append((first_sem, second_sem, midyear_sem))
         return courses_data
 
@@ -125,14 +125,14 @@ class DegreeProgram:
 class Course:
     def __init__(self, name):
         self.name = name
-        self.section_list = map(lambda section: Section(section), get_data(name))
+        self.section_list = list(map(lambda section: Section(section), get_data(name)))
     def print_data(self):
         print([i.__dict__ for i in self.section_list])
 
 class Section:
     def __init__(self, section):
         self.name = section[0]
-        self.schedules = map(lambda schedule: Schedule(schedule), section[1])
+        self.schedules = list(map(lambda schedule: Schedule(schedule), section[1]))
         self.slots = section[2]
     def print_section(self):
         print([i.__dict__ for i in self.schedules])
@@ -151,6 +151,8 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(bs
 
 def main():
     print(get_course_list_from_program('BS_CS'))
+    deg = DegreeProgram('BS_CS');
+    deg.print_courses_data()
     
 if __name__ == "__main__":
     main()
