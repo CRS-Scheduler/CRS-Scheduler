@@ -299,6 +299,8 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                                       return 'Please enter some text';
                                     } else if (!timePattern.hasMatch(value)) {
                                       return 'Please enter a valid timespan';
+                                    }else if (!checkTimeSpans(value)){
+                                      return 'Your timespans are overlapping';
                                     }
                                     return null;
                                   },
@@ -339,10 +341,13 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                                       hintText: 'Please enter your preferred timeslots',
                                     ),
                                     validator: (value) {
+                                      print(value);
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter some text';
                                       } else if (!timePattern.hasMatch(value)) {
                                         return 'Please enter a valid timespan';
+                                      }else if (!checkTimeSpans(value)){
+                                        return 'Your timespans are overlapping';
                                       }
                                       return null;
                                     },
@@ -381,6 +386,8 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                                       return 'Please enter some text';
                                     } else if (!timePattern.hasMatch(value)) {
                                       return 'Please enter a valid timespan';
+                                    } else if (!checkTimeSpans(value)){
+                                      return 'Your timespans are overlapping';
                                     }
                                     return null;
                                   },
@@ -412,4 +419,31 @@ double triggercheck(List<int> lister) {
     }
   }
   return valhold;
+}
+bool checkTimeSpans(String input) {
+
+  List<String> spanStrings = input.split(',').map((s) => s.trim()).toList();
+  List<DateTime> startTimes = [];
+  List<DateTime> endTimes = [];
+  
+  print(startTimes);
+  print(endTimes);
+  
+  for (String spanString in spanStrings) {
+    List<String> times = spanString.split('-').map((s) => s.trim()).toList();
+    int startHour = int.parse(times[0].substring(0, 2));
+    int startMinute = int.parse(times[0].substring(2, 4));
+    int endHour = int.parse(times[1].substring(0, 2));
+    int endMinute = int.parse(times[1].substring(2, 4));
+    startTimes.add(DateTime(2023, 1, 1, startHour, startMinute));
+    endTimes.add(DateTime(2023, 1, 1, endHour, endMinute));
+  }
+  for (int i = 0; i < startTimes.length; i++) {
+    for (int j = i + 1; j < startTimes.length; j++) {
+      if (startTimes[i].isBefore(endTimes[j]) && startTimes[j].isBefore(endTimes[i])) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
