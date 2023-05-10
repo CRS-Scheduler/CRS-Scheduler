@@ -45,10 +45,9 @@ class _SubProfChooserState extends State<SubProfChooser> {
   final GlobalKey _prof = GlobalKey();
 
   List<TextEditingController> controllers = [TextEditingController()];
-  List<TextEditingController> prof_controllers = [TextEditingController()];
+  //List<TextEditingController> prof_controllers = [TextEditingController()];
   void addController() {
     TextEditingController newController = TextEditingController();
-    TextEditingController newerController = TextEditingController();
     controllers.add(newController);
     //prof_controllers.add(newerController);
   }

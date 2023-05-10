@@ -341,7 +341,6 @@ class _TypeTimeEntryState extends State<TypeTimeEntry> {
                                       hintText: 'Please enter your preferred timeslots',
                                     ),
                                     validator: (value) {
-                                      print(value);
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter some text';
                                       } else if (!timePattern.hasMatch(value)) {
@@ -426,9 +425,7 @@ bool checkTimeSpans(String input) {
   List<DateTime> startTimes = [];
   List<DateTime> endTimes = [];
   
-  print(startTimes);
-  print(endTimes);
-  
+
   for (String spanString in spanStrings) {
     List<String> times = spanString.split('-').map((s) => s.trim()).toList();
     int startHour = int.parse(times[0].substring(0, 2));

@@ -369,7 +369,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                           //No Entries
                                           if(timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist)  && subproflist[0][0] == ''){
                                             _timeformkey.currentState!.validate();
-                                            print("ERROR! Blank Entry");
+                                            if (kDebugMode) {
+                                              print("ERROR! Blank Entry");
+                                            }
                                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
@@ -458,13 +460,14 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 color: Color(0xffffffff),
                                                 fontSize: 24)),
                                         onPressed: () async {
+                                          var sm = ScaffoldMessenger.of(context);
                                           var picked = await FilePicker.platform
                                               .pickFiles();
                                           if (picked != null) {
                                             PlatformFile selectedFile =
                                                 picked.files.first;
                                             List<String> result =
-                                                ReadFile(selectedFile);
+                                                readFile(selectedFile);
                                             List<String> force =
                                                 result[6].split('');
                                             if (force[0] == '1') {
@@ -524,8 +527,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                               print(
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                             }
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
+                                            sm.showSnackBar(
                                               const SnackBar(
                                                   duration:
                                                       Duration(seconds: 1),
@@ -539,8 +541,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                               if (kDebugMode) {
                                                 print("No default time");
                                               }
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
+                                              sm.showSnackBar(
                                                 const SnackBar(
                                                     duration:
                                                         Duration(seconds: 1),
@@ -553,7 +554,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                     "User inputs:\nDaylist: $daychecklist,\nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                                               }
                                               String defTime = timelist[6];
-                                              ScaffoldMessenger.of(context)
+                                              sm
                                                   .showSnackBar(
                                                 SnackBar(
                                                     duration: const Duration(
@@ -570,7 +571,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                                             }
 
-                                            ScaffoldMessenger.of(context)
+                                            sm
                                                 .showSnackBar(
                                               const SnackBar(
                                                   duration:
@@ -585,8 +586,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: ${subproflist.length}");
                                             }
                                           }
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          sm.showSnackBar(
                                             const SnackBar(
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
@@ -711,7 +711,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             //No Entries
                                             if(timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist)  && subproflist[0][0] == ''){
                                               _timeformkey.currentState!.validate();
-                                              print("ERROR! Blank Entry");
+                                              if (kDebugMode) {
+                                                print("ERROR! Blank Entry");
+                                              }
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                   duration: Duration(seconds: 1),
                                                   content: Text(
@@ -804,14 +806,13 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   color: Color(0xffffffff),
                                                   fontSize: 24)),
                                           onPressed: () async {
-                                            var picked = await FilePicker
-                                                .platform
-                                                .pickFiles();
+                                            var sm = ScaffoldMessenger.of(context);
+                                            var picked = await FilePicker.platform.pickFiles();
                                             if (picked != null) {
                                               PlatformFile selectedFile =
                                                   picked.files.first;
                                               List<String> result =
-                                                  ReadFile(selectedFile);
+                                                  readFile(selectedFile);
                                               List<String> force =
                                                   result[6].split('');
                                               if (force[0] == '1') {
@@ -864,24 +865,15 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                               });
                                             }
 
-                                            if (timelist[6] == "" &&
-                                                dayblank(daychecklist) &&
-                                                timeblank(timelist) &&
-                                                _timeformkey.currentState!
-                                                    .validate() &&
-                                                subproflist[0][0] == '') {
+                                            if (timelist[6] == "" && dayblank(daychecklist) && timeblank(timelist) && _timeformkey.currentState!.validate() && subproflist[0][0] == '') {
                                               if (kDebugMode) {
                                                 print("CSV EMPTY");
                                                 print(
                                                     "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                               }
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 1),
-                                                    content: Text(
-                                                        'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and Instructor')),
+                                              sm.showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text('WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and Instructor')),
                                               );
                                             } else if (_timeformkey
                                                     .currentState!
@@ -891,8 +883,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 if (kDebugMode) {
                                                   print("No default time");
                                                 }
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
+                                                sm.showSnackBar(
                                                   const SnackBar(
                                                       duration:
                                                           Duration(seconds: 1),
@@ -905,7 +896,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                       "User inputs:\nDaylist: $daychecklist,\nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                                                 }
                                                 String defTime = timelist[6];
-                                                ScaffoldMessenger.of(context)
+                                                sm
                                                     .showSnackBar(
                                                   SnackBar(
                                                       duration: const Duration(
@@ -922,7 +913,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                     "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: $subproflist");
                                               }
 
-                                              ScaffoldMessenger.of(context)
+                                              sm
                                                   .showSnackBar(
                                                 const SnackBar(
                                                     duration:
@@ -937,7 +928,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                     "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]}\n ProfSUb: ${subproflist.length}");
                                               }
                                             }
-                                            ScaffoldMessenger.of(context)
+                                           sm
                                                 .showSnackBar(
                                               const SnackBar(
                                                   duration:
@@ -997,7 +988,7 @@ double triggercheck(List<int> lister) {
   return valhold;
 }
 
-List<String> ReadFile(x) {
+List<String> readFile(x) {
   String fileContent = utf8.decode(x.bytes.toList());
   //var singleline = fileContent.replaceAll("\n", " ");
   List<String> result = (fileContent.split(','));
@@ -1011,9 +1002,7 @@ bool checkTimeSpansoverall(List<String> times) {
     List<DateTime> startTimes = [];
     List<DateTime> endTimes = [];
     
-    print(startTimes);
-    print(endTimes);
-    
+
     for (String spanString in spanStrings) {
       List<String> times = spanString.split('-').map((s) => s.trim()).toList();
       int startHour = int.parse(times[0].substring(0, 2));

@@ -802,6 +802,7 @@ class _DetailDashState extends State<DetailDash> {
                                               _currentSelectedCourse)
                                       .map((e) => e.toString())
                                       .toList();
+                                  var sm = ScaffoldMessenger.of(context);
                                   List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3]);
 
                                   if (kDebugMode) {
@@ -815,21 +816,19 @@ class _DetailDashState extends State<DetailDash> {
                                         "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
                                   }
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  sm.showSnackBar(
                                     const SnackBar(
                                         duration: Duration(seconds: 1),
                                         content: Text(
                                             'Saving details for your session')),
                                   );
 
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PrimeShowcaser(
-                                              courseCode:
-                                                  _currentSelectedCourse,
+                                  Navigator.push(context,MaterialPageRoute(builder: (context) => PrimeShowcaser(
+                                              courseCode: _currentSelectedCourse,
                                               yearLevel: _myStanding,
-                                              courseData: _courseData,allowedCourse: courseList,)));
+                                              courseData: _courseData,
+                                    allowedCourse: courseList,
+                                  )));
                                 }
                               },
                               child: const Text(
