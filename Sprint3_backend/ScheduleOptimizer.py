@@ -43,7 +43,7 @@ class Schedule:
         self.type = schedule[5]
         # print(self.days, self.time, self.type)
 
-def get_course_list_from_program(program: str): #get_course_list_from_program(bs_cs) returns list of all courses required under program
+def get_course_list_from_program(program: str): #get_course_list_from_program(program) returns list of all courses required under program
     deg = DegreeProgram(program)
     flat = []
     [flat.extend(sem) for year in deg.courses for sem in year]
