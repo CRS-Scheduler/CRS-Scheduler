@@ -22,11 +22,9 @@ def time_lookup(raw_time):
 def get_sched(sched):
     start = time_lookup(sched[0])
     end = time_lookup(sched[2])
-    AM = 0000
-    PM = 1200
-    if sched[1] == "": start = start + AM if sched[3] == "AM" else start + PM
-    else: start = start + AM if sched[1] == "AM" else start + PM
-    end = end + AM if sched[3] == "AM" else end + PM
+    if sched[1] == "": pass if sched[3] == "AM" else start = time(12+start.hour, start.minute)
+    else: pass if sched[1] == "AM" else start = time(12+start.hour, start.minute)
+    pass if sched[3] == "AM" else start = time(12+end.hour, end.minute)
     return (start,end)
 
 def get_html(name):
