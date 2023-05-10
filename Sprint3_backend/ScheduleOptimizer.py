@@ -1,3 +1,4 @@
+import random
 from CourseLookup import course_lister
 from CourseParser import get_data
 from CourseParser import get_days
