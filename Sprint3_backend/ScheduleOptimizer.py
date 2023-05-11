@@ -18,7 +18,7 @@ class DegreeProgram:
 
         # print(self.courses)
         # print(self.years)
-        [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
+        # [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
         # [print([i.__dict__ for i in course.section_list]) for year in self.courses_data for sem in year for course in sem]
 
     # def fetch_courses_data(self, semester):
@@ -60,7 +60,24 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(pr
 
 def main():
     # print(get_course_list_from_program('BS_CS'))
-    deg = DegreeProgram('BS_CS', 3)
+    optimal_schedule = OptimalSchedule()
+    degree_program = DegreeProgram('BS_CS', 2)
+    for course in degree_program.courses_data:
+        if len(course.section_list) == 0: continue
+        while True:
+            reset = False
+            selected = random.choice(course.section_list)
+            for schedule in selected.schedules:
+                for day in schedule.days:
+                    if not optimal_schedule.is_free(day, schedule.time[0], schedule.time[1], selected.name):
+                        reset = True
+                        break
+            if reset == True: continue
+            break
+        for schedule in selected.schedules:
+            for day in schedule.days:
+                optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
+    optimal_schedule.print_schedule()
     
 if __name__ == "__main__":
     main()
