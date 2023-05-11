@@ -4,11 +4,20 @@ from schedule import Schedule
 # Create a new schedule object
 my_schedule = Schedule()
 
-# Set CS21 on Monday from 7:00 to 8:30
-my_schedule.set_event('Monday', time(7, 0), time(8, 30), 'CS21')
-# Set CS138 on Tuesday, Thursday from 15:00 to 16:30
-my_schedule.set_event('Tuesday', time(15, 0), time(16, 30), 'CS138')
-my_schedule.set_event('Thursday', time(15, 0), time(16, 30), 'CS138')
+my_schedule.set_event('Monday', time(17, 0), time(18, 0), 'CS194')
+my_schedule.set_event('Tuesday', time(11,30), time(13,0), 'STS1')
+my_schedule.set_event('Tuesday', time(15,0), time(16,0), 'PE2')
+my_schedule.set_event('Thursday', time(11,30), time(13,0), 'STS1')
+my_schedule.set_event('Thursday', time(15,0), time(16,0), 'PE2')
+my_schedule.set_event('Wednesday', time(10,0), time(11,30), 'CS 132')
+my_schedule.set_event('Saturday', time(7,0), time(12,30), 'ROTC')
 
-# Print current schedule
-my_schedule.print_schedule();
+my_schedule.print_schedule()
+
+#test get_event method
+print('\nget_event method:')
+print(my_schedule.get_event('Monday', time(17,0)))
+#test remove_event method
+print('\nremove_event method:')
+my_schedule.remove_event('Monday', time(17,0))
+print(my_schedule.get_event('Monday', time(17,0)))

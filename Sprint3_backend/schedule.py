@@ -1,7 +1,7 @@
 class Schedule:
     def __init__(self):
         self.schedule = {
-            'Monday': [None] * 24,
+            'Monday': [None] * 24,  # 24 intervals from 7 am to 7 pm
             'Tuesday': [None] * 24,
             'Wednesday': [None] * 24,
             'Thursday': [None] * 24,
@@ -24,9 +24,6 @@ class Schedule:
         start_index = int(start_index * 2)
         end_index = int(end_index * 2)
 
-        start_time_24hr = start_time.replace(hour=start_time.hour + 7)
-        end_time_24hr = end_time.replace(hour=end_time.hour + 7)
-
         day_schedule = self.schedule.get(day)
         if not day_schedule:
             raise ValueError('Invalid day.')
@@ -34,49 +31,41 @@ class Schedule:
         if any(day_schedule[start_index:end_index]):
             raise ValueError('There is already an event scheduled in the given time slot.')
 
-        day_schedule[start_index:end_index] = [(start_time_24hr, end_time_24hr, event)] * (end_index - start_index)
+        day_schedule[start_index:end_index] = [event] * (end_index - start_index)
 
-    def get_event(self, day, time):
+    def get_event(self, day, start_time):
+        index = start_time.hour - 7
+        if start_time.minute >= 30:
+            index += 0.5
+        index = int(index * 2)
+
         day_schedule = self.schedule.get(day)
         if not day_schedule:
             raise ValueError('Invalid day.')
+        if index < 0 or index >= 24:
+            raise ValueError('Invalid start time.')
 
-        index = int((time.hour - 7) * 2)
-        if time.minute >= 30:
-            index += 1
+        return day_schedule[index]
 
-        event = day_schedule[index]
-        if event:
-            start_time_24hr, end_time_24hr, event_description = event
-            return start_time_24hr, end_time_24hr, event_description
-        else:
-            return None
+    def remove_event(self, day, start_time):
+        index = start_time.hour - 7
+        if start_time.minute >= 30:
+            index += 0.5
+        index = int(index * 2)
 
-    def remove_event(self, day, time):
         day_schedule = self.schedule.get(day)
         if not day_schedule:
             raise ValueError('Invalid day.')
-
-        index = int((time.hour - 7) * 2)
-        if time.minute >= 30:
-            index += 1
-
-        if not day_schedule[index]:
-            raise ValueError('No event scheduled at the given time.')
+        if index < 0 or index >= 24:
+            raise ValueError('Invalid start time.')
 
         day_schedule[index] = None
 
     def print_schedule(self):
         for day, day_schedule in self.schedule.items():
             print(day)
-            for index, event in enumerate(day_schedule):
+            for i, event in enumerate(day_schedule):
                 if event:
-                    start_time_24hr, end_time_24hr, event_description = event
-                    start_time = start_time_24hr.replace(hour=start_time_24hr.hour - 7)
-                    end_time = end_time_24hr.replace(hour=end_time_24hr.hour - 7)
-                    print(f'{start_time.strftime("%H:%M")} - {end_time.strftime("%H:%M")}: {event_description}')
-                else:
-                    start_time = (index // 2) + 7
-                    end_time = start_time + 0.5
-                    print(f'{start_time:02.0f}:{"00" if index % 2 == 0 else "30"} - {end_time:02.0f}:{"00" if index % 2 == 0 else "30"}: (Available)')
-            print()
+                    start_time = f'{i // 2 + 7:02}:{i % 2 * 30:02}'
+                    end_time = f'{(i + 1) // 2 + 7:02}:{(i + 1) % 2 * 30:02}'
+                    print(f'{start_time} - {end_time}: {event}')
