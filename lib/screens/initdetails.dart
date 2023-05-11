@@ -794,34 +794,25 @@ class _DetailDashState extends State<DetailDash> {
 
                                 if (_formKey.currentState!.validate()) {
                                   // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
-                                  _courseData = data!
-                                      .where((row) =>
+                                  _courseData = data!.where((row) =>
                                           row[collegeInd] ==
                                               _currentSelectedCollege &&
                                           row[courseNameInd] ==
-                                              _currentSelectedCourse)
-                                      .map((e) => e.toString())
-                                      .toList();
+                                              _currentSelectedCourse).map((e) => e.toString()).toList();
                                   var sm = ScaffoldMessenger.of(context);
-                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3]);
 
-                                  if (kDebugMode) {
-                                    print(courseList.toString());
-                                  }
                                   //print(courseList[1]);
                                   if (kDebugMode) {
                                     print(_courseData[0].split(', ')[3]);
-
-                                    print(
-                                        "User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
+                                    print("User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
+                                  }
+                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3]);
+                                  if (kDebugMode) {
+                                    print(courseList.toString());
                                   }
 
-                                  sm.showSnackBar(
-                                    const SnackBar(
-                                        duration: Duration(seconds: 1),
-                                        content: Text(
-                                            'Saving details for your session')),
-                                  );
+
+                                  sm.showSnackBar(const SnackBar(duration: Duration(seconds: 1), content: Text('Saving details for your session')),);
 
                                   Navigator.push(context,MaterialPageRoute(builder: (context) => PrimeShowcaser(
                                               courseCode: _currentSelectedCourse,

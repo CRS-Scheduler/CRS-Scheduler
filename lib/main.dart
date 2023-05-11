@@ -1,8 +1,7 @@
 import 'package:crs_scheduler/screens/initdetails.dart';
 import 'package:flutter/material.dart';
-
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:crs_scheduler/screens/schedulescreen.dart';
+import '../sizeconfig.dart';
 void main()  {
   runApp(const MyApp());
 }
@@ -50,56 +49,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return  const DetailParent();
+    return  const ScheduleShowcase();
 
 
   }
 }
 
-
-class MyAPITest extends StatefulWidget {
-  const MyAPITest({super.key});
-
-  @override
-  State<MyAPITest> createState() => _MyAPITestState();
-}
-
-class _MyAPITestState extends State<MyAPITest> {
-  List data=[];
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  Future<String> getData() async {
-    var response = await http.get(
-        Uri.parse("http://127.0.0.1:5000/api/courses?prgm=BS_CS"),
-        //headers: {"Accept": "application/json"}
-        );
-
-    setState(() {
-      data = json.decode(response.body);
-    });
-
-    return "Success!";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("JSON Response"),
-      ),
-      body: Text(data.toString()),
-    );
-  }
-}
 
