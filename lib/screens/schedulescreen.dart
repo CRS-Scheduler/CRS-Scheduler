@@ -65,7 +65,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     [Course("CS 12","THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
       Course("CS 21","THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
     [ Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
-    [Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))]
+    []
   ];
   
 
@@ -243,7 +243,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ],
               ),
             ),
-            Padding(
+           /* Padding(
               padding: const EdgeInsets.symmetric(
                   vertical: 30.0),
               child: Showcase(
@@ -273,7 +273,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                 ),
               ),
-            )],),
+            )// export button*/],),
         ),
       ),
     );
