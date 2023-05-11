@@ -1,4 +1,4 @@
-class Schedule:
+class OptimalSchedule:
     def __init__(self):
         self.schedule = {
             'Monday': [None] * 24,  # 24 intervals from 7 am to 7 pm
