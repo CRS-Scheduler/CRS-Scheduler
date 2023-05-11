@@ -9,6 +9,31 @@ class OptimalSchedule:
             'Saturday': [None] * 24
         }
 
+    def is_free(self, day, start_time, end_time, event):
+        if start_time.hour < 7 or end_time.hour > 19:
+            return False
+
+        start_index = start_time.hour - 7
+        end_index = end_time.hour - 7
+
+        if start_time.minute >= 30:
+            start_index += 0.5
+        if end_time.minute > 0:
+            end_index += 0.5
+
+        start_index = int(start_index * 2)
+        end_index = int(end_index * 2)
+
+        day_schedule = self.schedule.get(day)
+
+        if not day_schedule:
+            return False
+
+        if any(day_schedule[start_index:end_index]):
+            return False
+
+        return True
+
     def set_event(self, day, start_time, end_time, event):
         if start_time.hour < 7 or end_time.hour > 19:
             raise ValueError('Events can only be scheduled between 7 am and 7 pm.')
