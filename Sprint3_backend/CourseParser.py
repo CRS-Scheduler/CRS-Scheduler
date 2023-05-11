@@ -114,7 +114,7 @@ def get_days(days_sched):
                     days.append("Tuesday")
                 elif days_sched[i+1] == "h":
                     days.append("Thursday")
-                days.append("Tuesday")
+                else: days.append("Tuesday")
             case "W": days.append("Wednesday")
             case "F": days.append("Friday")
             case "S": days.append("Saturday")
