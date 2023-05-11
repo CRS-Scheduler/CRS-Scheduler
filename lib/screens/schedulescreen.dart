@@ -34,11 +34,11 @@ class ScheduleScreen extends StatefulWidget {
 class Course{
   String name;
   String section;
-  List<int> days;
+
   DateTime startTime;
   DateTime endTime;
 
-  Course(this.name, this.section,this.days, this.startTime, this.endTime);
+  Course(this.name, this.section, this.startTime, this.endTime);
 }
 DateTime startDayTime =  DateTime(2023, 0,0, 7, 00, 0);
 DateTime endDayTime =  DateTime(2023, 0, 0, 18, 30, 0);
@@ -49,23 +49,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
   final GlobalKey _export = GlobalKey();
   final List<Course> courses = [
-    Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),
-    Course("CS 12","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
-    Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),
-    Course("CS 32","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 15, 30, 0), DateTime(2023, 0, 0, 17, 00, 0)),
+    Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),
+    Course("CS 12","THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
+    Course("CS 21","THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),
+    Course("CS 32","THUV",DateTime(2023, 0,0, 15, 30, 0), DateTime(2023, 0, 0, 17, 00, 0)),
     // add more courses here
   ];
   final List<String> daysoftheweek=['Time','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
   final List<List<Course>> dayStack=[
-    [Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))],
-    [Course("CS 12","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
-      Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
-    [Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0))],
-    [Course("CS 12","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
-      Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
-    [ Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
-    [Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))]
+    [Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))],
+    [Course("CS 12","THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
+      Course("CS 21","THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
+    [Course("CS 21","THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0))],
+    [Course("CS 12","THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
+      Course("CS 21","THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
+    [ Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
+    [Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))]
   ];
   
 
