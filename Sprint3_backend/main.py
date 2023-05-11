@@ -1,8 +1,8 @@
 from datetime import time
 from schedule import OptimalSchedule
 
-# Create a new schedule object
-my_schedule = Schedule()
+# Create a new optimal schedule object
+my_schedule = OptimalSchedule()
 
 my_schedule.set_event('Monday', time(17, 0), time(18, 0), 'CS194')
 my_schedule.set_event('Tuesday', time(11,30), time(13,0), 'STS1')
