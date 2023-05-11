@@ -56,6 +56,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     // add more courses here
   ];
   final List<String> daysoftheweek=['Time','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  final List<List<Course>> dayStack=[
+    [Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))],
+    [Course("CS 12","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
+      Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
+    [Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0))],
+    [Course("CS 12","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
+      Course("CS 21","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
+    [ Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
+    [Course("Math 20","THUV",[0,1,0,1,0,0], DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))]
+  ];
   
 
   WidgetsToImageController controller = WidgetsToImageController();
@@ -215,11 +226,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     Container(color: const Color(0xff8B1538),
                       child: Row(
                         children: [
-                          SizedBox(
+                          for (List<Course> x in dayStack)
+                            SizedBox(
                             height: (brickHeight+1)*(timeBlockWidgets.length.toDouble()),
                             width: SizeConfig.safeBlockHorizontal * 80/7,
                             child: Stack(children:[
-                              for(Course i in courses)
+                              for(Course i in x)
                                 CourseWidget(course: i)
                             ]),
                           )
