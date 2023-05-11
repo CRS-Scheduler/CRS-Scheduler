@@ -38,8 +38,23 @@ def get_sched(sched):
     # print(dateTimeDifferenceInHours)
     return (start,end)
 
-def get_html(name):
-    url = "https://crs.upd.edu.ph/schedule/120222/" + name.replace(" ", "%20")
+def get_sem_and_base_url():
+    root_url = "https://crs.upd.edu.ph/schedule/"
+    try:
+        base_url_html = get(root_url, timeout=3).text
+    except:
+        error = "Check your internet connection and try again later."
+        return (False, error)
+    selection = BeautifulSoup(base_url_html, "html.parser").find_all('option', attrs={"selected": "selected"})[0]
+    match selection.get_text().split()[0].lower():
+        case "first": sem = 1
+        case "second": sem = 2
+        case "midyear": sem = 3
+    base_url = root_url + selection['value'] + "/"
+    return (sem, base_url)
+
+def get_html(name, base_url):
+    url = base_url + name.replace(" ", "%20")
     try:
         ret = get(url, timeout=3).text
         return (True, ret)
@@ -82,8 +97,8 @@ def get_data_from_parsed_contents(name, parsed_contents):
         ret.append((class_name, raw_schedule, slots))
     return ret
 
-def get_data(name):
-    tmp = get_html(name)
+def get_data(name, base_url):
+    tmp = get_html(name, base_url)
     if not tmp[0]: eprint(tmp[1]) # error print for get_html
     tmp = parse_contents(tmp[1])
     if not tmp[0]: eprint(tmp[1]) # error print for parse_contents

@@ -3,18 +3,21 @@ from CourseLookup import course_lister
 from CourseParser import get_data
 from CourseParser import get_days
 from CourseParser import get_sched
+from CourseParser import get_sem_and_base_url
 
 class DegreeProgram:
-    def __init__(self, name, year, semester):
+    def __init__(self, name, year):
         self.name = name
         # Require a lookup table for a particular degree program
-        self.courses = course_lister(name, year, semester)
+        current_sem, base_url = get_sem_and_base_url()
+        self.courses = course_lister(name, year, current_sem)
         self.years = len(self.courses)
-        self.courses_data = list(map(lambda c: Course(c), self.courses))
+        self.courses_data = list(map(lambda c: Course(c, base_url), self.courses))
+
 
         # print(self.courses)
         # print(self.years)
-        # [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
+        [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
         # [print([i.__dict__ for i in course.section_list]) for year in self.courses_data for sem in year for course in sem]
 
     # def fetch_courses_data(self, semester):
@@ -27,9 +30,9 @@ class DegreeProgram:
     #     return courses_data
 
 class Course:
-    def __init__(self, name):
+    def __init__(self, name, base_url):
         self.name = name
-        self.section_list = list(map(lambda section: Section(section), get_data(name)))
+        self.section_list = list(map(lambda section: Section(section), get_data(name, base_url)))
         # print([i.__dict__ for i in self.section_list])
 
 class Section:
@@ -48,7 +51,7 @@ class Schedule:
         # print(self.days, self.time, self.type)
 
 def get_course_list_from_program(program: str): #get_course_list_from_program(program) returns list of all courses required under program
-    deg = DegreeProgram(program, 3, 0)
+    deg = DegreeProgram(program, 3)
     return deg.courses
     # flat = []
     # [flat.extend(sem) for year in deg.courses for sem in year]
@@ -56,7 +59,7 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(pr
 
 def main():
     # print(get_course_list_from_program('BS_CS'))
-    deg = DegreeProgram('BS_CS', 3, 1)
+    deg = DegreeProgram('BS_CS', 3)
     
 if __name__ == "__main__":
     main()

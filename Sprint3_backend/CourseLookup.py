@@ -6,7 +6,7 @@ def course_lister(root, year, semester):
     # year_levels = map(lambda x: (x, sorted(x.glob("*.txt"))), degree_programs)
     # for (root, txtfilepath) in year_levels:
     txtfilepath = sorted(Path(root).glob(f"{root}_{year}.txt"))
-    return write_lookup(txtfilepath[0], semester)
+    return write_lookup(txtfilepath[0], semester-1)
 
 def write_lookup(txtfilename, semester):
     file = open(txtfilename, "r+")
