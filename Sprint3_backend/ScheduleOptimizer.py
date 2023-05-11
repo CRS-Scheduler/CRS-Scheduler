@@ -4,7 +4,7 @@ from CourseParser import get_data
 from CourseParser import get_days
 from CourseParser import get_sched
 from CourseParser import get_sem_and_base_url
-from schedule import OptimalSchedule
+from OptimalSchedule import OptimalSchedule
 
 class DegreeProgram:
     def __init__(self, name, year):
