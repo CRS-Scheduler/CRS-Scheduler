@@ -60,23 +60,32 @@ def get_course_list_from_program(program: str): #get_course_list_from_program(pr
 
 def main():
     # print(get_course_list_from_program('BS_CS'))
-    optimal_schedule = OptimalSchedule()
-    degree_program = DegreeProgram('BS_CS', 2)
-    for course in degree_program.courses_data:
-        if len(course.section_list) == 0: continue
-        while True:
-            reset = False
-            selected = random.choice(course.section_list)
+    while True:
+        hard_reset = False
+        optimal_schedule = OptimalSchedule()
+        degree_program = DegreeProgram('BS_CS', 2)
+        random_courses_data = degree_program.courses_data.copy()
+        random.shuffle(random_courses_data)
+        for course in random_courses_data:
+            random_section_list = course.section_list.copy()
+            random.shuffle(random_section_list)
+            if len(course.section_list) == 0: continue
+            while True:
+                reset = False
+                if len(random_section_list) == 0: hard_reset = True
+                selected = random_section_list.pop()
+                for schedule in selected.schedules:
+                    for day in schedule.days:
+                        if not optimal_schedule.is_free(day, schedule.time[0], schedule.time[1], selected.name):
+                            reset = True
+                            break
+                if reset == True: continue
+                break
             for schedule in selected.schedules:
                 for day in schedule.days:
-                    if not optimal_schedule.is_free(day, schedule.time[0], schedule.time[1], selected.name):
-                        reset = True
-                        break
-            if reset == True: continue
-            break
-        for schedule in selected.schedules:
-            for day in schedule.days:
-                optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
+                    optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
+        if hard_reset == True: continue
+        break
     optimal_schedule.print_schedule()
     
 if __name__ == "__main__":
