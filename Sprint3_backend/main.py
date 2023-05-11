@@ -1,5 +1,5 @@
 from datetime import time
-from schedule import Schedule
+from schedule import OptimalSchedule
 
 # Create a new schedule object
 my_schedule = Schedule()
