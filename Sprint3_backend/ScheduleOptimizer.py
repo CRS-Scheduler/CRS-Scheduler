@@ -48,19 +48,11 @@ class Schedule:
         self.type = schedule[5]
         # print(self.days, self.time, self.type)
 
-def get_course_list_from_program(program: str): #get_course_list_from_program(program) returns list of all courses required under program
-    deg = DegreeProgram(program, 3)
-    return deg.courses
-    # flat = []
-    # [flat.extend(sem) for year in deg.courses for sem in year]
-    # return list(set(flat))
-
-def main():
-    # print(get_course_list_from_program('BS_CS'))
+def get_course_list_from_program(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
     while True:
         hard_reset = False
         optimal_schedule = OptimalSchedule()
-        degree_program = DegreeProgram('BS_CS', 2)
+        degree_program = DegreeProgram(program, year_level)
         random_courses_data = degree_program.courses_data.copy()
         random.shuffle(random_courses_data)
         for course in random_courses_data:
@@ -69,7 +61,9 @@ def main():
             if len(course.section_list) == 0: continue
             while True:
                 reset = False
-                if len(random_section_list) == 0: hard_reset = True
+                if len(random_section_list) == 0:
+                    hard_reset = True
+                    break
                 selected = random_section_list.pop()
                 for schedule in selected.schedules:
                     for day in schedule.days:
@@ -85,6 +79,3 @@ def main():
         if hard_reset == True: continue
         break
     optimal_schedule.print_schedule()
-    
-if __name__ == "__main__":
-    main()
