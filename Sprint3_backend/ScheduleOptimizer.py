@@ -83,7 +83,7 @@ def schedule_optimizer(program, year_level): #get_course_list_from_program(progr
         if hard_reset == True: continue
         break
     print_str = ""
-    for day, day_schedule in self.schedule.items():
+    for day, day_schedule in optimal_schedule.schedule.items():
         print_str += day + '\n'
         event_start = None
         event_end = None
