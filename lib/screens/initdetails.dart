@@ -66,8 +66,7 @@ class _DetailDashState extends State<DetailDash> {
     return localhold;
   }
 
-  double deviceHeight(BuildContext context) =>
-      MediaQuery.of(context).size.height;
+  double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
   List<dynamic> _courseNames = ["Unselected"];
   late List<String> _dropdownItems = ["Unselected"];
   final _formKey = GlobalKey<FormState>();

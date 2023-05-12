@@ -64,11 +64,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     [ Course("Math 20 THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
     []
   ];
-  final List<List<Course>> stacker=[
-    [],[],[],[],[],[]
+  late  List<List<Course>> stacker=[[],[],[],[],[],[]];
 
-  ];
-  Future fetchlist(String course, int yr) async {
+
+  fetchSched(String course, int yr) async {
+    List<List<Course>> holder=[];
 // Define the API endpoint URL
     final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
     if (kDebugMode) {
@@ -76,37 +76,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
 // Make an HTTP GET request to the API endpoint
     final response = await http.get(Uri.parse(apiUrl));
-
 // Check if the request was successful (status code 200)
     if (response.statusCode == 200) {
       // Parse the response data as a string
-      String localhold = json.decode(response.body);
-      if (kDebugMode) {
-        print(localhold);
-      }
-      List<String> lines = localhold.split("\n");
-      lines.removeLast();
-      int stackInd=0;
-      for(String i in lines){
-        if(daysoftheweek.contains(i)){
-          if (i!="Monday") {
-            stackInd+=1;
-          }
-        }//increments matrix index
-        else if (i!="\n"){
-          print(i);
-          int hourStart = int.parse(i[0].substring(0, 1));
-          int minStart = int.parse(i[0].substring(0, 1));
-          int hourEnd = int.parse(i[1].substring(0, 1));
-          int minEmd = int.parse(i[1].substring(0, 1));
-          Course newCourse = Course(i[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2022, 0, 0, hourEnd, minEmd));
-          stacker[stackInd].add(newCourse);
-        }
-
-      }
-      if (kDebugMode) {
-        print(stacker);
-      }
+       String localhold = json.decode(response.body);
+       return localhold;
     } else {
       // Handle the error case, such as displaying an error message to the user
       if (kDebugMode) {
@@ -116,28 +90,54 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   }
 
-  WidgetsToImageController controller = WidgetsToImageController();
-// to save image bytes of widget
-  Uint8List? bytes;
+  schedParser(String schedule){
 
-  /*Future<void> _exportContainer() async {
-    try {
+  List<String> lines = schedule.split("\n");
+
+  lines.removeLast();
+  int stackInd=0;
+  for(String i in lines){
+    print(i);
+    if(daysoftheweek.contains(i)){
+      if (i!="Monday") {
+        stackInd+=1;
+      }
+    }//increments matrix index
+    else if (i!="\n"){
+      List<String> listhold = i.split(",");
 
 
-      final bytes = await controller.capture();
+      int hourStart = int.parse(listhold[0].substring(0, 2));
+      int minStart = int.parse(listhold[0].substring(2, 4));
+      int hourEnd = int.parse(listhold[1].substring(0, 2));
+      int minEmd = int.parse(listhold[1].substring(2, 4));
 
-      final Uint8List pngBytes = bytes;
-      final directory = await getApplicationDocumentsDirectory();
-      File file = File('${directory.path}/image.png');
-      await file.writeAsBytes(pngBytes);
-    } catch (e) {
-      print(e);
+      Course newCourse = Course(listhold[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
+      print("${newCourse.coursename_section}:${newCourse.startTime}-${newCourse.endTime}");
+      stacker[stackInd].add(newCourse);
     }
-  }*/
+
+  }
+
+  }
+
+
   @override
   void initState() {
     super.initState();
-    fetchlist(widget.courseCode, widget.yrStanding);
+    String hold;
+    Future.delayed(Duration.zero, () async {
+      // your async operation here
+      final result = await fetchSched(widget.courseCode, widget.yrStanding);
+      // update the state using setState
+      setState(() {
+        // update the state with the result of the async operation
+        hold = result;
+        schedParser(hold);
+        print(stacker);
+      });
+    });
+
   }
   @override
   Widget build(BuildContext context) {
@@ -348,14 +348,16 @@ class _CourseWidgetState extends State<CourseWidget> {
       Positioned(
         top:(brickHeight+1)*_heightGenerator(startDayTime, widget.course.startTime),
         child: Container(width:(SizeConfig.safeBlockHorizontal * 80)/7, 
-          height:(brickHeight+1)*_heightGenerator(widget.course.startTime, widget.course.endTime),
+          height:brickHeight,//(brickHeight+1)*_heightGenerator(widget.course.startTime, widget.course.endTime),
           decoration: BoxDecoration(color: Colors.amber, border: Border.all(),), 
           child: Padding(
             padding: const EdgeInsets.all(8.0), 
             child: Column(
               mainAxisAlignment:MainAxisAlignment.center,
-              children: [
-                Text('${widget.course.coursename_section}'),],
+              children: [ FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(widget.course.coursename_section))
+             ],
             ),
           ),
         ),

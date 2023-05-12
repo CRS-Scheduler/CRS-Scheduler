@@ -83,8 +83,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     "Senior"
   ];
   final _timeformkey = GlobalKey<FormState>();
-  double deviceHeight(BuildContext context) =>
-      MediaQuery.of(context).size.height;
+  double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
 
   int _indexer = 0;
