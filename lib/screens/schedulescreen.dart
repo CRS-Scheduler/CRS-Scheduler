@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
-import 'package:widgets_to_image/widgets_to_image.dart';
 
 class ScheduleShowcase extends StatelessWidget {
   final String courseCode;
@@ -35,13 +34,13 @@ class ScheduleScreen extends StatefulWidget {
 
 
 class Course{
-  String coursename_section;
+  String courseNameSection;
 
 
   DateTime startTime;
   DateTime endTime;
 
-  Course(this.coursename_section, this.startTime, this.endTime);
+  Course(this.courseNameSection, this.startTime, this.endTime);
 }
 DateTime startDayTime =  DateTime(2023, 0,0, 7, 00, 0);
 DateTime endDayTime =  DateTime(2023, 0, 0, 20, 00, 0);
@@ -50,7 +49,7 @@ double brickHeight=40;
 class _ScheduleScreenState extends State<ScheduleScreen> {
   double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
-  final GlobalKey _export = GlobalKey();
+  //final GlobalKey _export = GlobalKey();
 
   final List<String> daysoftheweek=['Time','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
@@ -68,7 +67,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
 
   fetchSched(String course, int yr) async {
-    List<List<Course>> holder=[];
 // Define the API endpoint URL
     final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
     if (kDebugMode) {
@@ -97,7 +95,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   lines.removeLast();
   int stackInd=0;
   for(String i in lines){
-    print(i);
+    if (kDebugMode) {
+      print(i);
+    }
     if(daysoftheweek.contains(i)){
       if (i!="Monday") {
         stackInd+=1;
@@ -113,7 +113,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       int minEmd = int.parse(listhold[1].substring(2, 4));
 
       Course newCourse = Course(listhold[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
-      print("${newCourse.coursename_section}:${newCourse.startTime}-${newCourse.endTime}");
+      if (kDebugMode) {
+        print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");
+      }
       stacker[stackInd].add(newCourse);
     }
 
@@ -134,7 +136,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         // update the state with the result of the async operation
         hold = result;
         schedParser(hold);
-        print(stacker);
+        if (kDebugMode) {
+          print(stacker);
+        }
       });
     });
 
@@ -356,7 +360,7 @@ class _CourseWidgetState extends State<CourseWidget> {
               mainAxisAlignment:MainAxisAlignment.center,
               children: [ FittedBox(
                   fit: BoxFit.fitWidth,
-                  child: Text(widget.course.coursename_section,softWrap: true))
+                  child: Text(widget.course.courseNameSection,softWrap: true))
              ],
             ),
           ),

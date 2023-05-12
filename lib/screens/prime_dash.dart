@@ -1,6 +1,6 @@
 // ignore_for_file: unused_field
 import 'dart:convert';
-import 'dart:html' as webFile;
+import 'dart:html' as web_file;
 import 'package:crs_scheduler/widgets/timechooser.dart';
 import 'package:crs_scheduler/widgets/daychooser.dart';
 import 'package:crs_scheduler/widgets/profchooser.dart';
@@ -331,7 +331,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
                                             //PLUGIN of CSV used here
                                             if (kIsWeb) {
-                                              var blob = webFile.Blob(
+                                              var blob = web_file.Blob(
                                                   [dayRow] +
                                                       [newline] +
                                                       [timeRow] +
@@ -342,8 +342,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   'text/plain',
                                                   'native');
                                               var anchorElement =
-                                                  webFile.AnchorElement(
-                                                href: webFile.Url
+                                                  web_file.AnchorElement(
+                                                href: web_file.Url
                                                         .createObjectUrlFromBlob(
                                                             blob)
                                                     .toString(),
@@ -410,16 +410,21 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 content: Text(
                                                     'WARNING: You have an error in your inputted prefered times.')),
                                             );
-                                          }else if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {
-                                            if (item == sublist[0]) {
+                                          }
+                                          else
+                                            if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {
+                                              print("problem: ${item}");
+
+                                              if (item == sublist[0]) {
+
 
                                             return false; // the element was found in data, no need to panic
                                           }
                                           }
                                           return true; // the element was not found in data, trigger a panic
-                                          })){if (kDebugMode) {
+                                          })&& subproflist[0][0] != ''){if (kDebugMode) {
                                             //print(sublist[0]);
-                                            print("ERROR: Preferred Subject Error");
+                                            print("ERROR: Preferred Subject Error - ROW");
                                             print(
                                                 "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
                                           }
@@ -672,7 +677,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
                                               //PLUGIN of CSV used here
                                               if (kIsWeb) {
-                                                var blob = webFile.Blob(
+                                                var blob = web_file.Blob(
                                                     [dayRow] +
                                                         [newline] +
                                                         [timeRow] +
@@ -683,8 +688,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                     'text/plain',
                                                     'native');
                                                 var anchorElement =
-                                                    webFile.AnchorElement(
-                                                  href: webFile.Url
+                                                    web_file.AnchorElement(
+                                                  href: web_file.Url
                                                           .createObjectUrlFromBlob(
                                                               blob)
                                                       .toString(),
@@ -763,7 +768,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             }
                                             }
                                             return true; // the element was not found in data, trigger a panic
-                                            })){if (kDebugMode) {
+                                            })&& subproflist[0][0] != ''){if (kDebugMode) {
                                               print("ERROR: Preferred Subject Error");
                                               print(
                                                   "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
