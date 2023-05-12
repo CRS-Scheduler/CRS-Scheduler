@@ -1,5 +1,5 @@
 from flask import Flask, request
-import CourseValidator, json
+import ScheduleOptimizer, json
 app = Flask(__name__)
 
 @app.route("/index")
@@ -12,7 +12,7 @@ def get_courses_from_program():
     #yrlvl = request.args.get("yrlvl")
     #l = ["doe a deer a female deer re a drop of golden sun".split()]
     #jsonstr = json.dumps(l)
-    jsonstr = json.dumps(CourseValidator.get_course_list_from_program(prgm))
+    jsonstr = json.dumps(ScheduleOptimizer.get_course_list_from_program(prgm))
     return jsonstr
 
 
