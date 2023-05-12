@@ -44,7 +44,7 @@ class Course{
   Course(this.coursename_section, this.startTime, this.endTime);
 }
 DateTime startDayTime =  DateTime(2023, 0,0, 7, 00, 0);
-DateTime endDayTime =  DateTime(2023, 0, 0, 18, 30, 0);
+DateTime endDayTime =  DateTime(2023, 0, 0, 20, 00, 0);
 double brickHeight=40;
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
@@ -348,7 +348,7 @@ class _CourseWidgetState extends State<CourseWidget> {
       Positioned(
         top:(brickHeight+1)*_heightGenerator(startDayTime, widget.course.startTime),
         child: Container(width:(SizeConfig.safeBlockHorizontal * 80)/7, 
-          height:brickHeight,//(brickHeight+1)*_heightGenerator(widget.course.startTime, widget.course.endTime),
+          height:(brickHeight+1)*_heightGenerator(widget.course.startTime, widget.course.endTime),
           decoration: BoxDecoration(color: Colors.amber, border: Border.all(),), 
           child: Padding(
             padding: const EdgeInsets.all(8.0), 
@@ -356,7 +356,7 @@ class _CourseWidgetState extends State<CourseWidget> {
               mainAxisAlignment:MainAxisAlignment.center,
               children: [ FittedBox(
                   fit: BoxFit.fitWidth,
-                  child: Text(widget.course.coursename_section))
+                  child: Text(widget.course.coursename_section,softWrap: true))
              ],
             ),
           ),
