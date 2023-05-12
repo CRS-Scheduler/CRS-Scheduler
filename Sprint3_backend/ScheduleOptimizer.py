@@ -104,3 +104,9 @@ def schedule_optimizer(program, year_level): #get_course_list_from_program(progr
                 event_start = None
                 event_end = None
     return print_str
+
+def main():
+    schedule_optimizer("BS_CS", 2)
+
+if __name__ == "__main__":
+    main()
