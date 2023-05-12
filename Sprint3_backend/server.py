@@ -8,12 +8,7 @@ def home_page():
 
 @app.route("/api/courses")
 def get_courses_from_program():
-    prgm = request.args.get("prgm")
-    #yrlvl = request.args.get("yrlvl")
-    #l = ["doe a deer a female deer re a drop of golden sun".split()]
-    #jsonstr = json.dumps(l)
-    jsonstr = json.dumps(ScheduleOptimizer.get_course_list_from_program(prgm))
+    program = request.args.get("prgm")
+    year_level = request.args.get("yrlvl")
+    jsonstr = json.dumps(ScheduleOptimizer.get_course_list_from_program(program,year_level))
     return jsonstr
-
-
-
