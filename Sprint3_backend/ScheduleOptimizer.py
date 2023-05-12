@@ -49,6 +49,12 @@ class Schedule:
         # print(self.days, self.time, self.type)
 
 def get_course_list_from_program(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
+    deg = DegreeProgram(program, year_level)
+    ret = []
+    [ret.extend(sem) for year in deg.courses for sem in year]
+    return list(set(flat))
+
+def schedule_optimizer(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
     while True:
         hard_reset = False
         optimal_schedule = OptimalSchedule()
