@@ -10,6 +10,7 @@ def course_lister(root, year, semester):
 def course_parser(root, year, course_list):
     for i in range(0,len(course_list)):
         course = course_list[i]
+        if len(course) < len(root): continue
         if course[0:len(root)] == root:
             extras_file = open(f"{root}/{root}{course[len(root):]}.txt", "r+")
             course_extras = extras_file.read().split("\n")
