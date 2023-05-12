@@ -64,7 +64,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     [ Course("Math 20 THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
     []
   ];
-  final List<List<String>> stacker=[
+  final List<List<Course>> stacker=[
     [],[],[],[],[],[]
 
   ];
@@ -94,7 +94,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           }
         }//increments matrix index
         else if (i!="\n"){
-          stacker[stackInd].add(i);
+          print(i);
+          int hourStart = int.parse(i[0].substring(0, 1));
+          int minStart = int.parse(i[0].substring(0, 1));
+          int hourEnd = int.parse(i[1].substring(0, 1));
+          int minEmd = int.parse(i[1].substring(0, 1));
+          Course newCourse = Course(i[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2022, 0, 0, hourEnd, minEmd));
+          stacker[stackInd].add(newCourse);
         }
 
       }
@@ -272,7 +278,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     Container(color: const Color(0xff8B1538),
                       child: Row(
                         children: [
-                          for (List<Course> x in dayStack)
+                          for (List<Course> x in stacker)
                             SizedBox(
                             height: (brickHeight+1)*(timeBlockWidgets.length.toDouble()),
                             width: SizeConfig.safeBlockHorizontal * 80/7,
