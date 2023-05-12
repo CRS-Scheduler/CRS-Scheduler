@@ -8,7 +8,7 @@ class DegreeProgram:
         self.name = name
         # Require a lookup table for a particular degree program
         current_sem, base_url = get_sem_and_base_url()
-        self.courses = course_lister(name, year, current_sem)
+        self.all_courses, self.courses = course_lister(name, year, current_sem)
         self.years = len(self.courses)
         self.courses_data = list(map(lambda c: Course(c, base_url), self.courses))
 
@@ -50,7 +50,7 @@ class Schedule:
 
 def get_course_list_from_program(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
     deg = DegreeProgram(program, year_level)
-    return [course.name for course in deg.courses_data]
+    return [course for course in deg.all_courses]
 
 def schedule_optimizer(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
     while True:
