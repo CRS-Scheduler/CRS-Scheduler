@@ -78,4 +78,4 @@ def get_course_list_from_program(program, year_level): #get_course_list_from_pro
                     optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
         if hard_reset == True: continue
         break
-    optimal_schedule.print_schedule()
+    return optimal_schedule
