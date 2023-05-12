@@ -78,6 +78,7 @@ def main():
                             break
                 if reset == True: continue
                 break
+            if hard_reset == True: break
             for schedule in selected.schedules:
                 for day in schedule.days:
                     optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
