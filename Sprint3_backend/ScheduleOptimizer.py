@@ -84,4 +84,12 @@ def schedule_optimizer(program, year_level): #get_course_list_from_program(progr
                     optimal_schedule.set_event(day, schedule.time[0], schedule.time[1], selected.name)
         if hard_reset == True: continue
         break
-    return optimal_schedule
+    print_str = ""
+    for day, day_schedule in self.schedule.items():
+        print_str += day + "\n"
+        for i, event in enumerate(day_schedule):
+            if event:
+                start_time = f'{i // 2 + 7:02}:{i % 2 * 30:02}'
+                end_time = f'{(i + 1) // 2 + 7:02}:{(i + 1) % 2 * 30:02}'
+                print_str += f'{start_time} - {end_time}: {event}\n'
+    return print_str
