@@ -2,29 +2,32 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../sizeconfig.dart';
-import 'dart:io';
+
 import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
-import 'dart:typed_data';
+
 import 'package:flutter/rendering.dart';
-import 'package:image/image.dart' as img;
+import 'package:http/http.dart' as http;
 import 'package:widgets_to_image/widgets_to_image.dart';
 class ScheduleShowcase extends StatelessWidget {
-  const ScheduleShowcase({Key? key}) : super(key: key);
+  String courseCode;
+  int yrStanding;
+  ScheduleShowcase({Key? key, required this.courseCode,required this.yrStanding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       enableAutoScroll: true,
       blurValue: 1,
-      builder: Builder(builder: (context) => const ScheduleScreen()),
+      builder: Builder(builder: (context) =>  ScheduleScreen(courseCode: courseCode,yrStanding: yrStanding,)),
       autoPlayDelay: const Duration(seconds: 3),
     );
   }
 }
 
 class ScheduleScreen extends StatefulWidget {
-  const ScheduleScreen({Key? key}) : super(key: key);
+  String courseCode;
+  int yrStanding;
+   ScheduleScreen({Key? key,required this.courseCode,required this.yrStanding}) : super(key: key);
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
@@ -67,7 +70,32 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     [ Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
     []
   ];
-  
+  Future fetchlist(String course, int yr) async {
+
+// Define the API endpoint URL
+    final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
+    if (kDebugMode) {
+      print(apiUrl);
+    }
+// Make an HTTP GET request to the API endpoint
+    final response = await http.get(Uri.parse(apiUrl));
+
+// Check if the request was successful (status code 200)
+    if (response.statusCode == 200) {
+      // Parse the response data as a string
+      String scheduleString = response.body;
+      if (kDebugMode) {
+        print(scheduleString);
+      // Do something with the schedule string, such as parsing and displaying it
+
+      }} else {
+      // Handle the error case, such as displaying an error message to the user
+      if (kDebugMode) {
+        print('Error: ${response.statusCode}');
+      }
+    }
+
+  }
 
   WidgetsToImageController controller = WidgetsToImageController();
 // to save image bytes of widget
@@ -87,6 +115,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       print(e);
     }
   }*/
+  @override
+  void initState() {
+    super.initState();
+    /* WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ShowCaseWidget.of(context)
+          .startShowCase([_college,_degree,_standing,_next]),
+    );*/
+    fetchlist(widget.courseCode, widget.yrStanding);
+  }
   @override
   Widget build(BuildContext context) {
     // time block calculations
@@ -316,5 +353,14 @@ double _heightGenerator(DateTime start, DateTime end){
 
   return difference.inMinutes / 30;
 }
-
-
+/*
+void _courseCollapser(List<Course> coursesToday){
+  final List<Course> collapsedCourse=[];
+  for(Course x in coursesToday) {
+    final String courseName = "";
+    final String courseSec = "";
+    final DateTime startTime;
+    final DateTime endTime;
+   // fina
+  }
+}*/

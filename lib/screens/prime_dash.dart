@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../sizeconfig.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:crs_scheduler/screens/schedulescreen.dart';
 
 class PrimeShowcaser extends StatelessWidget {
   final String courseCode;
@@ -74,7 +75,13 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   ];
   final List<int> daychecklist = [0, 0, 0, 0, 0, 0];
   final List<String> timelist = ["", "", "", "", "", "", ""];
-
+  final List<String> standing = [
+    "Unselected",
+    "Freshman",
+    "Sophomore",
+    "Junior",
+    "Senior"
+  ];
   final _timeformkey = GlobalKey<FormState>();
   double deviceHeight(BuildContext context) =>
       MediaQuery.of(context).size.height;
@@ -375,13 +382,10 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
-                                                    'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and subject')),
-                                            );
+                                                    'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and subject')),);
                                           } else
-                                          if (subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
-                                            return false; // the element was found in data, no need to panic
-                                          }
-                                          }
+                                          if (subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {return false; // the element was found in data, no need to panic
+                                          }}
                                           return true; // the element was not found in data, trigger a panic
                                           })&&!_timeformkey.currentState!.validate()&&!checkTimeSpansoverall(timelist)) {
 
@@ -407,12 +411,15 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 content: Text(
                                                     'WARNING: You have an error in your inputted prefered times.')),
                                             );
-                                          }else if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {
+                                          }else if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {
+                                            if (item == sublist[0]) {
+
                                             return false; // the element was found in data, no need to panic
                                           }
                                           }
                                           return true; // the element was not found in data, trigger a panic
                                           })){if (kDebugMode) {
+                                            //print(sublist[0]);
                                             print("ERROR: Preferred Subject Error");
                                             print(
                                                 "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
@@ -427,6 +434,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
                                                     'Saving Preferences')));
+                                            Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                                                ScheduleShowcase(courseCode: widget.courseData[0].split(', ')[3],yrStanding: standing.indexOf(widget.yearLevel),)
+                                            ));
                                           }
 
                                         },
@@ -769,6 +779,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   duration: Duration(seconds: 1),
                                                   content: Text(
                                                       'Saving Preferences')));
+                                              Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                                                  ScheduleShowcase(courseCode: widget.courseData[0].split(', ')[3],yrStanding: standing.indexOf(widget.yearLevel),)
+                                              ));
                                             }
 
                                           },

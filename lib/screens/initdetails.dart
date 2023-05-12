@@ -51,13 +51,13 @@ class _DetailDashState extends State<DetailDash> {
         .toList();
   }
   List datar=[];
-  Future<List<dynamic>> fetchlist(String course) async {
+  Future<List<dynamic>> fetchlist(String course, int yr) async {
     List<dynamic> localhold = [];
     if (kDebugMode) {
-      print("http://127.0.0.1:5000/api/courses?prgm=$course");
+      print("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr");
     }
     var response = await http.get(
-      Uri.parse("http://127.0.0.1:5000/api/courses?prgm=$course"),
+      Uri.parse("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr"),
       //headers: {"Accept": "application/json"}
     );
     setState(() {
@@ -803,10 +803,10 @@ class _DetailDashState extends State<DetailDash> {
 
                                   //print(courseList[1]);
                                   if (kDebugMode) {
-                                    print(_courseData[0].split(', ')[3]);
+                                    print("Coursecode${_courseData[0].split(', ')[3]}");
                                     print("User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
                                   }
-                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3]);
+                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3],standing.indexOf(_myStanding));
                                   if (kDebugMode) {
                                     print(courseList.toString());
                                   }
