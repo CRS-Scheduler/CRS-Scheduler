@@ -10,5 +10,12 @@ def home_page():
 def get_courses_from_program():
     program = request.args.get("prgm")
     year_level = request.args.get("yrlvl")
-    jsonstr = json.dumps(ScheduleOptimizer.get_course_list_from_program(program,year_level))
+    jsonstr = json.dumps(ScheduleOptimizer.get_course_list_from_program(program, year_level))
+    return jsonstr
+
+@app.route("/api/schedule")
+def optimal_schedule_from_args():
+    program = request.args.get("prgm")
+    year_level = request.args.get("yrlvl")
+    jsonstr = json.dumps(ScheduleOptimizer.schedule_optimizer(program, year_level))
     return jsonstr
