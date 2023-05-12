@@ -1,9 +1,6 @@
 import random
 from CourseLookup import course_lister
-from CourseParser import get_data
-from CourseParser import get_days
-from CourseParser import get_sched
-from CourseParser import get_sem_and_base_url
+from CourseParser import get_data, get_days, get_sched, get_sem_and_base_url
 from OptimalSchedule import OptimalSchedule
 
 class DegreeProgram:
