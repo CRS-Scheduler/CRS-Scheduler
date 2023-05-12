@@ -209,7 +209,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                           )
                         else
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            padding:  EdgeInsets.symmetric(vertical: 5.0,horizontal: deviceWidth(context) * 0.15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
