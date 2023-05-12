@@ -2,16 +2,16 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../sizeconfig.dart';
-
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:widgets_to_image/widgets_to_image.dart';
+
 class ScheduleShowcase extends StatelessWidget {
-  String courseCode;
-  int yrStanding;
-  ScheduleShowcase({Key? key, required this.courseCode,required this.yrStanding}) : super(key: key);
+  final String courseCode;
+  final int yrStanding;
+  const ScheduleShowcase({Key? key, required this.courseCode,required this.yrStanding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class ScheduleShowcase extends StatelessWidget {
 }
 
 class ScheduleScreen extends StatefulWidget {
-  String courseCode;
-  int yrStanding;
-   ScheduleScreen({Key? key,required this.courseCode,required this.yrStanding}) : super(key: key);
+  final String courseCode;
+  final int yrStanding;
+   const ScheduleScreen({Key? key,required this.courseCode,required this.yrStanding}) : super(key: key);
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
@@ -70,8 +70,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     [ Course("Math 20","THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
     []
   ];
-  Future fetchlist(String course, int yr) async {
+  final List<List<String>> stacker=[
+    [],[],[],[],[],[]
 
+  ];
+  Future fetchlist(String course, int yr) async {
 // Define the API endpoint URL
     final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
     if (kDebugMode) {
@@ -83,12 +86,28 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 // Check if the request was successful (status code 200)
     if (response.statusCode == 200) {
       // Parse the response data as a string
-      String scheduleString = response.body;
+      String localhold = json.decode(response.body);
       if (kDebugMode) {
-        print(scheduleString);
-      // Do something with the schedule string, such as parsing and displaying it
+        print(localhold);
+      }
+      List<String> lines = localhold.split("\n");
+      lines.removeLast();
+      int stackInd=0;
+      for(String i in lines){
+        if(daysoftheweek.contains(i)){
+          if (i!="Monday") {
+            stackInd+=1;
+          }
+        }//increments matrix index
+        else if (i!="\n"){
+          stacker[stackInd].add(i);
+        }
 
-      }} else {
+      }
+      if (kDebugMode) {
+        print(stacker);
+      }
+    } else {
       // Handle the error case, such as displaying an error message to the user
       if (kDebugMode) {
         print('Error: ${response.statusCode}');
@@ -118,10 +137,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    /* WidgetsBinding.instance.addPostFrameCallback(
-          (_) => ShowCaseWidget.of(context)
-          .startShowCase([_college,_degree,_standing,_next]),
-    );*/
     fetchlist(widget.courseCode, widget.yrStanding);
   }
   @override

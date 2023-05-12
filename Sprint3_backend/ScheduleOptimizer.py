@@ -98,9 +98,9 @@ def schedule_optimizer(program, year_level): #get_course_list_from_program(progr
                     event_end = i  
             # Check if the event has ended or it's the last time slot of the day
             if (not event or i == len(day_schedule) - 1) and event_start is not None: 
-                start_time = f'{event_start // 2 + 7:02}:{event_start % 2 * 30:02}'
-                end_time = f'{(event_end + 1) // 2 + 7:02}:{(event_end + 1) % 2 * 30:02}'
-                print_str += f'{start_time} - {end_time}: {pr_event}' + '\n'
+                start_time = f'{event_start // 2 + 7:02}{event_start % 2 * 30:02}'
+                end_time = f'{(event_end + 1) // 2 + 7:02}{(event_end + 1) % 2 * 30:02}'
+                print_str += f'{start_time}-{end_time}:{pr_event}' + '\n'
                 event_start = None
                 event_end = None
     return print_str
