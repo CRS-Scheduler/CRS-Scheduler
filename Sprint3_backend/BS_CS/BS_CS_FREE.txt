@@ -1,0 +1,45 @@
+Demo 1
+ETHICS 1
+FIL 18
+FIL 30
+LIS 30
+MATH 10
+PHILARTS 1
+PS 21
+SAS 1
+EL 50
+FIL 25
+MATH 2
+Antrho 10
+Archeo 2
+Arkiyoloji 1
+Art Stud 2
+Bio 1
+Chem 1
+CW 10
+Econ 11
+Eng 11
+Eng 12
+Env Sci 1
+FA 28
+FA 30
+Film 10
+Film 12
+FN 1
+GE 1
+GEOL 1
+L Arch 1
+Lingg 1
+MBB 1
+MPs 10
+MS 1
+Pan Pil 17
+Pan Pil 19
+Philo 10
+Philo 11
+Physics 10
+SEA 30
+Socio 10
+Theatre 11
+Theatre 12
+SOSC 3
