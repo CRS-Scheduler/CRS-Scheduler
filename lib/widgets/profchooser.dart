@@ -138,7 +138,7 @@ class _SubProfChooserState extends State<SubProfChooser> {
                           onPressed: () {
                             // if(widget.validDays.any((e) => e == 1)): null ?
                             ShowCaseWidget.of(context)
-                                .startShowCase([_sub, _prof]);
+                                .startShowCase([_sub]);
 
                             if (kDebugMode) {
                               print("lets play");

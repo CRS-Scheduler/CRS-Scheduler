@@ -248,7 +248,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                 Showcase(
                                     key: _prof,
                                     description:
-                                        "This tab allows you to enter your preferred classes and \noptionally, your preferred professors for those classes",
+                                        "This tab allows you to enter your preferred classes.",
                                     child: const Tab(icon: Icon(Icons.school))),
                               ],
                             ),
