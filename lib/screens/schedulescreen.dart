@@ -1,13 +1,18 @@
+import 'dart:html';
+
 import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../sizeconfig.dart';
 import 'dart:convert';
+import 'dart:html' as web_file;
 
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 
+
 class ScheduleShowcase extends StatelessWidget {
+
   final String courseCode;
   final int yrStanding;
   const ScheduleShowcase({Key? key, required this.courseCode,required this.yrStanding}) : super(key: key);
@@ -24,12 +29,14 @@ class ScheduleShowcase extends StatelessWidget {
 }
 
 class ScheduleScreen extends StatefulWidget {
+
   final String courseCode;
   final int yrStanding;
    const ScheduleScreen({Key? key,required this.courseCode,required this.yrStanding}) : super(key: key);
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
+
 }
 
 
@@ -47,9 +54,10 @@ DateTime endDayTime =  DateTime(2023, 0, 0, 20, 00, 0);
 double brickHeight=40;
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
+
   double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
-  //final GlobalKey _export = GlobalKey();
+  final GlobalKey _export = GlobalKey();
 
   final List<String> daysoftheweek=['Time','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
@@ -64,6 +72,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     []
   ];
   late  List<List<Course>> stacker=[[],[],[],[],[],[]];
+  late List<String> ExportList = [];
 
 
   fetchSched(String course, int yr) async {
@@ -112,11 +121,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       int hourEnd = int.parse(listhold[1].substring(0, 2));
       int minEmd = int.parse(listhold[1].substring(2, 4));
 
+      String text = listhold[2] + ' ' + hourStart.toString() + ':' + minStart.toString()
+          + '0-' + hourEnd.toString() + ':' + minEmd.toString()+ '0';
       Course newCourse = Course(listhold[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
       if (kDebugMode) {
         print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");
       }
       stacker[stackInd].add(newCourse);
+      ExportList.add(text);
+      ExportList.add('\n');
     }
 
   }
@@ -299,13 +312,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ],
               ),
             ),
-           /* Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(
                   vertical: 30.0),
               child: Showcase(
                 key: _export,
                 description:
-                "Press this to export your schedule as a PNG",
+                "Press this to export your schedule as a CSV",
                 child: SizedBox(
                   height: 65,
                   width: SizeConfig.safeBlockHorizontal * 15,
@@ -314,13 +327,27 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         backgroundColor:
                         const Color(0xff8B1538)),
                     onPressed: () {
+                      if (kIsWeb) {
+                        var blob = web_file.Blob(
+                            ExportList, 'text/plain', 'native');
+                        var anchorElement =
+                        web_file.AnchorElement(
+                          href: web_file.Url
+                              .createObjectUrlFromBlob(
+                              blob)
+                              .toString(),
+                        )
+                          ..setAttribute("download",
+                              "OptimizedSchedule.csv")
+                          ..click();
+                      }
                       if (kDebugMode) {
-                        print("Click click");
+                        print(ExportList);
                         print(timeBlockWidgets.length);
                       }
                     },
                     child: const Text(
-                      'Export Schedule',
+                      'Download as CSV',
                       style: TextStyle(
                         color: Color(0xffFFFFFF),
                         fontSize: 20,
@@ -329,7 +356,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                 ),
               ),
-            )// export button*/],),
+            )],),
         ),
       ),
     );
