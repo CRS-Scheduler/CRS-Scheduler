@@ -1,6 +1,5 @@
 import 'package:crs_scheduler/screens/initdetails.dart';
 import 'package:flutter/material.dart';
-import 'package:crs_scheduler/screens/schedulescreen.dart';
 import '../sizeconfig.dart';
 void main()  {
   runApp(const MyApp());

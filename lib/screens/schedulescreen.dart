@@ -1,4 +1,5 @@
-import 'dart:html';
+
+// ignore_for_file: unused_local_variable
 
 import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import '../sizeconfig.dart';
 import 'dart:convert';
 import 'dart:html' as web_file;
 
-import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -121,8 +121,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       int hourEnd = int.parse(listhold[1].substring(0, 2));
       int minEmd = int.parse(listhold[1].substring(2, 4));
 
-      String text = listhold[2] + ' ' + hourStart.toString() + ':' + minStart.toString()
-          + '0-' + hourEnd.toString() + ':' + minEmd.toString()+ '0';
+      String text = '${listhold[2]} $hourStart:${minStart}0-$hourEnd:${minEmd}0';
       Course newCourse = Course(listhold[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
       if (kDebugMode) {
         print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");

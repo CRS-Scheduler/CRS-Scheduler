@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, unused_local_variable, duplicate_ignore
 import 'dart:convert';
 import 'dart:html' as web_file;
 import 'package:crs_scheduler/widgets/timechooser.dart';
@@ -330,6 +330,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                             }
 
                                             //PLUGIN of CSV used here
+                                            // ignore: duplicate_ignore
                                             if (kIsWeb) {
                                               var blob = web_file.Blob(
                                                   [dayRow] +
@@ -341,6 +342,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                       [profSel],
                                                   'text/plain',
                                                   'native');
+                                              // ignore: unused_local_variable
                                               var anchorElement =
                                                   web_file.AnchorElement(
                                                 href: web_file.Url
@@ -382,11 +384,14 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
                                                     'WARNING: Please ensure that you have a preference in at least one category: Days of the week, Time, and subject')),);
-                                          } else
+                                          }
+                                          else
+                                            //time subject error
                                           if (subproflist.any((sublist) {for (var item in widget.allowedCourse) {if (item == sublist[0]) {return false; // the element was found in data, no need to panic
                                           }}
                                           return true; // the element was not found in data, trigger a panic
-                                          })&&!_timeformkey.currentState!.validate()&&!checkTimeSpansoverall(timelist)) {
+                                          })&&!_timeformkey.currentState!.validate()&&!checkTimeSpansoverall(timelist))
+                                          {
 
                                             if (kDebugMode) {
                                               print("ERROR: Time and Subject Error");
@@ -399,7 +404,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                     'WARNING: You have made an error in your time and subject preference input')),
                                             );
                                           }else
-                                          if(!_timeformkey.currentState!.validate()|| !checkTimeSpansoverall(timelist)){
+                                            // only time;checks if empty and format valid; checks if time span is valid
+                                          if((!_timeformkey.currentState!.validate()|| !checkTimeSpansoverall(timelist)) && dayblank(daychecklist))
+                                          {
                                             if (kDebugMode) {
                                               print("ERROR: Preferred time error");
                                               print(
@@ -410,10 +417,13 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 content: Text(
                                                     'WARNING: You have an error in your inputted prefered times.')),
                                             );
-                                          }
-                                          else
-                                            if(subproflist.any((sublist) {for (var item in widget.allowedCourse) {
-                                              print("problem: ${item}");
+                                          } else
+                                            //only subjects error
+                                            if(subproflist.any((sublist) {for (var item in widget.allowedCourse)
+                                            {
+                                              if (kDebugMode) {
+                                                print("problem: $item");
+                                              }
 
                                               if (item == sublist[0]) {
 
@@ -422,18 +432,20 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                           }
                                           }
                                           return true; // the element was not found in data, trigger a panic
-                                          })&& subproflist[0][0] != ''){if (kDebugMode) {
-                                            //print(sublist[0]);
-                                            print("ERROR: Preferred Subject Error - ROW");
-                                            print(
+                                          })&& subproflist[0][0] != '')
+                                            {
+                                              if (kDebugMode) {
+                                                print("ERROR: Preferred Subject Error - ROW");
+                                                print(
                                                 "User inputs:\nDaylist: $daychecklist,\nTimelist: $timelist \nNullweek choice: ${timelist[6]},\n ProfSUb: $subproflist");
-                                          }
-                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              content: Text(
-                                                  'WARNING: You have inputted a course that is unavailable to your degree program.')),
-                                          );}
-                                          else{
+                                              }
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  duration: Duration(seconds: 1),
+                                                  content: Text(
+                                                      'WARNING: You have inputted a course that is unavailable to your degree program.')),);}
+                                            //success
+                                            else
+                                          {
                                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 duration: Duration(seconds: 1),
                                                 content: Text(
@@ -960,7 +972,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   ),
                                 ],
                               ),
-                      )
+                      )//Export,Next,Input
                     ],
                   ),
                 ),

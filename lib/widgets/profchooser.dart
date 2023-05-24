@@ -42,6 +42,7 @@ class SubProfChooser extends StatefulWidget {
 
 class _SubProfChooserState extends State<SubProfChooser> {
   final GlobalKey _sub = GlobalKey();
+  // ignore: unused_field
   final GlobalKey _prof = GlobalKey();
 
   List<TextEditingController> controllers = [TextEditingController()];
