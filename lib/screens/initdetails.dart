@@ -793,6 +793,8 @@ class _DetailDashState extends State<DetailDash> {
 
                                 if (_formKey.currentState!.validate()) {
                                   // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
+                                  LoadingIndicatorDialog().show(context);
+
                                   _courseData = data!.where((row) =>
                                           row[collegeInd] ==
                                               _currentSelectedCollege &&
@@ -809,6 +811,7 @@ class _DetailDashState extends State<DetailDash> {
                                   if (kDebugMode) {
                                     print(courseList.toString());
                                   }
+                                  LoadingIndicatorDialog().dismiss();
 
 
                                   sm.showSnackBar(const SnackBar(duration: Duration(seconds: 1), content: Text('Saving details for your session')),);
@@ -847,4 +850,59 @@ class _DetailDashState extends State<DetailDash> {
 
 bool isNumeric(String s) {
   return double.tryParse(s) != null;
+}
+class LoadingIndicatorDialog {
+  static final LoadingIndicatorDialog _singleton = LoadingIndicatorDialog._internal();
+  late BuildContext _context;
+  bool isDisplayed = false;
+
+  factory LoadingIndicatorDialog() {
+    return _singleton;
+  }
+
+  LoadingIndicatorDialog._internal();
+
+  show(BuildContext context, {String text = 'Loading...'}) {
+    if(isDisplayed) {
+      return;
+    }
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          _context = context;
+          isDisplayed = true;
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(
+              backgroundColor: Colors.white,
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 16, top: 16, right: 16),
+                        child: CircularProgressIndicator(color: Color(0xff8B1538)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(text),
+                      )
+                    ],
+                  ),
+                )
+              ] ,
+            ),
+          );
+        }
+    );
+  }
+
+  dismiss() {
+    if(isDisplayed) {
+      Navigator.of(_context).pop();
+      isDisplayed = false;
+    }
+  }
 }

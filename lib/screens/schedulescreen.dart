@@ -122,7 +122,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   }
-
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -136,6 +136,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         // update the state with the result of the async operation
         hold = result;
         schedParser(hold);
+        isLoading = false;
         if (kDebugMode) {
           print(stacker);
         }
@@ -162,7 +163,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),);
     }
     return  Scaffold(
-      body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator(color:  Color(0xff00573F)), )
+          :SingleChildScrollView(
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
           child:Column(
@@ -374,14 +377,13 @@ double _heightGenerator(DateTime start, DateTime end){
 
   return difference.inMinutes / 30;
 }
-/*
-void _courseCollapser(List<Course> coursesToday){
-  final List<Course> collapsedCourse=[];
-  for(Course x in coursesToday) {
-    final String courseName = "";
-    final String courseSec = "";
-    final DateTime startTime;
-    final DateTime endTime;
-   // fina
+
+class ScheduleLoading extends StatelessWidget {
+  const ScheduleLoading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
-}*/
+}
+
