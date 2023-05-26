@@ -77,9 +77,11 @@ def get_data_from_parsed_contents(name, parsed_contents):
     ret = []
     regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) ([^ \n]+)"
     dissolved_offset = 0
+    # print(parsed_contents)
     if len(parsed_contents) == 1: return ret
     for i in range(0, len(parsed_contents), 8):
-        class_name = parsed_contents[1+i+dissolved_offset].get_text(" ")
+        class_code = parsed_contents[i+dissolved_offset].get_text()
+        class_name = parsed_contents[1+i+dissolved_offset].get_text()
         # print(class_name)
         search_string = str(parsed_contents[3+i+dissolved_offset])
         if not search(r"\b"+name+r"\b", class_name, IGNORECASE):
@@ -94,7 +96,8 @@ def get_data_from_parsed_contents(name, parsed_contents):
         if slots == 0:
             continue
         raw_schedule = findall(regex_string, search_string)
-        ret.append((class_name, raw_schedule, slots))
+        units = int(float(parsed_contents[2+i+dissolved_offset].get_text()))
+        ret.append((class_code, class_name, raw_schedule, slots, units))
     return ret
 
 def get_data(name, base_url):
