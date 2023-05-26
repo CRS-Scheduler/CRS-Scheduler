@@ -41,7 +41,7 @@ def get_sched(sched):
 def get_sem_and_base_url():
     root_url = "https://crs.upd.edu.ph/schedule/"
     try:
-        base_url_html = get(root_url, timeout=3).text
+        base_url_html = get(root_url, timeout=10).text
     except:
         error = "Check your internet connection and try again later."
         return (False, error)
@@ -56,7 +56,7 @@ def get_sem_and_base_url():
 def get_html(name, base_url):
     url = base_url + name.replace(" ", "%20")
     try:
-        ret = get(url, timeout=3).text
+        ret = get(url, timeout=10).text
         return (True, ret)
     except:
         error = "Error! Could not parse the url. Check the url and try again!"
