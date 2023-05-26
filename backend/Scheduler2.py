@@ -1,8 +1,15 @@
-import random, time, datetime, os
+import random, time, datetime, os, json
 from ScheduleOptimizer import DegreeProgram
 
+#SCHEDULING DEFAULTS
 DEFAULTBIAS = 5 #default requirement bias
 PERUNITSCORE = 2
+
+#GENERATION DEFAULTS
+ITERATIONS = 1000
+MAXCOURSES = 7
+MINUNITS = 0
+
 
 def weighted_sample_without_replacement(population, weights, k, rng=random):
         v = [rng.random() ** (1 / w) for w in weights]
@@ -72,8 +79,8 @@ class Course:
         self.units = units
 
     def __str__(self):
-        daystr = " ".join(days)
-        return "\nCourse Code: %s\n%s\n%s-%s,%s\n%s" % (self.code, self.name, str(self.startTimeH) + ":" + str(self.startTimeM), self.duration, daystr, self.instructor)
+        daystr = " ".join(self.days)
+        return "\nCourse Code: %s\n%s\n%s[%s],%s\n%s" % (self.code, self.name, str(self.tint.shour).zfill(2) + ":" + str(self.tint.sminute).zfill(2), str(self.tint.duration/60) + " h", daystr, self.instructor)
 
     
     def isConflicting(self, course): #needs a course object
@@ -171,19 +178,47 @@ def gen_course_pool(li):
 
     # flattening
     for i in li:
-        print(i.name, i.section_list)
+        #print(i.name, i.section_list)
         for j in i.section_list:
             schedob = j.schedules[0]
-            print(schedob.days, schedob.time[0].hour, schedob.time[0].minute, (schedob.time[1].hour - schedob.time[0].hour) * 60 + schedob.time[1].minute - schedob.time[0].minute)
-            #startTime = j.schedules[0][]
-            continue
-            coursepool.append(Course(subcode, i.name,startTime, duration, days, units))
-            subcode += 1
-    return
+            duration =  (schedob.time[1].hour - schedob.time[0].hour) * 60 + schedob.time[1].minute - schedob.time[0].minute
+            #print(schedob.days, schedob.time[0].hour, schedob.time[0].minute)
+            coursepool.append(Course(j.code, i.name, schedob.time[0].hour, schedob.time[0].minute, duration, schedob.days, j.units))
+            print(coursepool[-1])
+    return coursepool
 
-os.chdir("./backend")
-dat = DegreeProgram("BS_CS", 2)
-gen_course_pool(dat.courses_data)
+def sched2api(degree_program, year_level, seed):
+    os.chdir("./backend")
+    dat = DegreeProgram(degree_program, year_level)
+    coursepool = gen_course_pool(dat.courses_data)
+    scheduler = Scheduler(coursepool, list(), MAXCOURSES, seed, ITERATIONS)
+    for sched in scheduler.scheds.keys():
+        if scheduler.scheds[sched] > 18:
+            print("------------------------------------------------------------------")
+            print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
+            print("------------------------------------------------------------------")
+    
+def main():
+    os.chdir("./backend")
+    dat = DegreeProgram("BS_CS", 2)
+    coursepool = gen_course_pool(dat.courses_data)
+    assert(coursepool != None)
+    seed = random.randint(0,9999999)
+    scheduler = Scheduler(coursepool, list(), 7, seed, 1000)
+    passedsched = list()
+    for sched in scheduler.scheds.keys():
+        if scheduler.scheds[sched] > 18:
+            sjson = dict()
+            sjson["total_units"] = scheduler.scheds[sched]
+            sjson["courses"] = [x.__str__() for x in sched.sched]
+            passedsched.append(sjson)
+        # if scheduler.scheds[sched] > 18:
+        #     print("------------------------------------------------------------------")
+        #     print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
+        #     print("------------------------------------------------------------------")
+    return json.dumps(passedsched)
+
+main()
 
 '''
 coursepool = list()
