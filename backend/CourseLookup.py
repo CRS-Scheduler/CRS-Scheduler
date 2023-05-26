@@ -6,20 +6,9 @@ def course_lister(root, year, semester):
     data = file.read().split("\n\n")
     file.close()
     write = list(map(lambda x: x.split("\n"), data))[semester-1]
-    return (all_course_parser(root, year, write.copy()), course_parser(root, year, write))
+    return course_parser(root, year, write)
 
 def course_parser(root, year, course_list):
-    for i in range(0,len(course_list)):
-        course = course_list[i]
-        if len(course) < len(root): continue
-        if course[0:len(root)] == root:
-            extras_file = open(f"{root}/{root}{course[len(root):]}.txt", "r+")
-            course_extras = extras_file.read().split("\n")
-            course_list[i] = random.choice(course_extras)
-            extras_file.close()
-    return course_list
-
-def all_course_parser(root, year, course_list):
     initial_length = len(course_list)
     for i in range(0,initial_length):
         course = course_list[i]
