@@ -31,7 +31,7 @@ class Course:
     def __init__(self, name, base_url):
         self.name = name
         self.section_list = list(map(lambda section: Section(section), get_data(name, base_url)))
-        print([i.__dict__ for i in self.section_list])
+        # print([i.__dict__ for i in self.section_list])
 
 class Section:
     def __init__(self, section):
@@ -106,9 +106,3 @@ def schedule_optimizer(program, year_level): #get_course_list_from_program(progr
                 event_start = None
                 event_end = None
     return print_str
-
-def main():
-    DegreeProgram("BS_CS", 2)
-
-if __name__ == "__main__":
-    main()
