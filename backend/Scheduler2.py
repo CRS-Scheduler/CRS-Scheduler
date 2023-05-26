@@ -1,4 +1,5 @@
-import random
+import random, time, datetime, os
+from ScheduleOptimizer import DegreeProgram
 
 DEFAULTBIAS = 5 #default requirement bias
 PERUNITSCORE = 2
@@ -46,37 +47,41 @@ class RequiredCourse(Requirement):
 """Add future restrictions here"""
         
 
+
+
 class Course:
-    def __init__(self, code: int, name: str, startTime: int, duration: int, days: str, units: int, instructor: str = "CONCEALED"):
+    class timeint:
+        def __init__(self, hour, minute, durationInMinutes):
+            if hour > 23 or hour < 0 or minute > 59 or minute < 0:
+                raise Exception("Invalid time")
+            self.shour = hour
+            self.sminute = minute
+            self.duration = durationInMinutes
+        
+        def intersects(self, othertimeint):
+            a = [self.shour * 60 + self.sminute, self.shour * 60 + self.sminute + self.duration]
+            b = [othertimeint.shour * 60 + othertimeint.sminute, othertimeint.shour * 60 + othertimeint.sminute + othertimeint.duration]
+            return bool(max(0, min(a[1], b[1]) - max(a[0], b[0])))
+
+    def __init__(self, code: int, name: str, startTimeH: int, startTimeM: int, duration: int, days: list, units: int, instructor: str = "CONCEALED"):
         self.code = code
         self.name = name
-        self.startTime = startTime
-        self.duration = duration
-        self.endTime = startTime + duration
-        if self.endTime % 100 == 60:
-            self.endTime += 40
-        self.days = days #str base 2, 0th index is Sunday
+        self.tint = self.timeint(startTimeH, startTimeM, duration)
+        self.days = days #[("Su", "M", "T", "W", "Th", "F", "Sa")[x] for x in range(len(days)) if days[x] != "0"] #str base 2, 0th index is Sunday
         self.instructor = instructor
         self.units = units
 
     def __str__(self):
-        days = ("Su", "M", "T", "W", "Th", "F", "Sa")
-        daystr = [days[x] for x in range(len(self.days)) if self.days[x] != "0"]
-        daystr = " ".join(daystr)
-        return "\nCourse Code: %s\n%s\n%s-%s,%s\n%s" % (self.code, self.name, self.startTime, self.endTime, daystr, self.instructor)
+        daystr = " ".join(days)
+        return "\nCourse Code: %s\n%s\n%s-%s,%s\n%s" % (self.code, self.name, str(self.startTimeH) + ":" + str(self.startTimeM), self.duration, daystr, self.instructor)
 
     
     def isConflicting(self, course): #needs a course object
         if len(set(self.days).intersection(set(course.days))) == 0:
             return False
-        elif self.startTime < course.endTime and course.startTime < self.startTime:
-            return True
-        elif course.startTime < self.endTime and self.startTime < course.startTime:
-            return True
-        elif course.startTime == self.startTime:
-            return True
         else:
-            return False
+            return self.tint.intersects(course.tint)
+            
 
 class Schedule:
     def __init__(self, name: str, requirements: list, courses: list):
@@ -163,11 +168,24 @@ class Scheduler:
 def gen_course_pool(li):
     coursepool = list()
     subcode = 0
+
+    # flattening
     for i in li:
-        stime = 1
-        coursepool.append(Course(subcode, i.name, ))
-        subcode += 1
+        print(i.name, i.section_list)
+        for j in i.section_list:
+            schedob = j.schedules[0]
+            print(schedob.days, schedob.time[0].hour, schedob.time[0].minute, (schedob.time[1].hour - schedob.time[0].hour) * 60 + schedob.time[1].minute - schedob.time[0].minute)
+            #startTime = j.schedules[0][]
+            continue
+            coursepool.append(Course(subcode, i.name,startTime, duration, days, units))
+            subcode += 1
     return
+
+os.chdir("./backend")
+dat = DegreeProgram("BS_CS", 2)
+gen_course_pool(dat.courses_data)
+
+'''
 coursepool = list()
 coursepool.append(Course(0, "SUBJ 0", 700, 130, "0010100", 3, "Sir Paul"))
 coursepool.append(Course(1, "SUBJ 1", 830, 130, "0010100", 3, "Sir Paul"))
@@ -207,4 +225,4 @@ def main():
             print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
             print("------------------------------------------------------------------")
         
-
+'''
