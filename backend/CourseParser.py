@@ -41,7 +41,7 @@ def get_sched(sched):
 def get_sem_and_base_url():
     root_url = "https://crs.upd.edu.ph/schedule/"
     try:
-        base_url_html = get(root_url, timeout=3).text
+        base_url_html = get(root_url, timeout=10).text
     except:
         error = "Check your internet connection and try again later."
         return (False, error)
@@ -56,7 +56,7 @@ def get_sem_and_base_url():
 def get_html(name, base_url):
     url = base_url + name.replace(" ", "%20")
     try:
-        ret = get(url, timeout=3).text
+        ret = get(url, timeout=10).text
         return (True, ret)
     except:
         error = "Error! Could not parse the url. Check the url and try again!"
@@ -77,9 +77,11 @@ def get_data_from_parsed_contents(name, parsed_contents):
     ret = []
     regex_string = r"(M|T|W|Th|F|S|MT|MW|MTh|MF|MS|TW|TTh|TF|TS|WTh|WF|WS|ThF|ThS|FS) (\d{1,2}[:]?\d{0,2})(AM|PM|)?-(\d{1,2}[:]?\d{0,2})(AM|PM) ([^ \n]+)"
     dissolved_offset = 0
+    # print(parsed_contents)
     if len(parsed_contents) == 1: return ret
     for i in range(0, len(parsed_contents), 8):
-        class_name = parsed_contents[1+i+dissolved_offset].get_text(" ")
+        class_code = parsed_contents[i+dissolved_offset].get_text()
+        class_name = parsed_contents[1+i+dissolved_offset].get_text()
         # print(class_name)
         search_string = str(parsed_contents[3+i+dissolved_offset])
         if not search(r"\b"+name+r"\b", class_name, IGNORECASE):
@@ -94,7 +96,8 @@ def get_data_from_parsed_contents(name, parsed_contents):
         if slots == 0:
             continue
         raw_schedule = findall(regex_string, search_string)
-        ret.append((class_name, raw_schedule, slots))
+        units = int(float(parsed_contents[2+i+dissolved_offset].get_text()))
+        ret.append((class_code, class_name, raw_schedule, slots, units))
     return ret
 
 def get_data(name, base_url):

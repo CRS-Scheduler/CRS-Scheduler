@@ -35,10 +35,12 @@ class Course:
 
 class Section:
     def __init__(self, section):
-        self.name = section[0]
+        self.code = section[0]
+        self.name = section[1]
         # print(section)
-        self.schedules = list(map(lambda schedule: Schedule(schedule), section[1]))
-        self.slots = section[2]
+        self.schedules = list(map(lambda schedule: Schedule(schedule), section[2]))
+        self.slots = section[3]
+        self.units = section[4]
         # print([i.__dict__ for i in self.schedules])
 
 class Schedule:
