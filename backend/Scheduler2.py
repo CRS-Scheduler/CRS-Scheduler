@@ -192,11 +192,14 @@ def sched2api(degree_program, year_level, seed):
     dat = DegreeProgram(degree_program, year_level)
     coursepool = gen_course_pool(dat.courses_data)
     scheduler = Scheduler(coursepool, list(), MAXCOURSES, seed, ITERATIONS)
+    passedsched = list()
     for sched in scheduler.scheds.keys():
-        if scheduler.scheds[sched] > 18:
-            print("------------------------------------------------------------------")
-            print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
-            print("------------------------------------------------------------------")
+        if scheduler.scheds[sched] > MINUNITS:
+            sjson = dict()
+            sjson["total_units"] = scheduler.scheds[sched]
+            sjson["courses"] = [x.__str__() for x in sched.sched]
+            passedsched.append(sjson)
+    return json.dumps(passedsched)
     
 def main():
     os.chdir("./backend")
@@ -212,52 +215,5 @@ def main():
             sjson["total_units"] = scheduler.scheds[sched]
             sjson["courses"] = [x.__str__() for x in sched.sched]
             passedsched.append(sjson)
-        # if scheduler.scheds[sched] > 18:
-        #     print("------------------------------------------------------------------")
-        #     print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
-        #     print("------------------------------------------------------------------")
     return json.dumps(passedsched)
 
-main()
-
-'''
-coursepool = list()
-coursepool.append(Course(0, "SUBJ 0", 700, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(1, "SUBJ 1", 830, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(2, "SUBJ 2", 1100, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(3, "SUBJ 3", 1600, 130, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(4, "SUBJ 4", 700, 300, "0100000", 4, "Sir Paul"))
-coursepool.append(Course(5, "SUBJ 5", 800, 300, "0001010", 4, "Sir Paul"))
-coursepool.append(Course(6, "SUBJ 6", 1200, 200, "0010100", 1, "Sir Paul"))
-coursepool.append(Course(7, "SUBJ 7", 1500, 230, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(8, "SUBJ 0", 800, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(9, "SUBJ 0", 1100, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(10, "SUBJ 1", 730, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(11, "SUBJ 1", 830, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(12, "SUBJ 1", 900, 130, "0010100", 3, "Sir Paul"))
-coursepool.append(Course(13, "SUBJ 2", 1100, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(14, "SUBJ 2", 1400, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(15, "SUBJ 3", 830, 130, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(16, "SUBJ 3", 930, 130, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(17, "SUBJ 3", 1030, 130, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(18, "SUBJ 3", 1530, 130, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(19, "SUBJ 4", 1330, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(20, "SUBJ 4", 1330, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(21, "SUBJ 4", 1730, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(22, "SUBJ 5", 1830, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(23, "SUBJ 5", 1630, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(24, "SUBJ 5", 700, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(25, "SUBJ 5", 800, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(26, "SUBJ 5", 900, 300, "0010100", 4, "Sir Paul"))
-coursepool.append(Course(27, "SUBJ 6", 900, 230, "0010100", 1, "Sir Paul"))
-
-def main():
-    seed = random.randint(0,9999999)
-    scheduler = Scheduler(coursepool, list(), 7, seed, 1000)
-    for sched in scheduler.scheds.keys():
-        if scheduler.scheds[sched] > 18:
-            print("------------------------------------------------------------------")
-            print("UNITS: ", scheduler.scheds[sched], "\n","".join([x.__str__() for x in sched.sched]))
-            print("------------------------------------------------------------------")
-        
-'''
