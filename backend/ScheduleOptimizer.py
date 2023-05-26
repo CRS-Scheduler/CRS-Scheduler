@@ -15,7 +15,7 @@ class DegreeProgram:
 
         # print(self.courses)
         # print(self.years)
-        # print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
+        # [print([i.__dict__ for i in course.section_list]) for course in self.courses_data]
         # [print([i.__dict__ for i in course.section_list]) for year in self.courses_data for sem in year for course in sem]
 
     # def fetch_courses_data(self, semester):
