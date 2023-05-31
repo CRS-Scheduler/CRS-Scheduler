@@ -52,7 +52,7 @@ class Schedule:
 
 def get_course_list_from_program(program, year_level): #get_course_list_from_program(program) returns list of all courses required under program
     deg = DegreeProgram(program, year_level)
-    return [course for course in deg.courses]
+    return deg.courses
 
 def schedule_optimizer(program, year_level): # returns optimal schedule
     while True:
