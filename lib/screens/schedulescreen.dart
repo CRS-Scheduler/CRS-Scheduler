@@ -77,7 +77,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   fetchSched(String course, int yr) async {
 // Define the API endpoint URL
-    final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
+    //final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
+    final String apiUrl = 'https://crs-service-192.onrender.com/api/schedule?prgm=$course&yrlvl=$yr';
     if (kDebugMode) {
       print(apiUrl);
     }
