@@ -1,5 +1,6 @@
 import random, time, datetime, os, json
 from ScheduleOptimizer import DegreeProgram
+import ScheduleOptimizer
 
 #SCHEDULING DEFAULTS
 DEFAULTBIAS = 5 #default requirement bias
@@ -8,7 +9,7 @@ PERUNITSCORE = 2
 #GENERATION DEFAULTS
 ITERATIONS = 1000
 MAXCOURSES = 7
-MINUNITS = 0
+MINUNITS = 15
 
 
 def weighted_sample_without_replacement(population, weights, k, rng=random):
@@ -74,7 +75,8 @@ class Course:
         self.code = code
         self.name = name
         self.tint = self.timeint(startTimeH, startTimeM, duration)
-        self.days = days #[("Su", "M", "T", "W", "Th", "F", "Sa")[x] for x in range(len(days)) if days[x] != "0"] #str base 2, 0th index is Sunday
+        self.tintf = (startTimeH*100 + startTimeM, startTimeH*100 + startTimeM + ((duration//60)*100) + duration % 60)
+        self.days = days 
         self.instructor = instructor
         self.units = units
 
@@ -188,19 +190,36 @@ def gen_course_pool(li):
     return coursepool
 
 def sched2api(degree_program, year_level, seed):
-    os.chdir("./backend")
+    # def makejs(schedlist):
+    #     listoscheds = list()
+    #     for sched in schedlist:
+    #         scheddict = dict()
+    #         scheddict["Total_Units"] = sched["total_units"]
+
     dat = DegreeProgram(degree_program, year_level)
     coursepool = gen_course_pool(dat.courses_data)
     scheduler = Scheduler(coursepool, list(), MAXCOURSES, seed, ITERATIONS)
     passedsched = list()
+    nums = list()
     for sched in scheduler.scheds.keys():
         if scheduler.scheds[sched] > MINUNITS:
             sjson = dict()
-            sjson["total_units"] = scheduler.scheds[sched]
-            sjson["courses"] = [x.__str__() for x in sched.sched]
+            sjson["Total_Units"] = scheduler.scheds[sched]
+            #sjson["courses"] = [x.__str__() for x in sched.sched]
+            sjson["Days"] = dict()
+            for day in ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]:
+                sjson["Days"][day] = dict()
+                sjson["Days"][day]["Courses"] = list()
+                for cour in sched.sched:
+                    if day in cour.days:
+                        sjson["Days"][day]["Courses"].append((cour.code, cour.name, cour.tintf[0], cour.tintf[1]))
             passedsched.append(sjson)
     return json.dumps(passedsched)
-    
+
+#print(sched2api("BS_CS", 2, 10))
+print(json.dumps(ScheduleOptimizer.schedule_optimizer("BS_CS", 2)))
+
+
 def main():
     os.chdir("./backend")
     dat = DegreeProgram("BS_CS", 2)
