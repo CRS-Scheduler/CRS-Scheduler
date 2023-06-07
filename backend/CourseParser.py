@@ -46,10 +46,12 @@ def get_sem_and_base_url():
         error = "Check your internet connection and try again later."
         return (False, error)
     selection = BeautifulSoup(base_url_html, "html.parser").find_all('option', attrs={"selected": "selected"})[0]
-    match selection.get_text().split()[0].lower():
-        case "first": sem = 1
-        case "second": sem = 2
-        case "midyear": sem = 3
+    if selection.get_text().split()[0].lower() == "first":
+        sem = 1
+    elif selection.get_text().split()[0].lower() == "second":
+        sem = 2
+    elif selection.get_text().split()[0].lower() == "midyear":
+        sem = 3
     base_url = root_url + selection['value'] + "/"
     return (sem, base_url)
 
@@ -109,16 +111,22 @@ def get_data(name, base_url):
 
 def get_days(days_sched):
     days = []
-    for i in range(0, len(days_sched)):
-        match days_sched[i]:
-            case "M": days.append("Monday")
-            case "T":
-                if i+1 == len(days_sched):
-                    days.append("Tuesday")
-                elif days_sched[i+1] == "h":
-                    days.append("Thursday")
-                else: days.append("Tuesday")
-            case "W": days.append("Wednesday")
-            case "F": days.append("Friday")
-            case "S": days.append("Saturday")
+    for i in range(len(days_sched)):
+        day = days_sched[i]
+        if day == "M":
+            days.append("Monday")
+        elif day == "T":
+            if i+1 == len(days_sched):
+                days.append("Tuesday")
+            elif days_sched[i+1] == "h":
+                days.append("Thursday")
+            else:
+                days.append("Tuesday")
+        elif day == "W":
+            days.append("Wednesday")
+        elif day == "F":
+            days.append("Friday")
+        elif day == "S":
+            days.append("Saturday")
     return days
+
