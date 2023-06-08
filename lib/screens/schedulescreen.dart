@@ -103,6 +103,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
    days.forEach((day, schedule) {
      if (day != 'Sunday') {
        print(day);
+       ExportList.add(day);
+       ExportList.add('\n');
        for (List<dynamic> entry in schedule) {
          print(entry);
 
@@ -123,6 +125,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
          ExportList.add(text);
          ExportList.add('\n');
        }
+       ExportList.add('\n');
+
        stackInd+=1;
        }
 
