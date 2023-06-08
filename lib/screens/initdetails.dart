@@ -5,6 +5,7 @@ import 'package:crs_scheduler/assets/scripts/csv_reader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:crs_scheduler/assets/course_college.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../sizeconfig.dart';
 
@@ -44,11 +45,14 @@ class DetailDash extends StatefulWidget {
 }
 
 class _DetailDashState extends State<DetailDash> {
-  Future<void> getCourseNames(List<List<dynamic>> data, String college) async {
-    _courseNames = data
-        .where((row) => row[collegeInd] == college)
-        .map((row) => row[courseNameInd])
+   getCourseNames(String college) {
+    _courseNames = degrees
+        .where((degree) => degree['college'] == college)
+        .map((degree) => degree['name'])
         .toList();
+    print(_courseNames);
+
+
   }
   List datar=[];
   Future<List<dynamic>> fetchlist(String course, int yr) async {
@@ -102,15 +106,7 @@ class _DetailDashState extends State<DetailDash> {
   @override
   void initState() {
     super.initState();
-    /* WidgetsBinding.instance.addPostFrameCallback(
-          (_) => ShowCaseWidget.of(context)
-          .startShowCase([_college,_degree,_standing,_next]),
-    );*/
-    widget.csvReader.loadData().then((value) => setState(() {
-          data = value;
-          collegeInd = value[0].indexOf('college');
-          courseNameInd = value[0].indexOf('course_name');
-        }));
+
   }
 
   @override
@@ -286,30 +282,18 @@ class _DetailDashState extends State<DetailDash> {
                                                       isDense: false,
                                                       isExpanded: true,
                                                       onChanged: (newValue) {
+                                                        debugPrint("Degree Program dropdown Activated");
                                                         setState(() {
                                                           _currentSelectedCollege =
                                                               newValue!;
-                                                          getCourseNames(data!,
-                                                              _currentSelectedCollege);
-                                                          _dropdownItems =
-                                                              _courseNames
-                                                                  .map((e) => e
-                                                                      .toString())
-                                                                  .toList();
-                                                          _dropdownItems.insert(
-                                                              0, "Unselected");
-                                                          _isActiveCourses =
-                                                              (newValue ==
-                                                                      "Unselected")
-                                                                  ? false
-                                                                  : true;
-                                                          _currentSelectedCourse =
-                                                              "Unselected";
+                                                          getCourseNames( _currentSelectedCollege);
+                                                          _dropdownItems = _courseNames.map((e) => e.toString()).toList();
+                                                          _dropdownItems.insert(0, "Unselected");
+                                                          _isActiveCourses = (newValue == "Unselected") ? false : true;
+                                                          _currentSelectedCourse = "Unselected";
                                                         });
 
-                                                        if (kDebugMode) {
-                                                          print(_dropdownItems);
-                                                        }
+
                                                       },
                                                       validator: (value) {
                                                         if (value ==
@@ -586,7 +570,7 @@ class _DetailDashState extends State<DetailDash> {
                                                   setState(() {
                                                     _currentSelectedCollege =
                                                         newValue!;
-                                                    getCourseNames(data!,
+                                                    getCourseNames(
                                                         _currentSelectedCollege);
                                                     _dropdownItems =
                                                         _courseNames
@@ -797,19 +781,16 @@ class _DetailDashState extends State<DetailDash> {
                                   // String holder = await getCourseSN(_currentSelectedCollege,   _currentSelectedCourse);
                                   LoadingIndicatorDialog().show(context);
 
-                                  _courseData = data!.where((row) =>
-                                          row[collegeInd] ==
-                                              _currentSelectedCollege &&
-                                          row[courseNameInd] ==
-                                              _currentSelectedCourse).map((e) => e.toString()).toList();
+                                  List<dynamic> _courseData = getCourseData(_currentSelectedCollege, _currentSelectedCourse);
+                                  print(_courseData);
                                   var sm = ScaffoldMessenger.of(context);
 
-                                  //print(courseList[1]);
+
                                   if (kDebugMode) {
-                                    print("Coursecode${_courseData[0].split(', ')[3]}");
+                                    print("Coursecode: ${_courseData[0]}");
                                     print("User inputs:\nCollege: $_currentSelectedCollege, Course: $_currentSelectedCourse, Year Standing: $_myStanding ");
                                   }
-                                  List<dynamic> courseList = await fetchlist(_courseData[0].split(', ')[3],standing.indexOf(_myStanding));
+                                  List<dynamic> courseList = await fetchlist(_courseData[3],standing.indexOf(_myStanding));
                                   if (kDebugMode) {
                                     print(courseList.toString());
                                   }
@@ -818,7 +799,7 @@ class _DetailDashState extends State<DetailDash> {
 
                                   sm.showSnackBar(const SnackBar(duration: Duration(seconds: 1), content: Text('Saving details for your session')),);
 
-                                  Navigator.push(context,MaterialPageRoute(builder: (context) => PrimeShowcaser(
+                                 Navigator.push(context,MaterialPageRoute(builder: (context) => PrimeShowcaser(
                                               courseCode: _currentSelectedCourse,
                                               yearLevel: _myStanding,
                                               courseData: _courseData,
@@ -907,4 +888,13 @@ class LoadingIndicatorDialog {
       isDisplayed = false;
     }
   }
+}
+List<dynamic> getCourseData(String college, String courseName) {
+  final courseData = degrees
+      .where((degree) =>
+  degree['college'] == college && degree['name'] == courseName)
+      .map((degree) => degree.values.toList())
+      .toList();
+
+  return courseData.isNotEmpty ? courseData[0] : [];
 }
