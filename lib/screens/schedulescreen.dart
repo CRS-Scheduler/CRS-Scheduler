@@ -50,7 +50,7 @@ class Course{
   Course(this.courseNameSection, this.startTime, this.endTime);
 }
 DateTime startDayTime =  DateTime(2023, 0,0, 7, 00, 0);
-DateTime endDayTime =  DateTime(2023, 0, 0, 20, 00, 0);
+DateTime endDayTime =  DateTime(2023, 0, 0, 21, 00, 0);
 double brickHeight=40;
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
@@ -61,16 +61,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   final List<String> daysoftheweek=['Time','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-  final List<List<Course>> dayStack=[
-    [Course("Math 20 THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0))],
-    [Course("CS 12 THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
-      Course("CS 21 THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
-    [Course("CS 21 THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0))],
-    [Course("CS 12 THUV", DateTime(2023, 0,0, 10, 0, 0), DateTime(2023, 0, 0, 12, 0, 0)),
-      Course("CS 21 THUV", DateTime(2023, 0,0, 13, 0, 0), DateTime(2023, 0, 0, 15, 30, 0)),],
-    [ Course("Math 20 THUV", DateTime(2023, 0,0, 7, 0, 0), DateTime(2023, 0, 0, 9, 30, 0)),],
-    []
-  ];
+
   late  List<List<Course>> stacker=[[],[],[],[],[],[]];
   late List<dynamic> storage;
   late List<String> ExportList = [];
