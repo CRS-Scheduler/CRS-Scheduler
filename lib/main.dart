@@ -1,6 +1,7 @@
 import 'package:crs_scheduler/screens/initdetails.dart';
 import 'package:flutter/material.dart';
 import '../sizeconfig.dart';
+import 'package:crs_scheduler/screens/schedulescreen.dart';
 void main()  {
   runApp(const MyApp());
 }
@@ -55,8 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    //return    ScheduleShowcase(courseCode: 'BS_CS',yrStanding: 2,);
-    return const DetailParent();
+    return    ScheduleShowcase(courseCode: 'BS_CS',yrStanding: 2,);
+    //return const DetailParent();
 
 
   }

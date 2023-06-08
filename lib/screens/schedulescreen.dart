@@ -72,13 +72,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     []
   ];
   late  List<List<Course>> stacker=[[],[],[],[],[],[]];
+  late List<dynamic> storage;
   late List<String> ExportList = [];
 
 
   fetchSched(String course, int yr) async {
 // Define the API endpoint URL
-    //final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr';
-    final String apiUrl = 'https://crs-service-192.onrender.com/api/schedule?prgm=$course&yrlvl=$yr';
+    final String apiUrl = 'http://127.0.0.1:5000/api/schedule?prgm=$course&yrlvl=$yr&seed=1';
+    //final String apiUrl = 'https://crs-service-192.onrender.com/api/schedule?prgm=$course&yrlvl=$yr';
     if (kDebugMode) {
       print(apiUrl);
     }
@@ -87,7 +88,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 // Check if the request was successful (status code 200)
     if (response.statusCode == 200) {
       // Parse the response data as a string
-       String localhold = json.decode(response.body);
+      List<dynamic> localhold = json.decode(response.body);
        return localhold;
     } else {
       // Handle the error case, such as displaying an error message to the user
@@ -98,60 +99,68 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   }
 
-  schedParser(String schedule){
+  List<List<Course>> schedParser(var schedule){
+    List<List<Course>> stacker=[[],[],[],[],[],[]];
 
-  List<String> lines = schedule.split("\n");
-
-  lines.removeLast();
-  int stackInd=0;
-  for(String i in lines){
-    if (kDebugMode) {
-      print(i);
-    }
-    if(daysoftheweek.contains(i)){
-      if (i!="Monday") {
-        stackInd+=1;
-      }
-    }//increments matrix index
-    else if (i!="\n"){
-      List<String> listhold = i.split(",");
+   var data = Map.from(schedule);
 
 
-      int hourStart = int.parse(listhold[0].substring(0, 2));
-      int minStart = int.parse(listhold[0].substring(2, 4));
-      int hourEnd = int.parse(listhold[1].substring(0, 2));
-      int minEmd = int.parse(listhold[1].substring(2, 4));
+   // Print the number of units
 
-      String text = '${listhold[2]} $hourStart:${minStart}0-$hourEnd:${minEmd}0';
-      Course newCourse = Course(listhold[2], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
-      if (kDebugMode) {
-        print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");
-      }
-      stacker[stackInd].add(newCourse);
-      ExportList.add(text);
-      ExportList.add('\n');
-    }
+   Map<String, dynamic> days = data['Days'];
+    int stackInd=0;
+   days.forEach((day, schedule) {
+     if (day != 'Sunday') {
+       print(day);
+       for (List<dynamic> entry in schedule) {
+         print(entry);
 
-  }
+         int id = int.parse(entry[0]);
+         String course = entry[1];
 
+         int hourStart = entry[2]~/ 100;
+         int minStart = entry[2] % 100;
+         int hourEnd = entry[3] ~/ 100;
+         int minEmd = entry[3] % 100;
+
+         String text = '${entry[1]} $hourStart:${minStart}0-$hourEnd:${minEmd}0';
+         Course newCourse = Course(entry[1], DateTime(2023, 0, 0, hourStart, minStart), DateTime(2023, 0, 0, hourEnd, minEmd));
+         if (kDebugMode) {
+           print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");
+         }
+         stacker[stackInd].add(newCourse);
+       }
+       stackInd+=1;
+       }
+
+
+   });
+    print(stacker);
+   return stacker;
   }
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    String hold;
+    List<dynamic>  hold;
     Future.delayed(Duration.zero, () async {
       // your async operation here
+      debugPrint("Fetching schedules");
       final result = await fetchSched(widget.courseCode, widget.yrStanding);
+      debugPrint("Fetched Schedules");
       // update the state using setState
       setState(() {
         // update the state with the result of the async operation
         hold = result;
-        schedParser(hold);
+        debugPrint("entering schedParser");
+        //print(hold[0]);
+        schedParser(hold[0]);
         isLoading = false;
+        storage=hold;
         if (kDebugMode) {
-          print(stacker);
+          //print(hold);
+          //print(stacker);
         }
       });
     });
@@ -269,6 +278,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               ],
             ),
           ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                  "Total Units: ${storage[0]["Total_Units"]}",
+                  style: TextStyle(
+                  color: const Color(0xff7D0C0E),
+                  fontSize: (SizeConfig.screenWidth > 600)
+                  ? 24
+                      : SizeConfig.safeBlockHorizontal * 4,
+                  fontWeight: FontWeight.w600)),
+            ),
             SizedBox(
               width: SizeConfig.safeBlockHorizontal * 80,
 
@@ -298,7 +318,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     Container(color: const Color(0xff8B1538),
                       child: Row(
                         children: [
-                          for (List<Course> x in stacker)
+                          for (List<Course> x in schedParser(storage[0]))
                             SizedBox(
                             height: (brickHeight+1)*(timeBlockWidgets.length.toDouble()),
                             width: SizeConfig.safeBlockHorizontal * 80/7,
