@@ -54,12 +54,12 @@ class _DetailDashState extends State<DetailDash> {
   Future<List<dynamic>> fetchlist(String course, int yr) async {
     List<dynamic> localhold = [];
     if (kDebugMode) {
-      print("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr");
-      //print("https://crs-service-192.onrender.com/api/courses?prgm=$course&yrlvl=$yr");
+      //print("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr");
+      print("https://crs-service-192.onrender.com/api/courses?prgm=$course&yrlvl=$yr");
     }
     var response = await http.get(
-      Uri.parse("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr"),
-      //rUri.parse("https://crs-service-192.onrender.com/api/courses?prgm=$course&yrlvl=$yr"),
+      //Uri.parse("http://127.0.0.1:5000/api/courses?prgm=$course&yrlvl=$yr"),
+      Uri.parse("https://crs-service-192.onrender.com/api/courses?prgm=$course&yrlvl=$yr"),
       //headers: {"Accept": "application/json"}
     );
     setState(() {
