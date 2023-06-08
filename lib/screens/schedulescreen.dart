@@ -120,6 +120,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
            print("${newCourse.courseNameSection}:${newCourse.startTime}-${newCourse.endTime}");
          }
          stacker[stackInd].add(newCourse);
+         ExportList.add(text);
+         ExportList.add('\n');
        }
        stackInd+=1;
        }
