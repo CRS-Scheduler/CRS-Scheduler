@@ -14,7 +14,7 @@ import 'package:crs_scheduler/screens/schedulescreen.dart';
 class PrimeShowcaser extends StatelessWidget {
   final String courseCode;
   final String yearLevel;
-  final List<String> courseData;
+  final List<dynamic> courseData;
   final List allowedCourse;
   const PrimeShowcaser(
       {Key? key,
@@ -54,7 +54,7 @@ class PrimeShowcaser extends StatelessWidget {
 class Dashboard extends StatefulWidget {
   final String courseCode;
   final String yearLevel;
-  final List<String> courseData;
+  final List<dynamic> courseData;
   final List allowedCourse;
 
   const Dashboard(
@@ -451,7 +451,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                 content: Text(
                                                     'Saving Preferences')));
                                             Navigator.push(context,MaterialPageRoute(builder: (context) =>
-                                                ScheduleShowcase(courseCode: widget.courseData[0].split(', ')[3],yrStanding: standing.indexOf(widget.yearLevel),)
+                                                ScheduleShowcase(courseCode: widget.courseData[3],yrStanding: standing.indexOf(widget.yearLevel),)
                                             ));
                                           }
 
@@ -796,7 +796,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                                   content: Text(
                                                       'Saving Preferences')));
                                               Navigator.push(context,MaterialPageRoute(builder: (context) =>
-                                                  ScheduleShowcase(courseCode: widget.courseData[0].split(', ')[3],yrStanding: standing.indexOf(widget.yearLevel),)
+                                                  ScheduleShowcase(courseCode: widget.courseData[3],yrStanding: standing.indexOf(widget.yearLevel),)
                                               ));
                                             }
 
