@@ -3,5 +3,6 @@ Gunicorn
 bs4
 requests
 datetime
+flask_cors
 
 
