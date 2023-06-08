@@ -172,7 +172,7 @@ class Scheduler:
                     if denom == 0:
                         denom += 1
                     self.weightedpool[course] += (sched.get_score()/denom)
-        print("[%s] Finished" % (self.seed)) 
+        #print("[%s] Finished" % (self.seed)) 
         
 def gen_course_pool(li):
     coursepool = list()
@@ -186,16 +186,10 @@ def gen_course_pool(li):
             duration =  (schedob.time[1].hour - schedob.time[0].hour) * 60 + schedob.time[1].minute - schedob.time[0].minute
             #print(schedob.days, schedob.time[0].hour, schedob.time[0].minute)
             coursepool.append(Course(j.code, i.name, schedob.time[0].hour, schedob.time[0].minute, duration, schedob.days, j.units))
-            print(coursepool[-1])
+            #print(coursepool[-1])
     return coursepool
 
 def sched2api(degree_program, year_level, seed):
-    # def makejs(schedlist):
-    #     listoscheds = list()
-    #     for sched in schedlist:
-    #         scheddict = dict()
-    #         scheddict["Total_Units"] = sched["total_units"]
-
     dat = DegreeProgram(degree_program, year_level)
     coursepool = gen_course_pool(dat.courses_data)
     scheduler = Scheduler(coursepool, list(), MAXCOURSES, seed, ITERATIONS)
@@ -208,31 +202,9 @@ def sched2api(degree_program, year_level, seed):
             #sjson["courses"] = [x.__str__() for x in sched.sched]
             sjson["Days"] = dict()
             for day in ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]:
-                sjson["Days"][day] = dict()
-                sjson["Days"][day]["Courses"] = list()
+                sjson["Days"][day] = list()
                 for cour in sched.sched:
                     if day in cour.days:
-                        sjson["Days"][day]["Courses"].append((cour.code, cour.name, cour.tintf[0], cour.tintf[1]))
+                        sjson["Days"][day].append((cour.code, cour.name, cour.tintf[0], cour.tintf[1]))
             passedsched.append(sjson)
-    return json.dumps(passedsched)
-
-#print(sched2api("BS_CS", 2, 10))
-print(json.dumps(ScheduleOptimizer.schedule_optimizer("BS_CS", 2)))
-
-
-def main():
-    os.chdir("./backend")
-    dat = DegreeProgram("BS_CS", 2)
-    coursepool = gen_course_pool(dat.courses_data)
-    assert(coursepool != None)
-    seed = random.randint(0,9999999)
-    scheduler = Scheduler(coursepool, list(), 7, seed, 1000)
-    passedsched = list()
-    for sched in scheduler.scheds.keys():
-        if scheduler.scheds[sched] > 18:
-            sjson = dict()
-            sjson["total_units"] = scheduler.scheds[sched]
-            sjson["courses"] = [x.__str__() for x in sched.sched]
-            passedsched.append(sjson)
-    return json.dumps(passedsched)
-
+    return passedsched
