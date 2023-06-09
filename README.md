@@ -9,16 +9,4 @@ Camingao, Ethan \
 Gonzales, Isaiah Nikolo \
 Tanael, Aaron Jude
 
----
-To run the backend server:
-1. Go to the directory where `server.py` is located
-2. Run: `python -m flask --app server run`
-3. Type `localhost:5000` on your browser
-
----
-To run with API access:
-1. Open terminal in the cloned repository directory
-2. Run the following in the terminal: `flutter run -d chrome --web-browser-flag "--disable-web-security"`
-3. Let the webapp bootup
-
-Note: Type `r` in terminal to hot-restart
+To run the web app, go to https://crs-scheduler.github.io/CRS-Scheduler/.
